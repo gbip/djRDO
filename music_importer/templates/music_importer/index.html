@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Music collection</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'music_importer/bulma.css' %}">
+    <script  src="{% static 'music_importer/jsmediatags.min.js' %}"></script>
+
+</head>
+<body>
+
+<div class="container">
+    <input type="file"
+       id="btn-import" name="music" webkitdirectory directory multiple>
+    <button class="button" id="btn-import2">Import music</button>
+</div>
+
+{% if music_list %}
+<ul>
+    {% for music in music_list %}
+    <li>{{ music.title }} - {{ music.artist }} ({{ music.bpm }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+</body>
+</html>
+
+<script>
+    var jsmediatags = window.jsmediatags;
+
+    // Wrap the jsmediatags callback into a Promise
+    async function readMetadataAsync (file) {
+		return new Promise((resolve, reject) => {
+			jsmediatags.read(file, {
+				onSuccess: resolve,
+				onError: reject
+			});
+		});
+	}
+
+    // Django get CSRF cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Send the post data to the django endpoint
+    async function send_music_tags(url = '', data = {}) {
+        // Default options are marked with *
+        const csrftoken = getCookie('csrftoken');
+        console.log(JSON.stringify(data))
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken' : csrftoken,
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        //return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    // Retrieve the tags that we are looking for
+    // TODO : Handle missing fields
+    function jsonize_tags(tags) {
+        return {
+            title: tags.title,
+            artist: tags.artist,
+            genre: tags.genre,
+            year: tags.year,
+            bpm: tags.TBPM.data,
+            key: tags.TKEY.data,
+            album: tags.album,
+            picture: {
+                format: tags.picture.format,
+                data: tags.picture.data,
+            }
+        }
+    }
+
+    // Parse a file and return a JS object holding the metadata that we are interested in
+    async function parse(file) {
+        try {
+            let tags = await readMetadataAsync(file);
+            return jsonize_tags(tags.tags);
+        } catch (error) {
+            console.error("Failed to parse tags : " , error);
+        }
+    }
+
+    // Import the user music
+    async function music_import() {
+        let result = [];
+        for (const file of Array.from(this.files)) {
+            let v = await parse(file);
+            result.push(v);
+        }
+        await send_music_tags("{% url 'music_importer:upload' %}", result);
+    }
+    let btn = document.querySelector('#btn-import');
+    btn.addEventListener("change", music_import, false);
+</script>
