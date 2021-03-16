@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% include 'form.html' %}
-    <div>
+        <div>
         You don't have an account yet ?
-        <button class="button is-link" href="{% url 'accounts:signup' %}">Sign up</button>
+        <u><a class="is-link" href="{% url 'accounts:signup' %}">Sign up !</a></u>
+        </div>
+    <div class="is-primary">
+    {% include 'form.html' %}
     </div>
+
     {# Assumes you setup the password_reset view in your URLconf #}
     <p><a href="{% url 'accounts:password_reset' %}">Lost password?</a></p>
 {% endblock %}

@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-
+    <div>
+        Already have an account ?
+    <u><a href="{% url 'accounts:login' %}">Sign In !</a></u>
+        </div>
+    <div class="is-primary">
     {% include 'form.html' %}
+    </div>
     <!-- Submit form -->
     <!-- Display navigation button to  account creation page -->
-    <button><a href="{% url 'accounts:login' %}">Sign In !</a></button>
 {% endblock %}

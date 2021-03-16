@@ -6,13 +6,13 @@
 
     {% for hidden_field in form.hidden_fields %}
         <article class="message is-danger">
-        <div class="message-header">
-            <p>Error</p>
-        </div>
-        <div class="message-body">
-            {{ hidden_field }}
-        </div>
-            </article>
+            <div class="message-header">
+                <p>Error</p>
+            </div>
+            <div class="message-body">
+                {{ hidden_field }}
+            </div>
+        </article>
     {% empty %}
 
     {% endfor %}
@@ -36,12 +36,14 @@
 
             {% if form.is_bound %}
                 {% if field.errors %}
-                    {% render_field field class="control is-danger" %}
-                    {% for error in field.errors %}
-                        <div class="help is-danger">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
+                    <div class="control">
+                        {% render_field field class="input is-danger" %}
+                        {% for error in field.errors %}
+                            <div class="help is-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 {% else %}
                     <div class="control">
                         {% render_field field class="input is-success" %}
@@ -55,7 +57,7 @@
             {% endif %}
 
             {% if field.help_text %}
-                <small class="form-text text-muted">{{ field.help_text }}</small>
+                <small class="help">{{ field.help_text }}</small>
             {% endif %}
         </div>
     {% endfor %}
