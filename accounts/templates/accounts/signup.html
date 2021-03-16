@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    {% include 'form.html' %}
+    <!-- Submit form -->
+    <!-- Display navigation button to  account creation page -->
+    <button><a href="{% url 'accounts:login' %}">Sign In !</a></button>
+{% endblock %}

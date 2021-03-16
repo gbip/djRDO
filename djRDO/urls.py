@@ -17,9 +17,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 import music_importer
+import accounts
 from djRDO import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
     path('import/', include("music_importer.urls"))
 ] + static(settings.STATIC_URL)

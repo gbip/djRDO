@@ -1,0 +1,64 @@
+{% load widget_tweaks %}
+
+<form method="post">
+    {% csrf_token %}
+
+
+    {% for hidden_field in form.hidden_fields %}
+        <article class="message is-danger">
+        <div class="message-header">
+            <p>Error</p>
+        </div>
+        <div class="message-body">
+            {{ hidden_field }}
+        </div>
+            </article>
+    {% empty %}
+
+    {% endfor %}
+
+    {% if form.non_field_errors %}
+        <article class="message is-warning">
+            <div class="message-header">
+                <p>Login failed</p>
+            </div>
+            <div class="message-body">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        </article>
+    {% endif %}
+
+    {% for field in form.visible_fields %}
+        <div class="field">
+            {{ field.label_tag }}
+
+            {% if form.is_bound %}
+                {% if field.errors %}
+                    {% render_field field class="control is-danger" %}
+                    {% for error in field.errors %}
+                        <div class="help is-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="control">
+                        {% render_field field class="input is-success" %}
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="control">
+                    {% render_field field class="input" %}
+                </div>
+
+            {% endif %}
+
+            {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <input type="submit" value="Login" class="button is-success"></input>
+</form>

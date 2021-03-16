@@ -1,14 +1,13 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
 from django.views import generic
-from django.views.decorators.csrf import requires_csrf_token
 
 from .models import Music
 
 
 # Create your views here.
-
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "music_importer/index.html"
     context_object_name = "must_list"
 
@@ -16,10 +15,10 @@ class IndexView(generic.ListView):
         return Music.objects.get_queryset()[:5]
 
 
+@login_required
 def upload(request):
     print("ALO")
     if request.method == 'POST' and request.content_type == 'application/json':
-        print(request.body)
         return HttpResponse("Ok")
     else:
         raise Http404("Page not found")

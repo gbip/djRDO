@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 django = "*"
+pylint = "*"
+argon2 = "*"
+argon2-cffi = "*"
+django-widget-tweaks = "*"
 
 [dev-packages]
 
