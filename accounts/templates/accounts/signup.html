@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% block title %}Sign up to djRDO{% endblock %}
 {% block content %}
     <div>
         Already have an account ?
     <u><a href="{% url 'accounts:login' %}">Sign In !</a></u>
         </div>
     <div class="is-primary">
-    {% include 'form.html' %}
+    {% include 'form.html' with submit_button_value="Register" %}
     </div>
     <!-- Submit form -->
     <!-- Display navigation button to  account creation page -->
