@@ -3,7 +3,7 @@
 {% block content %}
         <div>
         You don't have an account yet ?
-        <u><a class="is-link" href="{% url 'accounts:signup' %}">Sign up !</a></u>
+        <u><a class="is-link" href="{% url 'accounts:register' %}">Sign up !</a></u>
         </div>
     <div class="is-primary">
     {% include 'form.html' with submit_button_value="Log in"%}
