@@ -7,20 +7,19 @@ import music.key as key
 
 
 class TestKeyMethods(unittest.TestCase):
-
     def test_declaration(self):
         """
         Test if all enum variants are well declared
         """
         for i in range(1, 12):
-            camelot_name_a = "A" + str(i)
-            camelot_name_b = "B" + str(i)
-            openkey_name_m = "M" + str(i)
-            openkey_name_d = "D" + str(i)
-            self.assertTrue(openkey_name_m in key.OpenKey.__members__)
-            self.assertTrue(openkey_name_d in key.OpenKey.__members__)
-            self.assertTrue(camelot_name_a in key.CamelotKey.__members__)
-            self.assertTrue(camelot_name_b in key.CamelotKey.__members__)
+            camelot_name_a = str(i) + "A"
+            camelot_name_b = str(i) + "B"
+            openkey_name_m = str(i) + "m"
+            openkey_name_d = str(i) + "d"
+            self.assertTrue(key.OpenKey(openkey_name_m).value == openkey_name_m)
+            self.assertTrue(key.OpenKey(openkey_name_d).value == openkey_name_d)
+            self.assertTrue(key.CamelotKey(camelot_name_a).value == camelot_name_a)
+            self.assertTrue(key.CamelotKey(camelot_name_b).value == camelot_name_b)
 
     def test_key_mappings(self):
         """
@@ -32,22 +31,47 @@ class TestKeyMethods(unittest.TestCase):
             openkey_name_m = key.OpenKey["M" + str(i)]
             openkey_name_d = key.OpenKey["D" + str(i)]
 
-            self.assertTrue(key.openKeyToCamelotKey[key.camelotToOpenKey[camelot_name_a]] == camelot_name_a)
-            self.assertTrue(key.musicKeyToCamelotKey[key.camelotKeyToMusicKey[camelot_name_a]] == camelot_name_a)
+            self.assertTrue(
+                key.openKeyToCamelotKey[key.camelotToOpenKey[camelot_name_a]]
+                == camelot_name_a
+            )
+            self.assertTrue(
+                key.musicKeyToCamelotKey[key.camelotKeyToMusicKey[camelot_name_a]]
+                == camelot_name_a
+            )
 
-            self.assertTrue(key.openKeyToCamelotKey[key.camelotToOpenKey[camelot_name_b]] == camelot_name_b)
-            self.assertTrue(key.musicKeyToCamelotKey[key.camelotKeyToMusicKey[camelot_name_b]] == camelot_name_b)
+            self.assertTrue(
+                key.openKeyToCamelotKey[key.camelotToOpenKey[camelot_name_b]]
+                == camelot_name_b
+            )
+            self.assertTrue(
+                key.musicKeyToCamelotKey[key.camelotKeyToMusicKey[camelot_name_b]]
+                == camelot_name_b
+            )
 
-            self.assertTrue(key.musicKeyToOpenKey[key.openKeyToMusicKey[openkey_name_d]] == openkey_name_d)
-            self.assertTrue(key.camelotToOpenKey[key.openKeyToCamelotKey[openkey_name_d]] == openkey_name_d)
+            self.assertTrue(
+                key.musicKeyToOpenKey[key.openKeyToMusicKey[openkey_name_d]]
+                == openkey_name_d
+            )
+            self.assertTrue(
+                key.camelotToOpenKey[key.openKeyToCamelotKey[openkey_name_d]]
+                == openkey_name_d
+            )
 
-            self.assertTrue(key.musicKeyToOpenKey[key.openKeyToMusicKey[openkey_name_m]] == openkey_name_m)
-            self.assertTrue(key.camelotToOpenKey[key.openKeyToCamelotKey[openkey_name_m]] == openkey_name_m)
+            self.assertTrue(
+                key.musicKeyToOpenKey[key.openKeyToMusicKey[openkey_name_m]]
+                == openkey_name_m
+            )
+            self.assertTrue(
+                key.camelotToOpenKey[key.openKeyToCamelotKey[openkey_name_m]]
+                == openkey_name_m
+            )
 
     def test_key_representation(self):
         """
         Test if keys have a well behaved string representation
         """
+
         def test(t, val):
             """
             :param t: test fixture

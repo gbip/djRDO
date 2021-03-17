@@ -1,9 +1,25 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import ModelForm
 from django.http import HttpResponse, Http404
 from django.views import generic
 
 from .models import MusicTrack
+
+
+class TrackFrom(ModelForm):
+    class Meta:
+        model = MusicTrack
+        fields = [
+            "title",
+            "artist",
+            "album",
+            "bpm",
+            "key",
+            "genre",
+            "user",
+            "date_released",
+        ]
 
 
 # Create your views here.
@@ -17,7 +33,6 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def upload(request):
-    print("ALO")
     if request.method == "POST" and request.content_type == "application/json":
         return HttpResponse("Ok")
     else:

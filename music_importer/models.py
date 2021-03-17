@@ -80,13 +80,12 @@ def key_validator(val):
     standard music key foramt
     :param val: The key to be validated
     """
-    if (
-        not val in key.OpenKey.value
-        and not val in key.MusicKey.value
-        and not val in key.CamelotKey.value
-    ):
+    if not val in key.OpenKey.value:
         raise ValidationError(
-            _("%(value)s is not a valid music key"),
+            _(
+                "%(value)s is not a valid music key. Expected a value such as 12m, 9A or 3d "
+                "(camelot or openkey notation)."
+            ),
             code="invalid",
             params={"value": val},
         )
@@ -117,4 +116,5 @@ class MusicTrack(models.Model):
     )
     date_released = models.DateField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    genre = models.CharField(max_length=200)
     objects = MusicManager()
