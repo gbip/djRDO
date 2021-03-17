@@ -1,7 +1,14 @@
-from enum import Enum
+"""
+This modules defines how to represent music keys.
+"""
+import enum
 
 
-class MusicKey(Enum):
+@enum.unique
+class MusicKey(enum.Enum):
+    """
+    Standard music key representation for all elements of the 5th wheel
+    """
     C_MAJOR = "C Major"  # 1d
     G_MAJOR = "G Major"  # 2d
     D_MAJOR = "D Major"  # 3d
@@ -28,7 +35,11 @@ class MusicKey(Enum):
     D_MINOR = "D Minor"  # 12 m
 
 
-class CamelotKey(Enum):
+@enum.unique
+class CamelotKey(enum.Enum):
+    """
+    Camelot music key representation
+    """
     B1 = "1B"
     B2 = "2B"
     B3 = "3B"
@@ -55,7 +66,11 @@ class CamelotKey(Enum):
     A12 = "12A"
 
 
-class OpenKey(Enum):
+@enum.unique
+class OpenKey(enum.Enum):
+    """
+    Openkey music key representation
+    """
     D1 = "1d"
     D2 = "2d"
     D3 = "3d"
@@ -141,30 +156,30 @@ musicKeyToOpenKey = {
 }
 
 musicKeyToCamelotKey = {
-    MusicKey.C_MAJOR:       openKeyToCamelotKey[OpenKey.D1],
-    MusicKey.G_MAJOR:       openKeyToCamelotKey[OpenKey.D2],
-    MusicKey.D_MAJOR:       openKeyToCamelotKey[OpenKey.D3],
-    MusicKey.A_MAJOR:       openKeyToCamelotKey[OpenKey.D4],
-    MusicKey.E_MAJOR:       openKeyToCamelotKey[OpenKey.D5],
-    MusicKey.B_MAJOR:       openKeyToCamelotKey[OpenKey.D6],
+    MusicKey.C_MAJOR: openKeyToCamelotKey[OpenKey.D1],
+    MusicKey.G_MAJOR: openKeyToCamelotKey[OpenKey.D2],
+    MusicKey.D_MAJOR: openKeyToCamelotKey[OpenKey.D3],
+    MusicKey.A_MAJOR: openKeyToCamelotKey[OpenKey.D4],
+    MusicKey.E_MAJOR: openKeyToCamelotKey[OpenKey.D5],
+    MusicKey.B_MAJOR: openKeyToCamelotKey[OpenKey.D6],
     MusicKey.F_SHARP_MAJOR: openKeyToCamelotKey[OpenKey.D7],
-    MusicKey.D_FLAT_MAJOR:  openKeyToCamelotKey[OpenKey.D8],
-    MusicKey.A_FLAT_MAJOR:  openKeyToCamelotKey[OpenKey.D9],
-    MusicKey.E_FLAT_MAJOR:  openKeyToCamelotKey[OpenKey.D10],
-    MusicKey.B_FLAT_MAJOR:  openKeyToCamelotKey[OpenKey.D11],
-    MusicKey.F_MAJOR:       openKeyToCamelotKey[OpenKey.D12],
-    MusicKey.A_MINOR:       openKeyToCamelotKey[OpenKey.M1],
-    MusicKey.E_MINOR:       openKeyToCamelotKey[OpenKey.M2],
-    MusicKey.B_MINOR:       openKeyToCamelotKey[OpenKey.M3],
-    MusicKey.G_FLAT_MINOR:  openKeyToCamelotKey[OpenKey.M4],
-    MusicKey.D_FLAT_MINOR:  openKeyToCamelotKey[OpenKey.M5],
-    MusicKey.A_FLAT_MINOR:  openKeyToCamelotKey[OpenKey.M6],
-    MusicKey.E_FLAT_MINOR:  openKeyToCamelotKey[OpenKey.M7],
-    MusicKey.B_FLAT_MINOR:  openKeyToCamelotKey[OpenKey.M8],
-    MusicKey.F_MINOR:       openKeyToCamelotKey[OpenKey.M9],
-    MusicKey.C_MINOR:       openKeyToCamelotKey[OpenKey.M10],
-    MusicKey.G_MINOR:       openKeyToCamelotKey[OpenKey.M11],
-    MusicKey.D_MINOR:       openKeyToCamelotKey[OpenKey.M12],
+    MusicKey.D_FLAT_MAJOR: openKeyToCamelotKey[OpenKey.D8],
+    MusicKey.A_FLAT_MAJOR: openKeyToCamelotKey[OpenKey.D9],
+    MusicKey.E_FLAT_MAJOR: openKeyToCamelotKey[OpenKey.D10],
+    MusicKey.B_FLAT_MAJOR: openKeyToCamelotKey[OpenKey.D11],
+    MusicKey.F_MAJOR: openKeyToCamelotKey[OpenKey.D12],
+    MusicKey.A_MINOR: openKeyToCamelotKey[OpenKey.M1],
+    MusicKey.E_MINOR: openKeyToCamelotKey[OpenKey.M2],
+    MusicKey.B_MINOR: openKeyToCamelotKey[OpenKey.M3],
+    MusicKey.G_FLAT_MINOR: openKeyToCamelotKey[OpenKey.M4],
+    MusicKey.D_FLAT_MINOR: openKeyToCamelotKey[OpenKey.M5],
+    MusicKey.A_FLAT_MINOR: openKeyToCamelotKey[OpenKey.M6],
+    MusicKey.E_FLAT_MINOR: openKeyToCamelotKey[OpenKey.M7],
+    MusicKey.B_FLAT_MINOR: openKeyToCamelotKey[OpenKey.M8],
+    MusicKey.F_MINOR: openKeyToCamelotKey[OpenKey.M9],
+    MusicKey.C_MINOR: openKeyToCamelotKey[OpenKey.M10],
+    MusicKey.G_MINOR: openKeyToCamelotKey[OpenKey.M11],
+    MusicKey.D_MINOR: openKeyToCamelotKey[OpenKey.M12],
 }
 
 """
