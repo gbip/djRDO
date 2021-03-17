@@ -9,6 +9,7 @@ pylint = "*"
 argon2 = "*"
 argon2-cffi = "*"
 django-widget-tweaks = "*"
+pylint-django = "*"
 
 [dev-packages]
 

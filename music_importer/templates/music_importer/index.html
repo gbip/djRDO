@@ -61,7 +61,7 @@
     async function send_music_tags(url = '', data = {}) {
         // Default options are marked with *
         const csrftoken = getCookie('csrftoken');
-        console.log(JSON.stringify(data))
+        //console.log(JSON.stringify(data))
         const response = await fetch(url, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
             headers: {
@@ -108,6 +108,7 @@
         let result = [];
         for (const file of Array.from(this.files)) {
             let v = await parse(file);
+            console.log(v);
             result.push(v);
         }
         await send_music_tags("{% url 'music_importer:upload' %}", result);
