@@ -86,10 +86,10 @@
             bpm: tags.TBPM.data,
             key: tags.TKEY.data,
             album: tags.album,
-            picture: {
+            /*picture: {
                 format: tags.picture.format,
                 data: tags.picture.data,
-            }
+            }*/
         }
     }
 
@@ -108,7 +108,7 @@
         let result = [];
         for (const file of Array.from(this.files)) {
             let v = await parse(file);
-            console.log(v);
+            console.log(JSON.stringify(v));
             result.push(v);
         }
         await send_music_tags("{% url 'music_importer:upload' %}", result);

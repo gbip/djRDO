@@ -11,6 +11,7 @@ from django.core.validators import MinValueValidator
 from music import key
 from django.utils.translation import gettext_lazy as _
 
+
 # Create your models here.
 
 
@@ -34,41 +35,81 @@ class Album(models.Model):
     """
 
     name = models.CharField(max_length=5000)
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class MusicManager(models.Manager):
-    def create_track(self, track, user):
+    def import_track(self, track, user):
         """
-        Insert a new track within the database
-        :param track: A python dict describing a track
-        :param user: A django user to use as the owner of the track, the album and the artist
+        Import a track, handling null fields as needed
+        :param track: python dictionary representing a track
+        :param user: user that will be the owner of the track and all objects created for its representation (album, artist)
         """
-        # Create album artist
-        album_artist, _ = Artist.objects.get_or_create(
-            name=track["album_artist"], user=user
-        )
-        album_artist.save()
+        # Try to import foreign keys. First check if the foreign key field is present in the provided data
+        #
+        # album : first check for the album artist, then for the album
+        album_artist = track.get("album_artist")
+        if album_artist is not None:
+            album_artist, _ = Artist.objects.get_or_create(
+                name=track["album_artist"], user=user
+            )
+            album_artist.save()
 
-        # Create album
-        album, _ = Album.objects.get_or_create(
-            name=track["album"], artist=album_artist, user=user
-        )
-        album.save()
+        album = track.get("album")
+        if album is not None:
+            if album_artist is not None:
+                album, _ = Album.objects.get_or_create(
+                    name=track["album"], artist=album_artist, user=user
+                )
+                album.save()
+            else:
+                album, _ = Album.objects.get_or_create(name=track["album"], user=user)
+                album.save()
 
-        # Create artist
-        artist, _ = Artist.objects.get_or_create(name=track["artist"], user=user)
-        artist.save()
+        artist = track.get("artist")
+        if artist is not None:
+            artist, _ = Artist.objects.get_or_create(name=track["artist"], user=user)
+            artist.save()
 
-        # Create music
-        music = self.create(
+        self.create_track(
+            user=user,
             title=track["title"],
-            bpm=track["bpm"],
             artist=artist,
             album=album,
-            key=track["key"],
-            date_released=track["year"],
+            bpm=track.get("bpm"),
+            track_key=track.get("key"),
+            date_released=track.get("year"),
+        )
+
+    def create_track(
+        self,
+        user,
+        title,
+        artist=None,
+        album=None,
+        bpm=None,
+        track_key=None,
+        date_released=None,
+    ):
+        """
+        Insert a new track within the database
+        :param date_released: Optional track release date
+        :param track_key: Optional track key
+        :param bpm: Optional track BPM
+        :param album: Optional album id
+        :param artist: Optional artist id
+        :param title: Mandatory title string
+        :param user: A django user to use as the owner of the track
+        """
+        # Create music
+        music = self.create(
+            title=title,
+            bpm=bpm,
+            artist=artist,
+            album=album,
+            key=track_key,
+            date_released=date_released,
             user=user,
         )
         return music
@@ -94,27 +135,34 @@ def key_validator(val):
 class MusicTrack(models.Model):
     """
     Music model :
-        * Title - String
-        * Import date - DateTime
-        * Bpm - Integer > 0
-        * Album - Key to an Album
-        * Artist - Key to an Artist
-        * Key - Enum from key.OpenKey
-        * Date Release - DateField
-        * User - Key to a user
+        * Title REQUIRED - String
+        * Import date REQUIRED - DateTime
+        * Bpm (optional)- Integer > 0
+        * Album (optional) - Key to an Album
+        * Artist (optional) - Key to an Artist
+        * Key (optional) - Enum from key.OpenKey
+        * Date Release (optional) - DateField
+        * User REQUIRED - Key to a user
     """
 
-    title = models.CharField(max_length=5000)
+    title = models.CharField(
+        max_length=5000,
+    )
     import_date = models.DateTimeField(auto_now_add=True)
-    bpm = models.IntegerField(validators=[MinValueValidator(0, "Bpm must be positive")])
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE)
+    bpm = models.IntegerField(
+        validators=[MinValueValidator(0, "Bpm must be positive")], null=True, blank=True
+    )
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True, blank=True)
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, null=True, blank=True)
     key = models.CharField(
         max_length=3,
         choices=[(tag, tag.value) for tag in key.OpenKey],
         validators=[key_validator],
+        null=True,
+        blank=True,
     )
-    date_released = models.DateField()
+    date_released = models.DateField(null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    genre = models.CharField(max_length=200)
+    genre = models.CharField(max_length=200, null=True, blank=True)
+
     objects = MusicManager()

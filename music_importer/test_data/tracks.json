@@ -3,11 +3,59 @@
     "title": "L'aurore",
     "artist": "Chinese Man",
     "genre": "Trip Hop",
-    "year": "2017-01-01",
+    "year": "2017-01-25",
     "bpm": "85",
     "key": "8A",
     "album": "Shikantaza",
-    "album_artist" : "Chinese Man",
+    "album_artist": "Chinese Man",
     "picture": null
+  },
+  {
+    "title": "Golden Age",
+    "genre": "Trip Hop",
+    "year": "2017-01-25",
+    "bpm": "144",
+    "key": "2A",
+    "album": "Shikantaza"
+  },
+  {
+    "title": "Anvoyé",
+    "artist": "Chinese Man",
+    "year": "2017-01-25",
+    "bpm": "86",
+    "key": "4A",
+    "album": "Shikantaza"
+  },
+  {
+    "title": "Goodnight",
+    "artist": "Chinese Man",
+    "genre": "Trip Hop",
+    "bpm": "136",
+    "key": "8A",
+    "album": "Shikantaza"
+  },
+  {
+    "title": "What You Need",
+    "artist": "Chinese Man feat Vinnie Dewayne, Myke Bogan & Tre Redeau",
+    "genre": "Trip Hop",
+    "year": "2017-01-25",
+    "key": "10B",
+    "album": "Shikantaza"
+  },
+  {
+    "title": "Blah! Featuring Youthstar, Taiwan MC, Illaman",
+    "artist": "Chinese Man feat Youthstar, Taiwan MC & Illaman",
+    "genre": "Trip Hop",
+    "year": "2017-01-25",
+    "bpm": "156",
+    "album": "Shikantaza"
+  },
+  {
+    "title": "Escape",
+    "artist": "Chinese Man",
+    "genre": "Trip Hop",
+    "year": "2017-01-25",
+    "bpm": "107",
+    "key": "9A"
   }
 ]
