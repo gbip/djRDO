@@ -5,6 +5,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from music import key
+from music_importer.tests import import_tracks_from_test_json
 
 
 class MusicImporterViewTestCase(TestCase):
@@ -12,21 +13,19 @@ class MusicImporterViewTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        user = User.objects.create_user(
+        cls.user = User.objects.create(
             username="test_user", password="test_password", email="nomail@nomail.com"
         )
-        cls.client = Client()
-        cls.client.login(username=user.username, password=user.password)
-        with open("music_importer/test_data/tracks.json") as file:
-            tracks = json.load(file)
-            for track in tracks:
-                # Convert camelot key to open key since we are not going through the form validation
-                if track.get("key") is not None:
-                    track["key"] = key.camelotToOpenKey[key.CamelotKey(track["key"])]
-                if track.get("year") is not None:
-                    # Modify year to only provide a year value since most music tags do not provide an exact date
-                    track["year"] = track["year"][:4]
-                cls.tracks.append(track)
+        cls.user.set_password("test_password")
+        cls.user.save()
+
+        import_tracks_from_test_json(lambda x: cls.tracks.append(x), cls.user)
+
+    def setUp(self):
+        logged_in = self.client.login(
+            username=self.user.username, password="test_password"
+        )
+        self.assertTrue(logged_in)
 
     def test_login_only_upload(self):
         response = self.client.get(reverse("music_importer:index"))
