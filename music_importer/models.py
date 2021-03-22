@@ -4,20 +4,61 @@ A music track is made of some metadata (title, bpm, key) along with some links t
 or an artist.
 Every music model is linked to a user.
 """
-import json
 
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
+from django.core import exceptions
 from django.db import models
 from django.utils.timezone import now
 
 from music import key
-from django.utils.translation import gettext_lazy as _
 
 
-class ArtistManager(models.Manager):
-    def get_by_natural_key(self, name, user):
-        return (self.get_or_create(name=name, user_id=user))[0]
+class KeyField(models.CharField):
+
+    description = "A music key"
+
+    def __init__(self, *args, **kwargs):
+        kwargs["max_length"] = 3
+        super().__init__(*args, **kwargs)
+        self.key = None
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+        del kwargs["max_length"]
+        return name, path, args, kwargs
+
+    def from_db_value(self, value, expression, connection):
+        if value is None:
+            return value
+        return KeyField.validate_key(value)
+
+    @classmethod
+    def validate_key(cls, value):
+        if value is None:
+            return None
+        elif value in set(k.value for k in key.OpenKey):
+            return value
+        elif value in set(k.value for k in key.CamelotKey):
+            return key.camelotKeyToOpenKey[key.CamelotKey(value)]
+        elif value in set(k.value for k in key.MusicKey):
+            return key.musicKeyToOpenKey[key.MusicKey(value)]
+        else:
+            raise exceptions.ValidationError("Invalid music key : {}".format(value))
+
+    def to_python(self, value):
+        if isinstance(value, key.OpenKey):
+            return value
+        if value is None:
+            return value
+
+        return KeyField.validate_key(value)
+
+    def get_prep_value(self, value):
+        return value
+
+    def value_to_string(self, obj):
+        value = self.value_from_object(obj)
+        return self.get_prep_value(value)
 
 
 class Artist(models.Model):
@@ -30,21 +71,43 @@ class Artist(models.Model):
     name = models.CharField(max_length=5000)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    objects = ArtistManager()
-
-    class Meta:
-        unique_together = ["name", "user"]
-
-    def natural_key(self):
-        return self.name, self.user.pk
-
     def __str__(self):
         return self.name
 
 
 class AlbumManager(models.Manager):
-    def get_by_natural_key(self, name, artist, user):
-        return (self.get_or_create(name=name, user_id=user, artist__name=artist))[0]
+    def get_by_natural_key(self, name, user):
+        return (self.get_or_create(name=name, user_id=user))[0]
+
+    def insert(self, name, user, artist=None):
+        """
+        Insert an album, checking for existence using the name and the user before inserting.
+        If the album as an artist attached to it, and an album already exists with this name but without an artist
+        attached to it, the stored album will be updated.
+
+        :param name: Album name
+        :param artist: Album artist (default None)
+        :param user: The user to be associated with the album
+        :return: The created album
+        """
+        if artist is not None:
+            # Try to find an album without the artist
+            try:
+                album_stored = self.get(name=name, user=user)
+                if album_stored.artist is None or album_stored.artist != artist:
+                    album_stored.artist = artist
+                    album_stored.save(update_fields=["artist"])
+                album = album_stored
+            # If it does not exist, then this is the first time that this album is inserted
+            except Album.DoesNotExist:
+                album = self.create(name=name, artist=artist, user=user)
+        else:
+            try:
+                album = self.get(name=name, user=user)
+            except Album.DoesNotExist:
+                album = self.create(name=name, user=user)
+
+        return album
 
 
 class Album(models.Model):
@@ -61,19 +124,17 @@ class Album(models.Model):
 
     objects = AlbumManager()
 
-    class Meta:
-        unique_together = ["name", "artist", "user"]
-
-    def natural_key(self):
-        return self.name, self.artist.natural_key(), self.user.pk
-
-    natural_key.dependencies = ["music_importer.artist"]
-
     def __str__(self):
-        return self.name
+        return (
+            self.name
+            + " - "
+            + str(self.artist.name if self.artist.name is not None else None)
+        )
 
 
 class MusicManager(models.Manager):
+
+    # TODO : Move validation to form
     @staticmethod
     def normalize_date(date_str):
         """
@@ -88,102 +149,6 @@ class MusicManager(models.Manager):
             if len(date_str) == 4:
                 result += "-01-01"
         return result
-
-    @staticmethod
-    def _normalize_json(track, user, album_name_list):
-        user_key = user.pk
-        track_fields = dict()
-        album_fields = dict()
-
-        track_fields["title"] = track["title"]
-        track_fields["bpm"] = track.get("bpm")
-        track_fields["key"] = track.get("key")
-        date = track.get("year")
-        track_fields["date_released"] = (
-            MusicManager.normalize_date(date) if date is not None else None
-        )
-
-        track_fields["genre"] = track.get("genre")
-        track_fields["user"] = user_key
-
-        # Handle album deferred creating
-        if track.get("album") is not None:
-            if track.get("album") not in album_name_list:
-                # Instantiate an album
-                album_fields["name"] = track.get("album")
-                artist = track.get("album_artist") or track.get("artist")
-                album_fields["artist"] = [artist, user_key]
-                album_fields["user"] = user_key
-
-            # Populate track fields
-            track_fields["album"] = [
-                track.get("album"),
-                track.get("album_artist"),
-                user_key,
-            ]
-
-        if track.get("artist") is not None:
-            track_fields["artist"] = [track.get("artist"), user_key]
-
-        model = (
-            {"model": "music_importer.musictrack", "fields": track_fields},
-            {"model": "music_importer.album", "fields": album_fields},
-        )
-        return model
-
-    @staticmethod
-    def normalize_tracks_to_json(tracks, user):
-        """
-        Normalize an array of track json to a single json object deserializable through django deserialization module
-        See MusicManager.normalize_track_json for more information the json format expected.
-
-        :return: A json array representing the django-deserializable version of the input data.
-        """
-        arr = []
-        album_name_list = []
-        for track in tracks:
-            track_json, album_json = MusicManager._normalize_json(
-                track, user, album_name_list
-            )
-            if album_json["fields"]:  # dict not empty
-                album_name_list.append(album_json["fields"]["name"])
-                arr.append(album_json)
-            arr.append(track_json)
-
-        return json.dumps(arr)
-
-    @staticmethod
-    def normalize_track_to_json(track, user):
-        """
-        Normalize a json so that it can be loaded through django deserialization module.
-
-        :param track: Json data that represents a track. The only mandatory field is 'title'.
-
-        :param user: The user that the track is linked to. This input should not be controlled by an end user and
-            adequate verification should be performed.
-
-        :return: A json string representing the track in django deserialization format.
-        """
-
-        result = MusicManager._normalize_json(track, user)
-        return json.dumps(result)
-
-
-def key_validator(val):
-    """
-    Validates that a key is either in the OpenKey format, the Camelot key format or the
-    standard music key format
-    :param val: The key to be validated
-    """
-    if val not in key.OpenKey.value:
-        raise ValidationError(
-            _(
-                "%(value)s is not a valid music key. Expected a value such as 12m, 9A or 3d "
-                "(camelot or openkey notation)."
-            ),
-            code="invalid",
-            params={"value": val},
-        )
 
 
 class MusicTrack(models.Model):
@@ -207,10 +172,7 @@ class MusicTrack(models.Model):
     bpm = models.PositiveSmallIntegerField(null=True, blank=True)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True, blank=True)
     album = models.ForeignKey(Album, on_delete=models.CASCADE, null=True, blank=True)
-    key = models.CharField(
-        max_length=3,
-        choices=[(tag, tag.value) for tag in key.OpenKey],
-        validators=[key_validator],
+    key = KeyField(
         null=True,
         blank=True,
     )
@@ -222,3 +184,14 @@ class MusicTrack(models.Model):
 
     def __str__(self):
         return "{0}".format(self.title)
+
+    def __eq__(self, other):
+        return (
+            self.bpm == other.bpm
+            and self.key == other.key
+            and self.title == other.title
+            and self.genre == other.genre
+            and self.date_released == other.date_released
+            and self.artist == other.artist
+            and self.album == other.album
+        )

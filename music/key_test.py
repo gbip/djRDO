@@ -32,7 +32,7 @@ class TestKeyMethods(unittest.TestCase):
             openkey_name_d = key.OpenKey["D" + str(i)]
 
             self.assertTrue(
-                key.openKeyToCamelotKey[key.camelotToOpenKey[camelot_name_a]]
+                key.openKeyToCamelotKey[key.camelotKeyToOpenKey[camelot_name_a]]
                 == camelot_name_a
             )
             self.assertTrue(
@@ -41,7 +41,7 @@ class TestKeyMethods(unittest.TestCase):
             )
 
             self.assertTrue(
-                key.openKeyToCamelotKey[key.camelotToOpenKey[camelot_name_b]]
+                key.openKeyToCamelotKey[key.camelotKeyToOpenKey[camelot_name_b]]
                 == camelot_name_b
             )
             self.assertTrue(
@@ -54,7 +54,7 @@ class TestKeyMethods(unittest.TestCase):
                 == openkey_name_d
             )
             self.assertTrue(
-                key.camelotToOpenKey[key.openKeyToCamelotKey[openkey_name_d]]
+                key.camelotKeyToOpenKey[key.openKeyToCamelotKey[openkey_name_d]]
                 == openkey_name_d
             )
 
@@ -63,7 +63,7 @@ class TestKeyMethods(unittest.TestCase):
                 == openkey_name_m
             )
             self.assertTrue(
-                key.camelotToOpenKey[key.openKeyToCamelotKey[openkey_name_m]]
+                key.camelotKeyToOpenKey[key.openKeyToCamelotKey[openkey_name_m]]
                 == openkey_name_m
             )
 

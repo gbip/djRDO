@@ -1,192 +1,258 @@
 [
   {
-    "title": "L'aurore",
-    "artist": "Chinese Man",
+    "title": "Anvoyé",
+    "artist": {
+      "name": "Chinese Man"
+    },
     "genre": "Trip Hop",
-    "year": "2017-01-25",
-    "bpm": "85",
+    "year": "2017",
+    "bpm": "86",
+    "key": "4A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
+  },
+  {
+    "title": "Liar",
+    "artist": {
+      "name": "Chinese Man feat Kendra Morris & Dillon Cooper"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "158",
     "key": "8A",
-    "album": "Shikantaza",
-    "album_artist": "Chinese Man",
-    "picture": null
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   },
   {
     "title": "Golden Age",
+    "artist": {
+      "name": "Chinese Man"
+    },
     "genre": "Trip Hop",
-    "year": "2017-01-25",
+    "year": "2017",
     "bpm": "144",
     "key": "2A",
-    "album": "Shikantaza",
-    "album_artist": "Chinese Man"
-  },
-  {
-    "title": "Anvoyé",
-    "artist": "Chinese Man",
-    "year": "2017-01-25",
-    "bpm": "86",
-    "key": "4A",
-    "album": "Shikantaza",
-    "album_artist": "Chinese Man"
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   },
   {
     "title": "Goodnight",
-    "artist": "Chinese Man",
+    "artist": {
+      "name": "Chinese Man"
+    },
     "genre": "Trip Hop",
+    "year": "2017",
     "bpm": "136",
     "key": "8A",
-    "album": "Shikantaza",
-    "album_artist": "Chinese Man"
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   },
   {
     "title": "What You Need",
-    "artist": "Chinese Man feat Vinnie Dewayne, Myke Bogan & Tre Redeau",
+    "artist": {
+      "name": "Chinese Man feat Vinnie Dewayne, Myke Bogan & Tre Redeau"
+    },
     "genre": "Trip Hop",
-    "year": "2017-01-25",
+    "year": "2017",
+    "bpm": "86",
     "key": "10B",
-    "album": "Shikantaza"
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
+  },
+  {
+    "title": "Warriors",
+    "artist": {
+      "name": "Chinese Man"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "144",
+    "key": "7A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
+  },
+  {
+    "title": "Step Back",
+    "artist": {
+      "name": "Chinese Man"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "140",
+    "key": "8A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   },
   {
     "title": "Blah! Featuring Youthstar, Taiwan MC, Illaman",
-    "artist": "Chinese Man feat Youthstar, Taiwan MC & Illaman",
+    "artist": {
+      "name": "Chinese Man feat Youthstar, Taiwan MC & Illaman"
+    },
     "genre": "Trip Hop",
-    "year": "2017-01-25",
+    "year": "2017",
     "bpm": "156",
-    "album": "Shikantaza"
+    "key": "8A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
+  },
+  {
+    "title": "Shikantaza",
+    "artist": {
+      "name": "Chinese Man"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "144",
+    "key": "8A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
+  },
+  {
+    "title": "Wolf",
+    "artist": {
+      "name": "Chinese Man"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "84",
+    "key": "9A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
+  },
+  {
+    "title": "Stone Cold",
+    "artist": {
+      "name": "Chinese Man feat Mariama"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "93",
+    "key": "5A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
+  },
+  {
+    "title": "L'aurore",
+    "artist": {
+      "name": "Chinese Man"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "85",
+    "key": "8A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   },
   {
     "title": "Escape",
-    "artist": "Chinese Man",
+    "artist": {
+      "name": "Chinese Man"
+    },
     "genre": "Trip Hop",
-    "year": "2017-01-25",
+    "year": "2017",
     "bpm": "107",
-    "key": "9A"
-  },
-  {
-    "title": "Sous les étoiles feat Flo",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "85",
     "key": "9A",
-    "album": "The skankin' cat"
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   },
   {
-    "title": "Trickin upon di track - Panda Dub remix",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "140",
-    "key": "9A",
-    "album": "The skankin' cat"
+    "title": "Modern Slave",
+    "artist": {
+      "name": "Chinese Man feat R.A. The Rugged Man"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "94",
+    "key": "7A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   },
   {
-    "title": "Deep in your",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "146",
-    "key": "4A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Skankin cat - Gary Wide remix",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "142",
-    "key": "5A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Earth feat Art-X",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "136",
-    "key": "3A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Rough and tough",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "140",
-    "key": "5A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "The skankin' cat",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "142",
-    "key": "5A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Inna di red",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "142",
+    "title": "The New Crown",
+    "artist": {
+      "name": "Chinese Man feat A-F-R-O, A.S.M. & Taiwan MC"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "80",
     "key": "8A",
-    "album": "The skankin' cat"
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   },
   {
-    "title": "... de monsieur JACK",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "127",
-    "key": "11A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Trouble of the world",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "109",
-    "key": "6A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Cerbère",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "125",
-    "key": "8A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Don't say you have nerver been told feat Jolly Joseph",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "120",
-    "key": "2A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Trickin upon di track feat Simple Spelim",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "140",
-    "key": "8A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Bigvoods - Fabasstone (Dub Invaders) remix",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "120",
-    "key": "10A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "L'étrange skank...",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "120",
-    "key": "4A",
-    "album": "The skankin' cat"
-  },
-  {
-    "title": "Bigvoods",
-    "artist": "Mahom",
-    "year": "2014",
-    "bpm": "120",
-    "key": "10A",
-    "album": "The skankin' cat"
+    "title": "Maläd",
+    "artist": {
+      "name": "Chinese Man"
+    },
+    "genre": "Trip Hop",
+    "year": "2017",
+    "bpm": "128",
+    "key": "7A",
+    "album": {
+      "name": "Shikantaza",
+      "artist": {
+        "name": "Chinese Man"
+      }
+    }
   }
 ]

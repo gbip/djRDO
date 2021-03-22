@@ -98,7 +98,7 @@ class Migration(migrations.Migration):
                 ],
                 max_length=3,
                 null=True,
-                validators=[music_importer.models.key_validator],
+                validators=[],
             ),
         ),
     ]

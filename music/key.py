@@ -102,7 +102,7 @@ class OpenKey(str, enum.Enum):
     M12 = "12m"
 
 
-camelotToOpenKey = {
+camelotKeyToOpenKey = {
     CamelotKey.B1: OpenKey.D6,
     CamelotKey.B2: OpenKey.D7,
     CamelotKey.B3: OpenKey.D8,
@@ -131,7 +131,7 @@ camelotToOpenKey = {
 """
 Generate inverted dict mappings
 """
-openKeyToCamelotKey = {value: key for (key, value) in camelotToOpenKey.items()}
+openKeyToCamelotKey = {value: key for (key, value) in camelotKeyToOpenKey.items()}
 
 musicKeyToOpenKey = {
     MusicKey.C_MAJOR: OpenKey.D1,

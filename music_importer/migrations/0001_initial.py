@@ -109,7 +109,7 @@ class Migration(migrations.Migration):
                             (music.key.OpenKey["M12"], "12m"),
                         ],
                         max_length=3,
-                        validators=[music_importer.models.key_validator],
+                        validators=[],
                     ),
                 ),
                 (

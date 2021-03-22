@@ -80,12 +80,19 @@
     function jsonize_tags(tags) {
         return {
             title: tags.title,
-            artist: tags.artist,
+            artist: {
+                name:tags.artist
+            } ,
             genre: tags.genre,
             year: tags.year,
             bpm: tags.TBPM.data,
             key: tags.TKEY.data,
-            album: tags.album,
+            album: {
+                name: tags.album,
+                artist: {
+                    name: tags.TPE2.data,
+                }
+            }
             /*picture: {
                 format: tags.picture.format,
                 data: tags.picture.data,
@@ -108,9 +115,9 @@
         let result = [];
         for (const file of Array.from(this.files)) {
             let v = await parse(file);
-            console.log(JSON.stringify(v));
             result.push(v);
         }
+        console.log(JSON.stringify(result))
         await send_music_tags("{% url 'music_importer:upload' %}", result);
     }
     let btn = document.querySelector('#btn-import');

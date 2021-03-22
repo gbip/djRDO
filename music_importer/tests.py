@@ -1,10 +1,10 @@
 import json
 
-from django.core import serializers
+from music_importer.models import Artist, Album
+from music_importer.serializer_ext import MusicSerializerExt
+
 
 # Create your tests here.
-from music import key
-from music_importer.models import MusicTrack
 
 
 def import_tracks_from_test_json(path, l, user):
@@ -15,26 +15,16 @@ def import_tracks_from_test_json(path, l, user):
     :param user: The user associated with each track
     :return: Nothing
     """
-    with open(path) as file:
+    with open(path, "rb") as file:
         tracks = json.load(file)
         for track in tracks:
-            # Process tracks to parse the key from Camelot Key to open key
-            if track.get("key") is not None:
-                track["key"] = key.camelotToOpenKey[key.CamelotKey(track["key"])]
+            l(track)
 
-            if l is not None:
-                l(track)
+            serializer = MusicSerializerExt(data=track)
+            serializer.initial_data["user"] = user.pk
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
 
-        data = MusicTrack.objects.normalize_tracks_to_json(tracks, user)
-        objs_with_deferred_fields = []
-        for obj in serializers.deserialize(
-            "json",
-            data,
-            handle_forward_references=True,
-        ):
-            obj.save()
-            if obj.deferred_fields is not None:
-                objs_with_deferred_fields.append(obj)
-
-        for obj in objs_with_deferred_fields:
-            obj.save_deferred_fields()
+        print("Objects : ")
+        print("\t Artists :" + str(Artist.objects.all()))
+        print("\t Album :" + str(Album.objects.all()))
