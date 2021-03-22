@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from music import key
-from music_importer.models import MusicTrack, Artist, Album
+from music_importer.models import MusicTrack, Artist, Album, MusicManager
 from music_importer.tests import import_tracks_from_test_json
 
 
@@ -13,7 +13,11 @@ class MusicImporterModelTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create(username="test_user", password="test_password")
-        import_tracks_from_test_json(lambda x: cls.tracks.append(x), cls.user)
+        import_tracks_from_test_json(
+            "music_importer/test_data/tracks.json",
+            lambda x: cls.tracks.append(x),
+            cls.user,
+        )
 
     def test_count(self):
         self.assertEqual(len(self.tracks), MusicTrack.objects.count())
@@ -46,7 +50,7 @@ class MusicImporterModelTestCase(TestCase):
             album=album,
             artist=artist,
             bpm=test_case.get("bpm"),
-            date_released=test_case.get("year"),
+            date_released=MusicManager.normalize_date(test_case.get("year")),
         )
 
         self.assertIsNotNone(track)
@@ -83,3 +87,6 @@ class MusicImporterModelTestCase(TestCase):
             key.camelotToOpenKey[key.CamelotKey.A8],
             ("Invalid track key : %r" % track.key),
         )
+
+    def test_date_normalization(self):
+        self.assertEqual(MusicManager.normalize_date("2014"), "2014-01-01")

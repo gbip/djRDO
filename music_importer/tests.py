@@ -7,7 +7,7 @@ from music import key
 from music_importer.models import MusicTrack
 
 
-def import_tracks_from_test_json(l, user):
+def import_tracks_from_test_json(path, l, user):
     """
     Import music tracks from test_data/tracks.json into the django database
 
@@ -15,7 +15,7 @@ def import_tracks_from_test_json(l, user):
     :param user: The user associated with each track
     :return: Nothing
     """
-    with open("music_importer/test_data/tracks.json") as file:
+    with open(path) as file:
         tracks = json.load(file)
         for track in tracks:
             # Process tracks to parse the key from Camelot Key to open key

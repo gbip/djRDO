@@ -75,6 +75,21 @@ class Album(models.Model):
 
 class MusicManager(models.Manager):
     @staticmethod
+    def normalize_date(date_str):
+        """
+        Takes care of normalizing date values to that django can validate those dates. Currently takes care of
+        appending a month and a day if the date only holds the year.
+
+        :param date_str: A date to be normalized
+        :return: The normalized date
+        """
+        result = date_str
+        if result is not None:
+            if len(date_str) == 4:
+                result += "-01-01"
+        return result
+
+    @staticmethod
     def _normalize_json(track, user, album_name_list):
         user_key = user.pk
         track_fields = dict()
@@ -83,7 +98,11 @@ class MusicManager(models.Manager):
         track_fields["title"] = track["title"]
         track_fields["bpm"] = track.get("bpm")
         track_fields["key"] = track.get("key")
-        track_fields["date_released"] = track.get("year")
+        date = track.get("year")
+        track_fields["date_released"] = (
+            MusicManager.normalize_date(date) if date is not None else None
+        )
+
         track_fields["genre"] = track.get("genre")
         track_fields["user"] = user_key
 
