@@ -1,13 +1,19 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import ModelForm
-from django.http import HttpResponse, Http404
+from django.forms import ModelForm, DateField
+from django.http import (
+    HttpResponse,
+    Http404,
+    HttpResponseRedirect,
+    HttpResponseBadRequest,
+)
+from django.urls import reverse
 from django.views import generic
 
 from .models import MusicTrack
 
 
-class TrackFrom(ModelForm):
+class TrackForm(ModelForm):
     class Meta:
         model = MusicTrack
         fields = [
@@ -23,8 +29,8 @@ class TrackFrom(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["date_released"].input_format(
-            [
+        self.fields["date_released"] = DateField(
+            input_format=[
                 "%Y",  # '2006'
                 "%Y-%m-%d",  # '2006-10-25'
                 "%m/%d/%Y",  # '10/25/2006'
@@ -53,6 +59,10 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 @login_required
 def upload(request):
     if request.method == "POST" and request.content_type == "application/json":
-        return HttpResponse("Ok")
+        form = TrackForm(request.POST)
+        if form.is_valid():
+            print(form)
+            return HttpResponseRedirect(reverse("music_importer:index"))
+        return HttpResponseBadRequest
     else:
         raise Http404("Page not found")

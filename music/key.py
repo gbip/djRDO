@@ -2,6 +2,7 @@
 This modules defines how to represent music keys.
 """
 import enum
+import json
 
 
 @enum.unique
@@ -9,6 +10,7 @@ class MusicKey(enum.Enum):
     """
     Standard music key representation for all elements of the 5th wheel
     """
+
     C_MAJOR = "C Major"  # 1d
     G_MAJOR = "G Major"  # 2d
     D_MAJOR = "D Major"  # 3d
@@ -40,6 +42,7 @@ class CamelotKey(enum.Enum):
     """
     Camelot music key representation
     """
+
     B1 = "1B"
     B2 = "2B"
     B3 = "3B"
@@ -67,10 +70,12 @@ class CamelotKey(enum.Enum):
 
 
 @enum.unique
-class OpenKey(enum.Enum):
+class OpenKey(str, enum.Enum):
     """
-    Openkey music key representation
+    Openkey music key representation.
+    Subclassing str allows for easy json serialization/deserialization.
     """
+
     D1 = "1d"
     D2 = "2d"
     D3 = "3d"
@@ -121,7 +126,7 @@ camelotToOpenKey = {
     CamelotKey.A9: OpenKey.M2,
     CamelotKey.A10: OpenKey.M3,
     CamelotKey.A11: OpenKey.M4,
-    CamelotKey.A12: OpenKey.M5
+    CamelotKey.A12: OpenKey.M5,
 }
 """
 Generate inverted dict mappings

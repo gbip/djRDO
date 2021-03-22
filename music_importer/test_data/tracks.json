@@ -16,7 +16,8 @@
     "year": "2017-01-25",
     "bpm": "144",
     "key": "2A",
-    "album": "Shikantaza"
+    "album": "Shikantaza",
+    "album_artist": "Chinese Man"
   },
   {
     "title": "Anvoyé",
@@ -24,7 +25,8 @@
     "year": "2017-01-25",
     "bpm": "86",
     "key": "4A",
-    "album": "Shikantaza"
+    "album": "Shikantaza",
+    "album_artist": "Chinese Man"
   },
   {
     "title": "Goodnight",
@@ -32,7 +34,8 @@
     "genre": "Trip Hop",
     "bpm": "136",
     "key": "8A",
-    "album": "Shikantaza"
+    "album": "Shikantaza",
+    "album_artist": "Chinese Man"
   },
   {
     "title": "What You Need",

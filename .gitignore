@@ -268,3 +268,6 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/django,intellij,virtualenv
 
 /.idea/
+
+music_importer/test_data/django_formatted_tracks.json
+music_importer/test_data/toto.json
