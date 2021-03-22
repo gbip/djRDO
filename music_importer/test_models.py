@@ -1,62 +1,9 @@
 from django.contrib.auth.models import User
-from django.core import serializers
 from django.test import TestCase
-import json
-
-from django.utils.dateparse import parse_date
 
 from music import key
 from music_importer.models import MusicTrack, Artist, Album
-
-
-class MusicImporterSerializerTestCase(TestCase):
-    def test_natural_key_creation(self):
-        user = User.objects.create(username="test_user", password="test_password")
-        with open("music_importer/test_data/tracks.json") as file:
-            tracks = json.load(file)
-            track = tracks[0]  # "L'aurore"
-            if track.get("key") is not None:
-                track["key"] = key.camelotToOpenKey[key.CamelotKey(track["key"])]
-            data = MusicTrack.objects.normalize_tracks_json([track], user)
-            objs_with_deferred_fields = []
-            for obj in serializers.deserialize(
-                "json",
-                data,
-                handle_forward_references=True,
-            ):
-                obj.save()
-                if obj.deferred_fields is not None:
-                    objs_with_deferred_fields.append(obj)
-
-            for obj in objs_with_deferred_fields:
-                obj.save_deferred_fields()
-
-        track = MusicTrack.objects.get(title="L'aurore")
-        self.assertEqual(track.bpm, 85, "Invalid bpm : %r" % track.bpm)
-        self.assertEqual(
-            track.title, "L'aurore", "Invalid track name : %r" % track.title
-        )
-        self.assertEqual(
-            track.artist.name,
-            "Chinese Man",
-            ("Invalid artist name : %r" % track.artist.name),
-        )
-        self.assertEqual(
-            track.album.name,
-            "Shikantaza",
-            ("Invalid album name : %r" % track.album.name),
-        )
-        self.assertEqual(
-            track.album.artist.name,
-            "Chinese Man",
-            ("Invalide album artist name : %r" % track.album.artist.name),
-        )
-
-        self.assertEqual(
-            track.key,
-            key.camelotToOpenKey[key.CamelotKey.A8],
-            ("Invalid track key : %r" % track.key),
-        )
+from music_importer.tests import import_tracks_from_test_json
 
 
 class MusicImporterModelTestCase(TestCase):
@@ -66,34 +13,7 @@ class MusicImporterModelTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create(username="test_user", password="test_password")
-        with open("music_importer/test_data/tracks.json") as file:
-            tracks = json.load(file)
-            for track in tracks:
-                # Convert camelot key to open key since we are not going through the form validation
-                if track.get("key") is not None:
-                    track["key"] = key.camelotToOpenKey[key.CamelotKey(track["key"])]
-                # if track.get("year") is not None:
-                #    track["year"] = parse_date(track["year"])
-                cls.tracks.append(track)
-
-        data = MusicTrack.objects.normalize_tracks_json(cls.tracks, cls.user)
-
-        objs_with_deferred_fields = []
-        for obj in serializers.deserialize(
-            "json",
-            data,
-            handle_forward_references=True,
-        ):
-            obj.save()
-            if obj.deferred_fields is not None:
-                objs_with_deferred_fields.append(obj)
-
-        for obj in objs_with_deferred_fields:
-            obj.save_deferred_fields()
-
-        print(MusicTrack.objects.all())
-        print(Album.objects.all())
-        print(Artist.objects.all())
+        import_tracks_from_test_json(lambda x: cls.tracks.append(x), cls.user)
 
     def test_count(self):
         self.assertEqual(len(self.tracks), MusicTrack.objects.count())
@@ -134,3 +54,32 @@ class MusicImporterModelTestCase(TestCase):
     def test_null_field_handling(self):
         for track in self.tracks[1:-1]:
             self.validate_data(track)
+
+    def test_natural_key_creation(self):
+
+        track = MusicTrack.objects.get(title="L'aurore")
+        self.assertEqual(track.bpm, 85, "Invalid bpm : %r" % track.bpm)
+        self.assertEqual(
+            track.title, "L'aurore", "Invalid track name : %r" % track.title
+        )
+        self.assertEqual(
+            track.artist.name,
+            "Chinese Man",
+            ("Invalid artist name : %r" % track.artist.name),
+        )
+        self.assertEqual(
+            track.album.name,
+            "Shikantaza",
+            ("Invalid album name : %r" % track.album.name),
+        )
+        self.assertEqual(
+            track.album.artist.name,
+            "Chinese Man",
+            ("Invalide album artist name : %r" % track.album.artist.name),
+        )
+
+        self.assertEqual(
+            track.key,
+            key.camelotToOpenKey[key.CamelotKey.A8],
+            ("Invalid track key : %r" % track.key),
+        )

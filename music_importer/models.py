@@ -113,7 +113,7 @@ class MusicManager(models.Manager):
         return model
 
     @staticmethod
-    def normalize_tracks_json(tracks, user):
+    def normalize_tracks_to_json(tracks, user):
         """
         Normalize an array of track json to a single json object deserializable through django deserialization module
         See MusicManager.normalize_track_json for more information the json format expected.
@@ -134,7 +134,7 @@ class MusicManager(models.Manager):
         return json.dumps(arr)
 
     @staticmethod
-    def normalize_track_json(track, user):
+    def normalize_track_to_json(track, user):
         """
         Normalize a json so that it can be loaded through django deserialization module.
 
@@ -148,81 +148,6 @@ class MusicManager(models.Manager):
 
         result = MusicManager._normalize_json(track, user)
         return json.dumps(result)
-
-    def import_track(self, track, user):
-        """
-        Import a track, handling null fields as needed
-        :param track: python dictionary representing a track
-        :param user: user that will be the owner of the track and all objects created for its representation (album,
-            artist)
-        """
-        # Try to import foreign keys. First check if the foreign key field is present in the provided data
-        #
-        # album : first check for the album artist, then for the album
-        album_artist = track.get("album_artist")
-        if album_artist is not None:
-            album_artist, _ = Artist.objects.get_or_create(
-                name=track["album_artist"], user=user
-            )
-            album_artist.save()
-
-        album = track.get("album")
-        if album is not None:
-            if album_artist is not None:
-                album, _ = Album.objects.get_or_create(
-                    name=track["album"], artist=album_artist, user=user
-                )
-                album.save()
-            else:
-                album, _ = Album.objects.get_or_create(name=track["album"], user=user)
-                album.save()
-
-        artist = track.get("artist")
-        if artist is not None:
-            artist, _ = Artist.objects.get_or_create(name=track["artist"], user=user)
-            artist.save()
-
-        self.create_track(
-            user=user,
-            title=track["title"],
-            artist=artist,
-            album=album,
-            bpm=track.get("bpm"),
-            track_key=track.get("key"),
-            date_released=track.get("year"),
-        )
-
-    def create_track(
-        self,
-        user,
-        title,
-        artist=None,
-        album=None,
-        bpm=None,
-        track_key=None,
-        date_released=None,
-    ):
-        """
-        Insert a new track within the database
-        :param date_released: Optional track release date
-        :param track_key: Optional track key
-        :param bpm: Optional track BPM
-        :param album: Optional album id
-        :param artist: Optional artist id
-        :param title: Mandatory title string
-        :param user: A django user to use as the owner of the track
-        """
-        # Create music
-        music = self.create(
-            title=title,
-            bpm=bpm,
-            artist=artist,
-            album=album,
-            key=track_key,
-            date_released=date_released,
-            user=user,
-        )
-        return music
 
 
 def key_validator(val):

@@ -1,25 +1,22 @@
-from django.contrib.auth.models import User
-from django.core import serializers
-from django.http import HttpResponseRedirect
-from django.test import TestCase, Client
-from django.urls import reverse
 import json
 
-from django.utils.dateparse import parse_date
+from django.contrib.auth.models import User
+from django.test import TestCase, Client
+from django.urls import reverse
 
 from music import key
-from music_importer.models import MusicTrack, Artist, Album
 
 
 class MusicImporterViewTestCase(TestCase):
     tracks = []
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
         user = User.objects.create_user(
             username="test_user", password="test_password", email="nomail@nomail.com"
         )
-        self.client = Client()
-        self.client.login(username="test_user", password="test_password")
+        cls.client = Client()
+        cls.client.login(username=user.username, password=user.password)
         with open("music_importer/test_data/tracks.json") as file:
             tracks = json.load(file)
             for track in tracks:
@@ -29,7 +26,7 @@ class MusicImporterViewTestCase(TestCase):
                 if track.get("year") is not None:
                     # Modify year to only provide a year value since most music tags do not provide an exact date
                     track["year"] = track["year"][:4]
-                self.tracks.append(track)
+                cls.tracks.append(track)
 
     def test_login_only_upload(self):
         response = self.client.get(reverse("music_importer:index"))
@@ -41,3 +38,4 @@ class MusicImporterViewTestCase(TestCase):
             url, self.tracks[0], content_type="application/json"
         )
         print(response.status_code)
+        self.assertEqual(response.status_code, 200)
