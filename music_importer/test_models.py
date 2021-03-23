@@ -146,7 +146,6 @@ class MusicImporterModelTestCase(TestCase):
                 )
                 self.assertIsNotNone(album)
             except:
-                print("error")
                 raise RuntimeError("Not unique")
 
     def test_all_track_import(self):

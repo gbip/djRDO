@@ -47,11 +47,8 @@ class MusicImporterSerializerSpecialBehaviourTestCase(TestCase):
                 serializer = MusicTrackSerializerW(data=track)
                 serializer.initial_data["user"] = self.user.pk
                 valid = serializer.is_valid()
-                if not valid:
-                    print(serializer.errors)
                 self.assertTrue(valid)
                 serializer.save()
-            print(Album.objects.all())
             album = Album.objects.get(name="Groovy psychology")
             self.assertEqual(album.artist.name, "Sigmund Freud")
             self.assertEqual(Album.objects.count(), 1)

@@ -5,6 +5,8 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from music import key
+from music_importer.models import MusicTrack
+from music_importer.serializer_w import MusicTrackSerializerW
 from music_importer.tests import import_tracks_from_test_json
 
 
@@ -34,8 +36,23 @@ class MusicImporterViewTestCase(TestCase):
 
     def test_loading_one_track(self):
         url = reverse("music_importer:upload")
+        # Data that will be sent to the API
+        post_data = [self.tracks[0]]
+
+        # Data that will be used to compare the stored data with
+        data = self.tracks[0]
+        data["user"] = self.user.pk
+        ser = MusicTrackSerializerW(data=data)
+        valid = ser.is_valid()
+        print(ser.errors)
+        self.assertTrue(valid)
+
         response = self.client.post(
-            url, self.tracks[0], content_type="application/json"
+            url, json.dumps(post_data), content_type="application/json"
         )
-        print(response.status_code)
-        self.assertEqual(response.status_code, 200)
+        ser.save()
+        self.assertEqual(response.status_code, 302)
+
+        # Retrieve objects and check for equality
+        d = MusicTrack.objects.filter(title=ser.data["title"])
+        self.assertEqual(d[0], d[1])
