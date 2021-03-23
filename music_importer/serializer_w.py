@@ -7,21 +7,21 @@ from rest_framework.fields import CharField, IntegerField
 from music_importer.models import MusicTrack, Album, Artist, KeyField
 
 
-class ArtistSerializerExt(serializers.ModelSerializer):
+class ArtistSerializerW(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = ["name"]
 
 
-class AlbumSerializerExt(serializers.ModelSerializer):
-    artist = ArtistSerializerExt(required=False)
+class AlbumSerializerW(serializers.ModelSerializer):
+    artist = ArtistSerializerW(required=False)
 
     class Meta:
         model = Album
         fields = ["name", "artist"]
 
 
-class MusicSerializerExt(serializers.ModelSerializer):
+class MusicTrackSerializerW(serializers.ModelSerializer):
     """
     This serializer is responsible for writing tracks to the database. It supports album and artist fields.
     Upon track creation, if an artist field is present, and it is missing from the database then such an artist will be created
@@ -33,8 +33,8 @@ class MusicSerializerExt(serializers.ModelSerializer):
     3) If the album does simply not exist, create it
     """
 
-    artist = ArtistSerializerExt(required=False)
-    album = AlbumSerializerExt(required=False)
+    artist = ArtistSerializerW(required=False)
+    album = AlbumSerializerW(required=False)
     bpm = IntegerField(min_value=0, required=False)
     key = CharField(
         validators=[KeyField.validate_key],

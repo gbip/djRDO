@@ -4,7 +4,7 @@ This module holds common test code
 import json
 
 from music_importer.models import Artist, Album
-from music_importer.serializer_ext import MusicSerializerExt
+from music_importer.serializer_w import MusicTrackSerializerW
 
 
 # Create your tests here.
@@ -25,7 +25,7 @@ def import_tracks_from_test_json(path, l, user):
             if l is not None:
                 l(track)
 
-            serializer = MusicSerializerExt(data=track)
+            serializer = MusicTrackSerializerW(data=track)
             serializer.initial_data["user"] = user.pk
             serializer.is_valid(raise_exception=True)
             serializer.save()

@@ -19,11 +19,8 @@ class MusicImporterViewTestCase(TestCase):
         cls.user.set_password("test_password")
         cls.user.save()
 
-        import_tracks_from_test_json(
-            "music_importer/test_data/tracks.json",
-            lambda x: cls.tracks.append(x),
-            cls.user,
-        )
+        with open("music_importer/test_data/tracks.json", "rb") as file:
+            cls.tracks = json.load(file)
 
     def setUp(self):
         logged_in = self.client.login(

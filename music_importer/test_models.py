@@ -8,7 +8,7 @@ from rest_framework.renderers import JSONRenderer
 
 from music import key
 from music_importer.models import MusicTrack, Artist, Album, MusicManager
-from music_importer.serializer_ext import MusicSerializerExt
+from music_importer.serializer_w import MusicTrackSerializerW
 from music_importer.tests import import_tracks_from_test_json
 
 
@@ -44,11 +44,11 @@ class MusicImporterSerializerTestCase(TestCase):
             key="3d",
         )
 
-        serializer = MusicSerializerExt(track)
+        serializer = MusicTrackSerializerW(track)
         json = JSONRenderer().render(serializer.data)
         stream = io.BytesIO(json)
         data = JSONParser().parse(stream)
-        serializer2 = MusicSerializerExt(data=data)
+        serializer2 = MusicTrackSerializerW(data=data)
         serializer2.user = self.user
         self.assertTrue(serializer2.is_valid())
         serializer2.save()

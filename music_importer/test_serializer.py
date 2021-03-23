@@ -5,7 +5,7 @@ from django.test import TestCase
 from rest_framework.exceptions import ErrorDetail
 
 from music_importer.models import Album, MusicTrack
-from music_importer.serializer_ext import MusicSerializerExt
+from music_importer.serializer_w import MusicTrackSerializerW
 
 
 class MusicImporterSerializerSpecialBehaviourTestCase(TestCase):
@@ -20,7 +20,7 @@ class MusicImporterSerializerSpecialBehaviourTestCase(TestCase):
         with open("music_importer/test_data/simple_track.json", "rb") as file:
             tracks = json.load(file)
             self.assertEqual(len(tracks), 1)
-            serializer = MusicSerializerExt(data=tracks[0])
+            serializer = MusicTrackSerializerW(data=tracks[0])
             serializer.initial_data["user"] = self.user.pk
             valid = serializer.is_valid()
             self.assertTrue(valid)
@@ -44,7 +44,7 @@ class MusicImporterSerializerSpecialBehaviourTestCase(TestCase):
         with open(path, "rb") as file:
             tracks = json.load(file)
             for track in tracks:
-                serializer = MusicSerializerExt(data=track)
+                serializer = MusicTrackSerializerW(data=track)
                 serializer.initial_data["user"] = self.user.pk
                 valid = serializer.is_valid()
                 if not valid:
@@ -78,7 +78,7 @@ class MusicImporterSerializerFailsTestCase(TestCase):
             tracks = json.load(file)
             self.assertEqual(len(tracks), len(error))
             for (track, error) in zip(tracks, error):
-                serializer = MusicSerializerExt(data=track)
+                serializer = MusicTrackSerializerW(data=track)
                 serializer.initial_data["user"] = self.user.pk
                 valid = serializer.is_valid()
                 self.assertFalse(valid)
