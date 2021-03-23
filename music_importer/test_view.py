@@ -4,13 +4,15 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from music import key
 from music_importer.models import MusicTrack
 from music_importer.serializer_w import MusicTrackSerializerW
-from music_importer.tests import import_tracks_from_test_json
 
 
 class MusicImporterViewTestCase(TestCase):
+    """
+    Test that the upload view correctly works
+    """
+
     tracks = []
 
     @classmethod
@@ -30,11 +32,31 @@ class MusicImporterViewTestCase(TestCase):
         )
         self.assertTrue(logged_in)
 
-    def test_login_only_upload(self):
+    def test_upload_permissions(self):
+        client = Client()
+
+        # /index, not logged in
+        response = client.get(reverse("music_importer:index"))
+        redirect_url = (
+            reverse("accounts:login") + "?next=" + reverse("music_importer:index")
+        )
+        self.assertRedirects(response, redirect_url)
+
+        # /index, logged in
         response = self.client.get(reverse("music_importer:index"))
         self.assertEqual(response.status_code, 200)
 
+        # /upload not logged in
+        response = client.get(reverse("music_importer:upload"))
+        redirect_url = (
+            reverse("accounts:login") + "?next=" + reverse("music_importer:upload")
+        )
+        self.assertRedirects(response, redirect_url)
+
     def test_loading_one_track(self):
+        """
+        Load a single track and verify it's value
+        """
         url = reverse("music_importer:upload")
         # Data that will be sent to the API
         post_data = [self.tracks[0]]
@@ -56,3 +78,11 @@ class MusicImporterViewTestCase(TestCase):
         # Retrieve objects and check for equality
         d = MusicTrack.objects.filter(title=ser.data["title"])
         self.assertEqual(d[0], d[1])
+
+    def test_loading_all_tracks(self):
+        url = reverse("music_importer:upload")
+        response = self.client.post(
+            url, json.dumps(self.tracks), content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(MusicTrack.objects.count(), len(self.tracks))
