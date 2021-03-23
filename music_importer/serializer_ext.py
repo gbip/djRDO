@@ -1,8 +1,8 @@
 """
-This module defines a writable json interface
+This module defines a writable json interface that allows to serialize a track that embeds an artist and an album field.
 """
 from rest_framework import serializers
-from rest_framework.fields import CharField
+from rest_framework.fields import CharField, IntegerField
 
 from music_importer.models import MusicTrack, Album, Artist, KeyField
 
@@ -14,7 +14,7 @@ class ArtistSerializerExt(serializers.ModelSerializer):
 
 
 class AlbumSerializerExt(serializers.ModelSerializer):
-    artist = ArtistSerializerExt()
+    artist = ArtistSerializerExt(required=False)
 
     class Meta:
         model = Album
@@ -22,8 +22,20 @@ class AlbumSerializerExt(serializers.ModelSerializer):
 
 
 class MusicSerializerExt(serializers.ModelSerializer):
-    artist = ArtistSerializerExt()
-    album = AlbumSerializerExt()
+    """
+    This serializer is responsible for writing tracks to the database. It supports album and artist fields.
+    Upon track creation, if an artist field is present, and it is missing from the database then such an artist will be created
+    For an album the logic is a little bit more complicated.
+    First if this album has an artist present we create the artist if needed and use it as Album.artist key.
+    Then we use the of Album.insert(), that handles :
+    1) If the same album exist without an artist, then add the artist to the album
+    2) If the same album exist with an artist while we don't provide one, then use this album
+    3) If the album does simply not exist, create it
+    """
+
+    artist = ArtistSerializerExt(required=False)
+    album = AlbumSerializerExt(required=False)
+    bpm = IntegerField(min_value=0, required=False)
     key = CharField(
         validators=[KeyField.validate_key],
         max_length=3,
@@ -62,14 +74,6 @@ class MusicSerializerExt(serializers.ModelSerializer):
                     **album_artist_data, user=user
                 )
             album_data["artist"] = album_artist
-            Album.objects.insert(user=user, **album_data)
-            album, _ = Album.objects.get_or_create(**album_data, user=user)
+            album = Album.objects.insert(user=user, **album_data)
 
         return MusicTrack.objects.create(album=album, artist=artist, **validated_data)
-
-
-class MultipleMusicSerializerExt(serializers.Serializer):
-    tracks = MusicSerializerExt(many=True)
-
-    class Meta:
-        fields = ["tracks"]

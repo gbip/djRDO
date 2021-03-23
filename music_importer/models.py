@@ -128,7 +128,7 @@ class Album(models.Model):
         return (
             self.name
             + " - "
-            + str(self.artist.name if self.artist.name is not None else None)
+            + str(self.artist.name if self.artist is not None else None)
         )
 
 

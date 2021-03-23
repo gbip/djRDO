@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Album without name",
+    "album": {
+      "artist": {
+        "name": "My Artist"
+      }
+    }
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Invalid Bpm",
+    "bpm": "187.6"
+  },
+  {
+    "title": "Invalid Bpm 2",
+    "bpm": "-54"
+  }
+]

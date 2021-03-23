@@ -1,0 +1,17 @@
+[
+    {
+    "title": "Album artist track 2",
+    "album": {
+      "name": "Groovy psychology"
+    }
+  },
+  {
+    "title": "Album Artist track 1",
+    "album": {
+      "name": "Groovy psychology",
+      "artist": {
+        "name": "Sigmund Freud"
+      }
+    }
+  }
+]

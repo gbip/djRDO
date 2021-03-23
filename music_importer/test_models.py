@@ -13,6 +13,10 @@ from music_importer.tests import import_tracks_from_test_json
 
 
 class MusicImporterSerializerTestCase(TestCase):
+    """
+    Test that the serializer is able to serialize/deserialize it's own data
+    """
+
     @classmethod
     def setUpTestData(cls):
         cls.user = User.objects.create(username="test_user", password="test_password")
@@ -57,6 +61,10 @@ class MusicImporterSerializerTestCase(TestCase):
 
 
 class MusicImporterModelTestCase(TestCase):
+    """
+    Test that we are able to import real track metadata
+    """
+
     tracks = []
     user = None
 
@@ -70,6 +78,9 @@ class MusicImporterModelTestCase(TestCase):
         )
 
     def test_count(self):
+        """
+        Verify that we have the right number of album in our database
+        """
         self.assertEqual(len(self.tracks), MusicTrack.objects.count())
         # Count the number of unique albums
         album_count = len(
@@ -86,6 +97,11 @@ class MusicImporterModelTestCase(TestCase):
         self.assertEqual(album_count, Album.objects.count())
 
     def validate_data(self, test_case):
+        """
+        Validate that the database data matches the track data
+
+        :param test_case: a dict representing a track
+        """
         # Fetch artist ID
         artist = test_case.get("artist")
         if artist is not None:
@@ -118,6 +134,11 @@ class MusicImporterModelTestCase(TestCase):
         self.assertIsNotNone(track)
 
     def validate_uniqueness(self, test_case):
+        """
+        Validate that we have the right amount of album in the database
+
+        :param test_case: A dict representing a track
+        """
         track = MusicTrack.objects.get(title=test_case["title"], user=self.user)
         self.assertIsNotNone(track)
         if test_case.get("album") is not None:
@@ -130,13 +151,18 @@ class MusicImporterModelTestCase(TestCase):
                 print("error")
                 raise RuntimeError("Not unique")
 
-    def test_null_field_handling(self):
+    def test_all_track_import(self):
+        """
+        Verify that the database is in a state consistent with the collection of track loaded
+        """
         for track in self.tracks[1:-1]:
             self.validate_data(track)
             self.validate_uniqueness(track)
 
     def test_simple_track(self):
-
+        """
+        Verify by hand that a track has been correctly imported
+        """
         track = MusicTrack.objects.get(title="L'aurore")
         self.assertEqual(track.bpm, 85, "Invalid bpm : %r" % track.bpm)
         self.assertEqual(
@@ -165,4 +191,7 @@ class MusicImporterModelTestCase(TestCase):
         )
 
     def test_date_normalization(self):
+        """
+        Check the date normalizer behaviour
+        """
         self.assertEqual(MusicManager.normalize_date("2014"), "2014-01-01")

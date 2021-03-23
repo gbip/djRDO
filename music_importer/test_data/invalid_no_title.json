@@ -1,0 +1,17 @@
+[
+  {
+    "artist": {
+      "name": "SuperDuperArtist"
+    },
+    "genre": "Test Case",
+    "year": "2021",
+    "bpm": "7300",
+    "key": "5A",
+    "album": {
+      "name": "TestingAlbumRecord",
+      "artist": {
+        "name": "AnOtherCoolPerson"
+      }
+    }
+  }
+]
