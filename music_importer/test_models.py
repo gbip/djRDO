@@ -85,13 +85,11 @@ class MusicImporterModelTestCase(TestCase):
         # Count the number of unique albums
         album_count = len(
             set(
-                map(
-                    lambda x: x.get("name"),
-                    filter(
-                        lambda x: x is not None,
-                        map(lambda t: t.get("album"), self.tracks),
-                    ),
-                )
+                [
+                    t.get("album").get("name")
+                    for t in self.tracks
+                    if t.get("album") is not None
+                ]
             )
         )
         self.assertEqual(album_count, Album.objects.count())
