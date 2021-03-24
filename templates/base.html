@@ -6,8 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'bulma.min.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/all.css' %}"> <!--load all styles -->
+    {% block header %} {% endblock %}
 </head>
 <body>
+{% include "navbar.html" %}
 <section class="section">
     <div class="container">
 
@@ -19,3 +23,5 @@
 </section>
 </body>
 </html>
+{% block script %}
+{% endblock %}
