@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }} profile{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <h2 class="title is-2">{{ user }} profile</h2>
+            <div class="content">
+                <div class="block">
+                    <strong>Email :</strong>
+                    <p>{{ user.email }}</p>
+                    <strong>Inscription date : </strong>{{ user.date_joined }}
+                </div>
+                <div class="block">
+                    <button class="button">Logout</button>
+                    <a class="button " href="{% url 'accounts:password_change' %}">Change password</a>
+
+                    <form method="post" action="{% url 'accounts:delete_account' %}" style="display: contents">
+                        {% csrf_token %}
+                        <input type="submit" value="Delete account" class="button is-danger"/>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box">
+            <h2 class="title is-2">Music statistics</h2>
+            <p>
+                You have uploaded <strong>{{ tracks }}</strong> tracks to djRDO.
+            </p>
+            {% if missing_bpm != 0 %}
+                <article class="message is-warning">
+                    <div class="message-header">
+                        <p>Missing BPM</p>
+                        <button class="delete" aria-label="delete"></button>
+                    </div>
+                    <div class="message-body">
+                        It seems that you have {{ missing_bpm }} tracks missing a bpm field in their metada.ta
+                    </div>
+                </article>
+            {% endif %}
+            {% if missing_key != 0 %}
+                <article class="message is-warning">
+                    <div class="message-header">
+                        <p>Missing Key</p>
+                        <button class="delete" aria-label="delete"></button>
+                    </div>
+                    <div class="message-body">
+                        It seems that you have {{ missing_bpm }} tracks missing a key field in their metadata.
+                    </div>
+                </article>
+            {% endif %}
+        </div>
+    </div>
+
+
+{% endblock %}

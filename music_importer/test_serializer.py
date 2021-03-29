@@ -1,6 +1,6 @@
 import json
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.exceptions import ErrorDetail
 
@@ -11,7 +11,9 @@ from music_importer.serializer_w import MusicTrackSerializerW
 class MusicImporterSerializerSpecialBehaviourTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create(username="test_user", password="test_password")
+        cls.user = get_user_model().objects.create(
+            username="test_user", password="test_password"
+        )
 
     def test_simple_track(self):
         """
@@ -68,7 +70,9 @@ class MusicImporterSerializerFailsTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create(username="test_user", password="test_password")
+        cls.user = get_user_model().objects.create(
+            username="test_user", password="test_password"
+        )
 
     def verify_error(self, path, error):
         with open(path, "rb") as file:

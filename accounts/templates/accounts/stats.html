@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ user.username }} collection statistics{% endblock %}
+{% block header %}
+    <script src="{% static 'js/Chart.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <h2 class="title is-2">Bpm distribution</h2>
+            <div class="content">
+                <div class="block">
+            <canvas id="bpm_chart" width="400" height="400"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box">
+            <h2 class="title is-2">Key distribution</h2>
+            <div class="container">
+                        <canvas id="key_chart" width="400" height="400"></canvas>
+                </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block script %}
+    <script>
+        const ctx_bpm_chart = document.getElementById('bpm_chart').getContext('2d');
+        const bpm_chart = new Chart(ctx_bpm_chart, {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for bpm in bpm_distribution %}
+                        {{ bpm.bpm }},
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: '# of Tracks',
+                    data: [{% for bpm in bpm_distribution %}
+                        {{ bpm.bpm__count}},
+
+
+                    {% endfor %}
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                legend: {
+                    text: "Bpm distribution"
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }]
+                }
+            }
+        });
+        const ctx_key_chart = document.getElementById('key_chart').getContext('2d');
+        const key_chart = new Chart(ctx_key_chart, {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for key in key_distribution %}
+                        "{{ key.key.value }}",
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: '# of Tracks',
+                    data: [{% for key in key_distribution %}
+                        {{ key.key__count}},
+
+
+                    {% endfor %}
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                legend: {
+                    text: "Bpm distribution"
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock %}

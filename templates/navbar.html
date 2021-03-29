@@ -14,14 +14,15 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-            <a class="navbar-item">
-                Home
-            </a>
+            {% if user.is_authenticated %}
+                <a class="navbar-item">
+                    Music Library
+                </a>
 
-            <a class="navbar-item">
-                About
-            </a>
-
+                <a class="navbar-item" href="{% url 'accounts:stats' %}">
+                    Insights
+                </a>
+            {% endif %}
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     More
@@ -43,18 +44,22 @@
                     </a>
                 </div>
             </div>
-            <div class="buttons">
-                <a class="button is-primary" href="{% url 'music_importer:index' %}">
-                            <span class="icon">
-                                <i class="fas fa-upload"></i>
-                            </span>
-                    <strong>Import music</strong>
-                </a>
-            </div>
+
         </div>
 
         <div class="navbar-end">
-
+        {% if user.is_authenticated %}
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-primary" href="{% url 'music_importer:index' %}">
+                            <span class="icon">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                        <strong>Import Music</strong>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
             <div class="navbar-item">
                 {% if user.is_authenticated %}
                     <div class="navbar-item has-dropdown is-hoverable">
@@ -63,7 +68,7 @@
                         </a>
 
                         <div class="navbar-dropdown">
-                            <a class="navbar-item">
+                            <a class="navbar-item" href="{% url 'accounts:profile' %}">
                                 Profile
                             </a>
                             <a class="navbar-item">

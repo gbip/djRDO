@@ -28,7 +28,8 @@ def upload(request):
     if request.method == "POST" and request.content_type == "application/json":
         data = JSONParser().parse(request)
         for t in data:
-            t["user"] = request.user.pk
+            if t is not None:
+                t["user"] = request.user.pk
         serializer = MusicTrackSerializerW(data=data, many=True)
         if serializer.is_valid():
             serializer.save()

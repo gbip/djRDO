@@ -10,6 +10,7 @@ from django.core import exceptions
 from django.db import models
 from django.utils.timezone import now
 
+from djRDO import settings
 from music import key
 
 
@@ -69,7 +70,7 @@ class Artist(models.Model):
     """
 
     name = models.CharField(max_length=5000)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -120,7 +121,9 @@ class Album(models.Model):
 
     name = models.CharField(max_length=5000)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False
+    )
 
     objects = AlbumManager()
 
@@ -177,7 +180,7 @@ class MusicTrack(models.Model):
         blank=True,
     )
     date_released = models.DateField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     genre = models.CharField(max_length=200, null=True, blank=True)
 
     objects = MusicManager()

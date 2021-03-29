@@ -1,6 +1,7 @@
 import json
 
-from django.contrib.auth.models import User
+from djRDO.settings import AUTH_USER_MODEL
+from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse
 
@@ -17,7 +18,7 @@ class MusicImporterViewTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create(
+        cls.user = get_user_model().objects.create(
             username="test_user", password="test_password", email="nomail@nomail.com"
         )
         cls.user.set_password("test_password")

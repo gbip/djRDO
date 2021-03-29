@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.urls import reverse
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -110,6 +112,8 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
 ]
 
+LOGIN_REDIRECT_URL = "/accounts"
+AUTH_USER_MODEL = "accounts.DjRdoUser"
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 

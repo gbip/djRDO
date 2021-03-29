@@ -1,6 +1,6 @@
 import io
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils.datetime_safe import date
 from rest_framework.parsers import JSONParser
@@ -19,7 +19,9 @@ class MusicImporterSerializerTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create(username="test_user", password="test_password")
+        cls.user = get_user_model().objects.create(
+            username="test_user", password="test_password"
+        )
 
     def test_track_serialization(self):
         """
@@ -70,7 +72,9 @@ class MusicImporterModelTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.user = User.objects.create(username="test_user", password="test_password")
+        cls.user = get_user_model().objects.create(
+            username="test_user", password="test_password"
+        )
         import_tracks_from_test_json(
             "music_importer/test_data/tracks.json",
             lambda x: cls.tracks.append(x),
