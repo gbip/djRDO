@@ -3,7 +3,6 @@ This module holds common test code
 """
 import json
 
-from music_importer.models import Artist, Album
 from music_importer.serializer_w import MusicTrackSerializerW
 
 

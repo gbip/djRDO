@@ -3,6 +3,7 @@ Test module for musical keys enumeration
 """
 
 import unittest
+
 import music.key as key
 
 

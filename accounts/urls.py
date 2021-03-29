@@ -1,4 +1,5 @@
 from django.contrib.auth import views as auth_views
+from django.shortcuts import redirect
 from django.urls import path, reverse_lazy
 
 from . import views
@@ -7,6 +8,7 @@ from . import views
 app_name = "accounts"
 
 urlpatterns = [
+    path("", views.my_profile, name="profile"),
     path("delete_account/", views.delete_account, name="delete_account"),
     path("stats/", views.stats, name="stats"),
     path(
@@ -46,5 +48,4 @@ urlpatterns = [
         name="password_reset_done",
     ),
     path("register/", views.signup, name="register"),
-    path("profile/", views.my_profile, name="profile"),
 ]

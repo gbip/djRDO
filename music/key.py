@@ -2,7 +2,6 @@
 This modules defines how to represent music keys.
 """
 import enum
-import json
 
 
 @enum.unique

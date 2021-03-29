@@ -16,12 +16,17 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-import music_importer
-import accounts
+from django.views.generic import TemplateView
+
 from djRDO import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),
-    path('import/', include("music_importer.urls"))
+    path("admin/", admin.site.urls),
+    path("accounts/", include("accounts.urls")),
+    path("import/", include("music_importer.urls")),
+    path(
+        "",
+        TemplateView.as_view(template_name="landing.html"),
+        name="landing",
+    ),
 ] + static(settings.STATIC_URL)

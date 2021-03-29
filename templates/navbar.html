@@ -1,8 +1,8 @@
 {% load static %}
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-            <img src={% static 'banner.png' %} width="111" height="35">
+        <a class="navbar-item" href={% url 'landing' %}>
+            <img src="{% static 'banner.png' %}" width="111" height="35" alt="djRDO logo">
         </a>
 
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">

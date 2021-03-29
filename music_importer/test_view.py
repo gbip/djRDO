@@ -1,6 +1,5 @@
 import json
 
-from djRDO.settings import AUTH_USER_MODEL
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from django.urls import reverse

@@ -27,7 +27,8 @@
         <div class="box">
             <h2 class="title is-2">Music statistics</h2>
             <p>
-                You have uploaded <strong>{{ tracks }}</strong> tracks to djRDO.
+                You have uploaded <strong>{{ tracks }}</strong> tracks to djRDO. Find more statistics on the
+                <a href="{% url "accounts:stats" %}">Insight</a> page.
             </p>
             {% if missing_bpm != 0 %}
                 <article class="message is-warning">
