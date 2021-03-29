@@ -1,9 +1,72 @@
 {% extends "base.html" %}
 {% block title %}djRDO{% endblock %}
-
+{% load static %}
 {% block content %}
+    <section class="has-text-centered container">
+        <figure class="image is-inline-block is-128x128">
+            <img alt="djRDO Logo" src="{% static "djRDO.svg" %}"/>
+        </figure>
+        <h1 class="title is-1">djRDO</h1>
+        <h2 class="subtitle is-3">A powerful music organizer for DJs</h2>
+        <div class="columns">
+            <div class="column">
+                <div class="icon-text">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-magic"></i>
+                    </span>
+                    <span class="title is-4">
+                        Easy to use
+                    </span>
+                </div>
+                <span class="is-size-5">
+                     Simply <a href="{% url "accounts:register" %}">create an account</a> and get started !
+                    </span>
+            </div>
+            <div class="column">
+                <div class="icon-text">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-wifi"></i>
+                    </span>
+                    <span class="title is-4">
+                        Online synchronisation
+                    </span>
+                </div>
+                <span class="is-size-5">
+                    Access your music collection from all your devices.
+                    </span>
+            </div>
+        </div>
 
-    <h1 class="is-title">djRDO</h1>
-
+        <div>
+            <div class="columns">
+                <div class="column">
+                    <div class="icon-text">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-feather"></i>
+                    </span>
+                        <span class="title is-4">
+                        Lightweight
+                    </span>
+                    </div>
+                    <span class="is-size-5">
+                    Access your music collection from all your devices.
+                    </span>
+                </div>
+                <div class="column">
+                    <div class="icon-text">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-code"></i>
+                    </span>
+                        <span class="title is-4">
+                        Open Source
+                    </span>
+                    </div>
+                    <span class="is-size-5">
+                Extend this project by contributing to it !
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
 
 {% endblock %}

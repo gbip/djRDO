@@ -48,18 +48,18 @@
         </div>
 
         <div class="navbar-end">
-        {% if user.is_authenticated %}
-            <div class="navbar-item">
-                <div class="buttons">
-                    <a class="button is-primary" href="{% url 'music_importer:index' %}">
+            {% if user.is_authenticated %}
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary" href="{% url 'music_importer:index' %}">
                             <span class="icon">
                                 <i class="fas fa-upload"></i>
                             </span>
-                        <strong>Import Music</strong>
-                    </a>
+                            <strong>Import Music</strong>
+                        </a>
+                    </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
             <div class="navbar-item">
                 {% if user.is_authenticated %}
                     <div class="navbar-item has-dropdown is-hoverable">
@@ -83,10 +83,16 @@
                 {% else %}
                     <div class="buttons">
                         <a class="button is-primary" href="{% url 'accounts:register' %}">
-                            <strong>Sign up</strong>
+                             <span class="icon">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <span>Sign up</span>
                         </a>
-                        <a href="{% url 'accounts:login' %}" class="button is-light">
-                            Log in
+                        <a href="{% url 'accounts:login' %}" class="button is-primary is-outlined">
+                            <span class="icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </span>
+                            <span>Log in</span>
                         </a>
                     </div>
                 {% endif %}
