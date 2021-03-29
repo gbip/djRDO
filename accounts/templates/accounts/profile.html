@@ -13,11 +13,11 @@
                 </div>
                 <div class="block">
                     <button class="button">Logout</button>
-                    <a class="button " href="{% url 'accounts:password_change' %}">Change password</a>
+                    <a class="button " href="{% url 'accounts:password_change' %}">Change Password</a>
 
                     <form method="post" action="{% url 'accounts:delete_account' %}" style="display: contents">
                         {% csrf_token %}
-                        <input type="submit" value="Delete account" class="button is-danger"/>
+                        <input type="submit" value="Delete Account" class="button is-danger"/>
                     </form>
                 </div>
             </div>

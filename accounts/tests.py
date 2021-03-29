@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 
-class TestViewsAuthBehaviour(TestCase):
+class TestAuthViewsBehaviour(TestCase):
     @classmethod
     def setUp(cls):
         cls.user = get_user_model().objects.create(
@@ -32,3 +32,13 @@ class TestViewsAuthBehaviour(TestCase):
         self.assertNotContains(response, "Login")
         self.assertContains(response, "Import Music")
         self.assertContains(response, "Insights")
+
+    def test_profile(self):
+        self.assertTrue(
+            self.client.login(username=self.user.username, password="test_password")
+        )
+        response = self.client.get(reverse("accounts:profile"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.user.email)
+        for btn_text in ["Logout", "Change Password", "Delete Account"]:
+            self.assertContains(response, btn_text)
