@@ -42,7 +42,16 @@ def my_profile(request):
 def delete_account(request):
     if request.method == "POST":
         request.user.delete()
-        return render(request, "account_deleted.html")
+        context = dict()
+        context["message"] = (
+            "<strong>"
+            + request.user.username
+            + "</strong>"
+            + " your account and all your data have been deleted successfully."
+        )
+        return render(request, "display_message.html", context=context)
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["POST"])
 
 
 def signup(request):

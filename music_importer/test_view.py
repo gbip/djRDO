@@ -73,7 +73,7 @@ class MusicImporterViewTestCase(TestCase):
             url, json.dumps(post_data), content_type="application/json"
         )
         ser.save()
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
 
         # Retrieve objects and check for equality
         d = MusicTrack.objects.filter(title=ser.data["title"])
@@ -84,5 +84,5 @@ class MusicImporterViewTestCase(TestCase):
         response = self.client.post(
             url, json.dumps(self.tracks), content_type="application/json"
         )
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(MusicTrack.objects.count(), len(self.tracks))

@@ -1,4 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseNotAllowed
 from django.shortcuts import render
 
 # Create your views here.
@@ -25,3 +27,20 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
         context = super().get_context_data(**kwargs)
         context["key_color_map"] = key.openKeyColors
         return context
+
+
+@login_required
+def delete_collection(request):
+    if request.method == "POST":
+        tracks = MusicTrack.objects.filter(user=request.user)
+        tracks.delete()
+        context = dict()
+        context["message"] = (
+            "<strong>"
+            + request.user.username
+            + "</strong>"
+            + " all your tracks have been deleted successfully."
+        )
+        return render(request, "display_message.html", context=context)
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["POST"])
