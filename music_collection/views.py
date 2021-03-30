@@ -14,7 +14,12 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
     paginate_by = 100
 
     def get_queryset(self):
-        return MusicTrack.objects.filter(user=self.request.user).order_by("import_date")
+        order = self.request.GET.get("order_by", "import_date")
+        dir = self.request.GET.get("dir", "asc")
+        tracks = MusicTrack.objects.filter(user=self.request.user).order_by(order)
+        if dir == "desc":
+            tracks = tracks.reverse()
+        return tracks
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
