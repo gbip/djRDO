@@ -23,11 +23,6 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
             tracks = tracks.reverse()
         return tracks
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["key_color_map"] = key.openKeyColors
-        return context
-
 
 @login_required
 def delete_collection(request):

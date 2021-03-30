@@ -20,7 +20,7 @@
         </article>
         <article id="server_resp_info" class="message is-info is-hidden">
                         <div class="message-header">
-                            <p>Import successfull</p>
+                            <p>Import successful</p>
                             <button class="delete" aria-label="delete"></button>
                         </div>
                         <div id="server_resp_info_body" class="message-body">
@@ -219,12 +219,12 @@
                 let dropzone = document.getElementById("file-import-btn")
                 dropzone.appendChild(p)
             }
-            p.textContent = "Imported " + number + " tracks."
+            p.textContent = "Found " + number + " tracks."
         }
 
         /**
          * Print a warning about a file that could not be imported in a bulma message div
-         * @param warning_str : The filename to be be displayed
+         * @param warning_str : string the filename to be be displayed
          */
         function print_warning(warning_str) {
             let col = document.getElementById("message-column")
@@ -234,9 +234,10 @@
             if (should_be_bold(warning_str)) {
                 let bold = document.createElement("b");
                 item.appendChild(bold)
-                item = bold
+                bold.textContent = warning_str;
+            } else {
+                item.textContent = warning_str;
             }
-            item.textContent = warning_str;
             list.appendChild(item)
         }
 
@@ -309,8 +310,5 @@
                     music_import(files)
                 })
         }
-    </script>
-
-
     </script>
 {% endblock %}
