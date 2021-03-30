@@ -5,6 +5,7 @@ from django.http import (
     HttpResponseRedirect,
     JsonResponse,
 )
+from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 from rest_framework.parsers import JSONParser
@@ -16,11 +17,16 @@ from .serializer_w import MusicTrackSerializerW
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
-    template_name = "music_importer/index.html"
+    template_name = "music_importer/import.html"
     context_object_name = "must_list"
 
     def get_queryset(self):
         return MusicTrack.objects.get_queryset()[:5]
+
+
+@login_required
+def tracks_uploaded(request):
+    return render(request, "")
 
 
 @login_required
@@ -33,7 +39,7 @@ def upload(request):
         serializer = MusicTrackSerializerW(data=data, many=True)
         if serializer.is_valid():
             serializer.save()
-            return HttpResponseRedirect(reverse("music_importer:index"))
+            return JsonResponse(data=dict(), status=200)
         else:
             return JsonResponse(serializer.errors, status=400)
     else:

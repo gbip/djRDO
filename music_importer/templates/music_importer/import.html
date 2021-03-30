@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% block title %} Upload music to djRDO {% endblock %}
+{% load static %}
+{% block header %}
+    <script src="{% static 'music_importer/jsmediatags.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/djRDO.css' %}">
+    <script src="{% static 'js/data_transfer.js' %}"></script>
+
+{% endblock %}
+{% block content %}
+    <div class="box">
+        <article id="server_resp_error" class="message is-error is-hidden">
+                        <div class="message-header">
+                            <p>Error : some of your tracks have triggered a server error</p>
+                            <button class="delete" aria-label="delete"></button>
+                        </div>
+                        <div id="server_resp_error_body" class="message-body">
+
+                        </div>
+        </article>
+        <article id="server_resp_info" class="message is-info is-hidden">
+                        <div class="message-header">
+                            <p>Import successfull</p>
+                            <button class="delete" aria-label="delete"></button>
+                        </div>
+                        <div id="server_resp_info_body" class="message-body">
+
+                        </div>
+        </article>
+
+
+        <div class="block has-text-centered">
+            <h1 class="title">Upload some music !</h1>
+        </div>
+        <div class="block">
+            <div class="columns">
+
+                <div class="column">
+                    <div class="dropzone columns is-centered" ondrop="drop_handler(event)"
+                         ondragover="dragover_handler(event)">
+                        <input id="file-import" type="file" hidden webkitdirectory directory multiple/>
+                        <div class="has-text-centered is-centered column">
+                            <button id="file-import-btn" type="button" onclick="performClick('file-import')"
+                                    style="border: none; color: rgba(0,0,0,.6); background: none; padding: 0; cursor: pointer">
+                                Drop
+                                files or click here to upload.<br/>
+                                Supports <i>mp3</i>, <i>flac</i> and <i>mp4</i>.
+                            </button>
+                        </div>
+                    </div>
+                    <div class="has-text-centered">
+                        <button id="upload-btn" class="button is-primary is-center is-hidden"
+                                onclick="send_music_to_server()" disabled>
+                            Upload Tracks
+                        </button>
+                    </div>
+                </div>
+                <div class="column is-hidden" id="message-column">
+                    <article class="message is-warning">
+                        <div class="message-header">
+                            <p>Warning : Some files were not music tracks and have not been imported</p>
+                            <button class="delete" aria-label="delete"></button>
+                        </div>
+                        <div class="message-body">
+
+                            <ul id="warn-notif">
+
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block script %}
+
+    <script>
+        const jsmediatags = window.jsmediatags;
+        let music_tracks;
+
+        // Wrap the jsmediatags callback into a Promise
+        async function readMetadataAsync(file) {
+            return new Promise((resolve, reject) => {
+                jsmediatags.read(file, {
+                    onSuccess: resolve,
+                    onError: reject
+                });
+            });
+        }
+
+        // Django get CSRF cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Send the post data to the django endpoint
+        async function send_music_tags(url = '', data = {}) {
+            // Default options are marked with *
+            const csrftoken = getCookie('csrftoken');
+            //console.log(JSON.stringify(data))
+            const response = await fetch(url, {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: 'follow', // manual, *follow, error
+                body: JSON.stringify(data) // body data type must match "Content-Type" header
+            });
+            return response; // parses JSON response into native JavaScript objects
+        }
+
+        // Retrieve the tags that we are looking for
+        // TODO : Handle missing fields
+        function jsonize_tags(tags) {
+            return {
+                title: tags.title,
+                artist: {
+                    name: tags.artist
+                },
+                genre: tags.genre,
+                year: tags.year,
+                bpm: tags.TBPM.data,
+                key: tags.TKEY.data,
+                album: {
+                    name: tags.album,
+                    artist: {
+                        name: tags.TPE2.data,
+                    }
+                }
+                /*picture: {
+                    format: tags.picture.format,
+                    data: tags.picture.data,
+                }*/
+            }
+        }
+
+        // Parse a file and return a JS object holding the metadata that we are interested in
+        async function parse(file) {
+            let tags = await readMetadataAsync(file);
+            return jsonize_tags(tags.tags);
+        }
+
+        /**
+         * Parses the metadata from a list of files.
+         * Displays the number of track imported within the dropzone.
+         * Print a warning if some files are not music
+         */
+        async function music_import(files) {
+            let result = [];
+            let counter = 0;
+            for (const file of Array.from(files)) {
+                try {
+                    let v = await parse(file);
+                    if (v != null) {
+                        counter += 1;
+                        result.push(v);
+                    } else {
+                        print_warning("NULL")
+                    }
+                } catch (e) {
+                    print_warning(file.filepath)
+                }
+            }
+            music_tracks = result
+            print_track_imported(counter);
+            enable_upload_button_if(counter)
+        }
+
+        /** Callback for the file picker */
+        async function file_picker_clicked() {
+            await music_import(this.files)
+        }
+
+        /**
+         * Return if the filename should be bold when displayed in a warning message
+         */
+        function should_be_bold(filename) {
+            return (filename.endsWith("mp3") || filename.endsWith("flac") || filename.endsWith("mp4"));
+        }
+
+
+        /**
+         * Conditionally enables the upload button,depending on the number of tracks imported
+         */
+        function enable_upload_button_if(tracks_imported) {
+            let btn = document.getElementById("upload-btn");
+            if (tracks_imported > 0) {
+                btn.disabled = false;
+                unhide(btn)
+            }
+        }
+
+        /**
+         * Display the number of tracks imported inside the dropzone
+         * @param number : number number of tracks imported
+         */
+        function print_track_imported(number) {
+            let p = document.getElementById("track_imported")
+            if (p == null) {
+                p = document.createElement("p")
+                p.id = "track_imported"
+                let dropzone = document.getElementById("file-import-btn")
+                dropzone.appendChild(p)
+            }
+            p.textContent = "Imported " + number + " tracks."
+        }
+
+        /**
+         * Print a warning about a file that could not be imported in a bulma message div
+         * @param warning_str : The filename to be be displayed
+         */
+        function print_warning(warning_str) {
+            let col = document.getElementById("message-column")
+            unhide(col)
+            let list = document.getElementById("warn-notif");
+            let item = document.createElement("li")
+            if (should_be_bold(warning_str)) {
+                let bold = document.createElement("b");
+                item.appendChild(bold)
+                item = bold
+            }
+            item.textContent = warning_str;
+            list.appendChild(item)
+        }
+
+        function hide(elem) {
+            if (!elem.classList.contains("is-hidden")) {
+                elem.classList.add("is-hidden")
+            }
+        }
+
+
+        function unhide(elem) {
+            if (elem.classList.contains("is-hidden")) {
+                elem.classList.remove("is-hidden")
+            }
+        }
+
+        function handle_server_resp(resp) {
+            if (resp.status === 200) {
+                mess_root = document.getElementById("server_resp_info");
+                mess = document.getElementById("server_resp_info_body");
+                message = document.createElement("p");
+                message.textContent = music_tracks.length + " tracks have been imported !";
+                mess.appendChild(message);
+                unhide(mess_root);
+                document.getElementById("upload-btn").disabled = true;
+                //hide(document.getElementById("upload-btn"))
+            } else {
+                mess_root = document.getElementById("server_resp_error");
+                mess = document.getElementById("server_resp_error_body");
+                message = document.createElement("p");
+                // TODO : Parse json
+                mess.appendChild(message);
+                unhide(mess_root);
+            }
+        }
+
+        /**
+         * Emulate a clik on elemId
+         * @param elemId
+         */
+        function performClick(elemId) {
+            const elem = document.getElementById(elemId);
+            if (elem && document.createEvent) {
+                const evt = document.createEvent("MouseEvents");
+                evt.initEvent("click", true, false);
+                elem.dispatchEvent(evt);
+            }
+        }
+
+        async function send_music_to_server() {
+            response = await send_music_tags("{% url 'music_importer:upload' %}", music_tracks);
+            handle_server_resp(response)
+        }
+
+        let picker = document.getElementById("file-import")
+        picker.addEventListener("click", file_picker_clicked, false)
+
+
+        function dragover_handler(ev) {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "link";
+        }
+
+
+        async function drop_handler(ev) {
+            ev.preventDefault();
+            const items = ev.dataTransfer.items
+            window.getFilesFromDataTransferItems(items)
+                .then(files => {
+                    music_import(files)
+                })
+        }
+    </script>
+
+
+    </script>
+{% endblock %}
