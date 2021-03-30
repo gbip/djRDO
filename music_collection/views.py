@@ -17,10 +17,11 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
 
     def get_queryset(self):
         order = self.request.GET.get("order_by", "import_date")
-        dir = self.request.GET.get("dir", "asc")
+        direction = self.request.GET.get("dir", "asc")
+        # Reverse ordering by prepending "-"
+        if direction == "desc":
+            order = "-" + order
         tracks = MusicTrack.objects.filter(user=self.request.user).order_by(order)
-        if dir == "desc":
-            tracks = tracks.reverse()
         return tracks
 
 
