@@ -100,6 +100,9 @@ class OpenKey(str, enum.Enum):
     M11 = "11m"
     M12 = "12m"
 
+    def get_key_color(self):
+        return openKeyColors[self]
+
 
 camelotKeyToOpenKey = {
     CamelotKey.B1: OpenKey.D6,
