@@ -15,7 +15,6 @@ from music import key
 
 
 class KeyField(models.CharField):
-
     description = "A music key"
 
     def __init__(self, *args, **kwargs):
@@ -198,3 +197,9 @@ class MusicTrack(models.Model):
             and self.artist == other.artist
             and self.album == other.album
         )
+
+    def get_key_color(self):
+        if self.key is None:
+            return "00000000"
+        else:
+            return key.openKeyColors[self.key]

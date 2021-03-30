@@ -191,3 +191,30 @@ Reverse dictionary to get inverted mapping
 """
 openKeyToMusicKey = {value: key for (key, value) in musicKeyToOpenKey.items()}
 camelotKeyToMusicKey = {value: key for (key, value) in musicKeyToCamelotKey.items()}
+
+openKeyColors = {
+    OpenKey.D1: "dd82e2",
+    OpenKey.D2: "86759f",
+    OpenKey.D3: "6b8fc3",
+    OpenKey.D4: "58bcf7",
+    OpenKey.D5: "50e5e9",
+    OpenKey.D6: "51d292",
+    OpenKey.D7: "7df378",
+    OpenKey.D8: "b1e55c",
+    OpenKey.D9: "ffe757",
+    OpenKey.D10: "ffb556",
+    OpenKey.D11: "e74d4d",
+    OpenKey.D12: "ff4ca8",
+    OpenKey.M1: "ecb7ed",
+    OpenKey.M2: "b9afc7",
+    OpenKey.M3: "abbedc",
+    OpenKey.M4: "9fdafc",
+    OpenKey.M5: "9bf1f2",
+    OpenKey.M6: "9be5c0",
+    OpenKey.M7: "a2f79c",
+    OpenKey.M8: "d3efa2",
+    OpenKey.M9: "fff1a0",
+    OpenKey.M10: "ffd5a0",
+    OpenKey.M11: "f19998",
+    OpenKey.M12: "ff99ce",
+}

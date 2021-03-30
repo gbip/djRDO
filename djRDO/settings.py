@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "music_importer",
     "accounts",
+    "music_collection",
 ]
 
 MIDDLEWARE = [

@@ -20,7 +20,7 @@ class MusicImporterSerializerTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = get_user_model().objects.create(
-            username="test_user", password="test_password"
+            username="test_user", password="test_password", email="toto@toto.com"
         )
 
     def test_track_serialization(self):

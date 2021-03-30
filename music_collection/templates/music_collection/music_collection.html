@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }}'s Music Collection{% endblock %}
+{% block content %}
+    <table class="table is-striped is-hoverable is-fullwidth">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>BPM</th>
+            <th>Key</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for music in object_list %}
+            <tr>
+                <td >{{ music.title }}</td>
+                <td>{{ music.artist.name }}</td>
+                <td>{{ music.album.name }}</td>
+                <td>{{ music.bpm }}</td>
+                <td style="color: #{{ music.get_key_color }}">{{ music.key.value }}</td>
+                <td>{{ music.released_date }}</td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+
+    </table>
+    {% if is_paginated %}
+        <div class="container has-text-centered">
+            <span>
+                {% if page_obj.has_previous %}
+                    <a href="{% url 'music_collection:music_list' %}?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{% url 'music_collection:music_list' %}?page={{ page_obj.next_page_number }}">Next page</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% endblock %}
