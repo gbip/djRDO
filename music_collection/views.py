@@ -25,6 +25,11 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
     paginate_by = 100
     ordering = ["date_created"]
 
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user).order_by(
+            *self.ordering
+        )
+
 
 class MusicCollectionDetailView(DetailView, LoginRequiredMixin):
     model = MusicCollection
@@ -84,7 +89,7 @@ class MusicTrackListView(ListView, LoginRequiredMixin):
         # Reverse ordering by prepending "-"
         if direction == "desc":
             order = "-" + order
-        tracks = MusicTrack.objects.filter(user=self.request.user).order_by(order)
+        tracks = self.model.objects.filter(user=self.request.user).order_by(order)
         return tracks
 
     def get_context_data(self, **kwargs):
@@ -100,7 +105,7 @@ def delete_collection(request):
     Delete a user track's collection.
     """
     if request.method == "POST":
-        tracks = MusicTrack.objects.filter(user=request.user)
+        tracks = MusicTrack.objects.filter(user=request.user).all()
         tracks.delete()
         context = dict()
         context["message"] = (
