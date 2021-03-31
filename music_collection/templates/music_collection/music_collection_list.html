@@ -5,18 +5,18 @@
     <div class="block">
         <form method="post" action="{% url 'music_collection:create_collection' %}">
             {% csrf_token %}
-        <div class="field is-grouped">
-            <p class="control has-icons-left has-icons-right">
-                <input class="input" type="text" name="name" placeholder="Create new collection">
-                <span class="icon is-small is-left">
+            <div class="field is-grouped">
+                <p class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" name="name" placeholder="Create new collection">
+                    <span class="icon is-small is-left">
       <i class="fas fa-plus"></i>
     </span>
-            <div class="control">
-                <button class="button is-link" type="submit">Create</button>
+                <div class="control">
+                    <button class="button is-link" type="submit">Create</button>
+                </div>
+                </p>
             </div>
-            </p>
-        </div>
-            </form>
+        </form>
     </div>
     <div class="block">
         <table class="table is-striped is-hoverable is-fullwidth">
@@ -26,10 +26,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=title&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=title&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -38,10 +38,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=artist&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=artist&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -50,10 +50,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=import_date&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=import_date&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -62,11 +62,15 @@
             </thead>
             <tbody>
             {% for collection in object_list %}
-                <tr>
-                    <td>{{ collection.title }}</td>
-                    <td>{{ collection.musictrack_set.count }}</td>
-                    <td>{{ collection.date_created }}</td>
-                </tr>
+                <a>
+                    <tr >
+                        <td>
+                            <a href="{% url 'music_collection:collection_detail' pk=collection.pk %}">{{ collection.title }}</a>
+                        </td>
+                        <td>{{ collection.musictrack_set.count }}</td>
+                        <td>{{ collection.date_created }}</td>
+                    </tr>
+                </a>
 
             {% endfor %}
             </tbody>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{{ collection.title }} - Collection {% endblock %}
+{% block content %}
+
+    {% if object.musictrack_set.count == 0 %}
+        There are no music tracks in this collection, yet.
+    {% else %}
+        <ul>
+            {% for music in object.musictrack_set.all %}
+                <li>
+                    {{ music.title }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

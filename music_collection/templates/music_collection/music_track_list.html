@@ -11,10 +11,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=title&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=title&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -23,10 +23,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=artist&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=artist&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -35,10 +35,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=album&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=album&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -47,10 +47,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=bpm&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=bpm&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -59,10 +59,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=key&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=key&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -71,13 +71,15 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=import_date&dir=asc">
-                        <i  class="fas fa-angle-up"></i>
+                        <i class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=import_date&dir=desc">
-                        <i  class="fas fa-angle-down"></i>
+                        <i class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
+                </th>
+                <th>Add to collection
                 </th>
             </tr>
             </thead>
@@ -91,30 +93,21 @@
                     <td style="color: #{{ music.get_key_color }}">{{ music.key.value }}</td>
                     <td>{{ music.released_date }}</td>
                     <td>
-                        <div class="dropdown is-right">
-                            <div class="dropdown-trigger">
-                                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                    <span>Add to collection</span>
-                                    <span class="icon is-small">
-                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                    </span>
-                                </button>
+                        <div class="control has-icons-left">
+                            <div class="select">
+                                <form method="post" action="{% url 'music_collection:add_music_to_collection' %}">
+                                    <input type="hidden" value="{{ music.pk }}" name="music_pk"/>
+                                    {% csrf_token %}
+                                    <select name="col_pk" onchange="this.form.submit()">
+                                        <option>Add to collection</option>
+                                        {% for collection in collections %}
+                                            <option value="{{ collection.pk }}">{{ collection.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
                             </div>
-                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                                <div class="dropdown-content">
-                                    <a href="#" class="dropdown-item">
-                                        Dropdown item
-                                    </a>
-                                    <a class="dropdown-item">
-                                        Other dropdown item
-                                    </a>
-                                    <a href="#" class="dropdown-item is-active">
-                                        Active dropdown item
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        Other dropdown item
-                                    </a>
-                                </div>
+                            <div class="icon is-small is-left">
+                                <i class="fas fa-folder"></i>
                             </div>
                         </div>
 

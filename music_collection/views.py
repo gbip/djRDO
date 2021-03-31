@@ -9,7 +9,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from music_collection.models import MusicCollection
 from music_importer.models import MusicTrack
@@ -23,6 +23,31 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
     model = MusicCollection
     template_name = "music_collection/music_collection_list.html"
     paginate_by = 100
+    ordering = ["date_created"]
+
+
+class MusicCollectionDetailView(DetailView, LoginRequiredMixin):
+    model = MusicCollection
+    template_name = "music_collection/music_collection_detail.html"
+
+
+@login_required
+def add_music_to_collection(request):
+    if request.method == "POST":
+        if "col_pk" in request.POST and "music_pk" in request.POST:
+            col_pk = request.POST["col_pk"]
+            music_pk = request.POST["music_pk"]
+            collection = MusicCollection.objects.get(user=request.user, pk=col_pk)
+            music = MusicTrack.objects.get(user=request.user, pk=music_pk)
+            music.collections.add(collection)
+            music.save()
+            return HttpResponseRedirect(
+                reverse("music_collection:collection_detail", kwargs={"pk": col_pk})
+            )
+        else:
+            return HttpResponseBadRequest()
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["POST"])
 
 
 @login_required
@@ -33,8 +58,8 @@ def create_collection(request):
     if request.method == "POST":
         if "name" in request.POST:
             name = request.POST["name"]
-            MusicCollection.objects.create(title=name)
-            return HttpResponseRedirect(reverse("music_collection:music_collection"))
+            MusicCollection.objects.create(title=name, user=request.user)
+            return HttpResponseRedirect(reverse("music_collection:collection_list"))
         else:
             return HttpResponseBadRequest()
     else:
@@ -61,6 +86,12 @@ class MusicTrackListView(ListView, LoginRequiredMixin):
             order = "-" + order
         tracks = MusicTrack.objects.filter(user=self.request.user).order_by(order)
         return tracks
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        collection = MusicCollection.objects.filter(user=self.request.user)
+        context["collections"] = collection
+        return context
 
 
 @login_required

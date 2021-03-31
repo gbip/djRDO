@@ -164,6 +164,9 @@ class MusicTrack(models.Model):
             and self.album == other.album
         )
 
+    def __hash__(self):
+        return hash(self.id)
+
     def get_key_color(self):
         if self.key is None:
             return "000000"
