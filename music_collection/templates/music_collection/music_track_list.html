@@ -11,10 +11,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=title&dir=asc">
-                        <i href="google.com" class="fas fa-angle-up"></i>
+                        <i  class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=title&dir=desc">
-                        <i href="google.com" class="fas fa-angle-down"></i>
+                        <i  class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -23,10 +23,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=artist&dir=asc">
-                        <i href="google.com" class="fas fa-angle-up"></i>
+                        <i  class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=artist&dir=desc">
-                        <i href="google.com" class="fas fa-angle-down"></i>
+                        <i  class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -35,10 +35,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=album&dir=asc">
-                        <i href="google.com" class="fas fa-angle-up"></i>
+                        <i  class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=album&dir=desc">
-                        <i href="google.com" class="fas fa-angle-down"></i>
+                        <i  class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -47,10 +47,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=bpm&dir=asc">
-                        <i href="google.com" class="fas fa-angle-up"></i>
+                        <i  class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=bpm&dir=desc">
-                        <i href="google.com" class="fas fa-angle-down"></i>
+                        <i  class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -59,10 +59,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=key&dir=asc">
-                        <i href="google.com" class="fas fa-angle-up"></i>
+                        <i  class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=key&dir=desc">
-                        <i href="google.com" class="fas fa-angle-down"></i>
+                        <i  class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -71,10 +71,10 @@
                     <span class="icon">
                         <span class="fa-stack fa-sm">
                         <a href="?order_by=import_date&dir=asc">
-                        <i href="google.com" class="fas fa-angle-up"></i>
+                        <i  class="fas fa-angle-up"></i>
                         </a>
                         <a href="?order_by=import_date&dir=desc">
-                        <i href="google.com" class="fas fa-angle-down"></i>
+                        <i  class="fas fa-angle-down"></i>
                         </a>
                         </span>
                     </span>
@@ -90,6 +90,35 @@
                     <td>{{ music.bpm }}</td>
                     <td style="color: #{{ music.get_key_color }}">{{ music.key.value }}</td>
                     <td>{{ music.released_date }}</td>
+                    <td>
+                        <div class="dropdown is-right">
+                            <div class="dropdown-trigger">
+                                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span>Add to collection</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                <div class="dropdown-content">
+                                    <a href="#" class="dropdown-item">
+                                        Dropdown item
+                                    </a>
+                                    <a class="dropdown-item">
+                                        Other dropdown item
+                                    </a>
+                                    <a href="#" class="dropdown-item is-active">
+                                        Active dropdown item
+                                    </a>
+                                    <a href="#" class="dropdown-item">
+                                        Other dropdown item
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
                 </tr>
 
             {% endfor %}
@@ -114,4 +143,48 @@
             </div>
             </div>
         {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Dropdowns
+
+            var $dropdowns = getAll('.dropdown:not(.is-hoverable)');
+
+            if ($dropdowns.length > 0) {
+                $dropdowns.forEach(function ($el) {
+                    $el.addEventListener('click', function (event) {
+                        event.stopPropagation();
+                        $el.classList.toggle('is-active');
+                    });
+                });
+
+                document.addEventListener('click', function (event) {
+                    closeDropdowns();
+                });
+            }
+
+            function closeDropdowns() {
+                $dropdowns.forEach(function ($el) {
+                    $el.classList.remove('is-active');
+                });
+            }
+
+            // Close dropdowns if ESC pressed
+            document.addEventListener('keydown', function (event) {
+                var e = event || window.event;
+                if (e.keyCode === 27) {
+                    closeDropdowns();
+                }
+            });
+
+            // Functions
+
+            function getAll(selector) {
+                return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
+            }
+        });
+    </script>
 {% endblock %}

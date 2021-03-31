@@ -12,6 +12,7 @@ from django.utils.timezone import now
 
 from djRDO import settings
 from music import key
+from music_collection.models import MusicCollection
 
 
 class KeyField(models.CharField):
@@ -126,6 +127,7 @@ class MusicTrack(models.Model):
         * Artist (optional) - Key to an Artist
         * Key (optional) - Enum from key.OpenKey
         * Date Release (optional) - DateField
+        * Collections (optional) - M2M to a collection
         * User REQUIRED - Key to a user
     """
 
@@ -144,6 +146,7 @@ class MusicTrack(models.Model):
     date_released = models.DateField(null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     genre = models.CharField(max_length=200, null=True, blank=True)
+    collections = models.ManyToManyField(MusicCollection)
 
     objects = MusicManager()
 

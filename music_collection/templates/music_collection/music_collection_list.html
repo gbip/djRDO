@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }}'s Music Collection{% endblock %}
+{% block content %}
+
+    <div class="block">
+        <form method="post" action="{% url 'music_collection:create_collection' %}">
+            {% csrf_token %}
+        <div class="field is-grouped">
+            <p class="control has-icons-left has-icons-right">
+                <input class="input" type="text" name="name" placeholder="Create new collection">
+                <span class="icon is-small is-left">
+      <i class="fas fa-plus"></i>
+    </span>
+            <div class="control">
+                <button class="button is-link" type="submit">Create</button>
+            </div>
+            </p>
+        </div>
+            </form>
+    </div>
+    <div class="block">
+        <table class="table is-striped is-hoverable is-fullwidth">
+            <thead>
+            <tr>
+                <th>Name
+                    <span class="icon">
+                        <span class="fa-stack fa-sm">
+                        <a href="?order_by=title&dir=asc">
+                        <i  class="fas fa-angle-up"></i>
+                        </a>
+                        <a href="?order_by=title&dir=desc">
+                        <i  class="fas fa-angle-down"></i>
+                        </a>
+                        </span>
+                    </span>
+                </th>
+                <th>Number of tracks
+                    <span class="icon">
+                        <span class="fa-stack fa-sm">
+                        <a href="?order_by=artist&dir=asc">
+                        <i  class="fas fa-angle-up"></i>
+                        </a>
+                        <a href="?order_by=artist&dir=desc">
+                        <i  class="fas fa-angle-down"></i>
+                        </a>
+                        </span>
+                    </span>
+                </th>
+                <th>Date created
+                    <span class="icon">
+                        <span class="fa-stack fa-sm">
+                        <a href="?order_by=import_date&dir=asc">
+                        <i  class="fas fa-angle-up"></i>
+                        </a>
+                        <a href="?order_by=import_date&dir=desc">
+                        <i  class="fas fa-angle-down"></i>
+                        </a>
+                        </span>
+                    </span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for collection in object_list %}
+                <tr>
+                    <td>{{ collection.title }}</td>
+                    <td>{{ collection.musictrack_set.count }}</td>
+                    <td>{{ collection.date_created }}</td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+    <div class="block">
+        {% if is_paginated %}
+            <div class="container has-text-centered">
+            <span>
+                {% if page_obj.has_previous %}
+                    <a href="{% url 'music_collection:music_list' %}?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="{% url 'music_collection:music_list' %}?page={{ page_obj.next_page_number }}">Next page</a>
+                {% endif %}
+            </span>
+            </div>
+            </div>
+        {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Dropdowns
+
+            var $dropdowns = getAll('.dropdown:not(.is-hoverable)');
+
+            if ($dropdowns.length > 0) {
+                $dropdowns.forEach(function ($el) {
+                    $el.addEventListener('click', function (event) {
+                        event.stopPropagation();
+                        $el.classList.toggle('is-active');
+                    });
+                });
+
+                document.addEventListener('click', function (event) {
+                    closeDropdowns();
+                });
+            }
+
+            function closeDropdowns() {
+                $dropdowns.forEach(function ($el) {
+                    $el.classList.remove('is-active');
+                });
+            }
+
+            // Close dropdowns if ESC pressed
+            document.addEventListener('keydown', function (event) {
+                var e = event || window.event;
+                if (e.keyCode === 27) {
+                    closeDropdowns();
+                }
+            });
+
+            // Functions
+
+            function getAll(selector) {
+                return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
+            }
+        });
+    </script>
+{% endblock %}
