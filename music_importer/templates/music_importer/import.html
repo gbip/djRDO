@@ -9,23 +9,23 @@
 {% endblock %}
 {% block content %}
     <div class="box">
-        <article id="server_resp_error" class="message is-error is-hidden">
-                        <div class="message-header">
-                            <p>Error : some of your tracks have triggered a server error</p>
-                            <button class="delete" aria-label="delete"></button>
-                        </div>
-                        <div id="server_resp_error_body" class="message-body">
+        <article id="server_resp_error" class="message is-danger is-hidden">
+            <div class="message-header">
+                <p>Error : some of your tracks have triggered a server error</p>
+                <button class="delete" aria-label="delete"></button>
+            </div>
+            <div id="server_resp_error_body" class="message-body">
 
-                        </div>
+            </div>
         </article>
         <article id="server_resp_info" class="message is-info is-hidden">
-                        <div class="message-header">
-                            <p>Import successful</p>
-                            <button class="delete" aria-label="delete"></button>
-                        </div>
-                        <div id="server_resp_info_body" class="message-body">
+            <div class="message-header">
+                <p>Import successful</p>
+                <button class="delete" aria-label="delete"></button>
+            </div>
+            <div id="server_resp_info_body" class="message-body">
 
-                        </div>
+            </div>
         </article>
 
 
@@ -126,29 +126,38 @@
             return response; // parses JSON response into native JavaScript objects
         }
 
+
+        function get_field(tags, field) {
+            if (tags.hasOwnProperty(field)) {
+                return tags[field]
+            } else return null;
+        }
+
         // Retrieve the tags that we are looking for
         // TODO : Handle missing fields
         function jsonize_tags(tags) {
-            return {
-                title: tags.title,
-                artist: {
-                    name: tags.artist
-                },
-                genre: tags.genre,
-                year: tags.year,
-                bpm: tags.TBPM.data,
-                key: tags.TKEY.data,
-                album: {
-                    name: tags.album,
-                    artist: {
-                        name: tags.TPE2.data,
-                    }
+            const property_list = ["title", "genre", "year", "TBPM.data", "TKEY.data", "TPE2.data"];
+            let object = {};
+
+            property_list.forEach(function (property) {
+                const val = get_field(tags, property);
+                if (val != null) {
+                    object[property] = val;
                 }
-                /*picture: {
-                    format: tags.picture.format,
-                    data: tags.picture.data,
-                }*/
+            })
+            const artist_name = get_field(tags, "artist");
+            if (artist_name != null) {
+                object["artist"] = {name: artist_name};
             }
+            const album_name = get_field(tags, "album");
+            const album_artist = get_field(tags, "album_artist");
+            if (album_name != null) {
+                object["album"] = {name : album_name};
+                if (album_artist != null) {
+                    object["album"] = {artist: { name : album_artist}};
+                }
+            }
+            return object;
         }
 
         // Parse a file and return a JS object holding the metadata that we are interested in
@@ -172,10 +181,14 @@
                         counter += 1;
                         result.push(v);
                     } else {
-                        print_warning("NULL")
+                        print_warning(file.filepath);
                     }
                 } catch (e) {
-                    print_warning(file.filepath)
+                    if (null != file.filepath) {
+                        print_warning(file.filepath);
+                    } else {
+                        console.log(e);
+                    }
                 }
             }
             music_tracks = result
@@ -265,10 +278,18 @@
                 document.getElementById("upload-btn").disabled = true;
                 //hide(document.getElementById("upload-btn"))
             } else {
+                console.log(resp)
                 mess_root = document.getElementById("server_resp_error");
                 mess = document.getElementById("server_resp_error_body");
                 message = document.createElement("p");
                 // TODO : Parse json
+                resp.json().then(data => {
+                    console.log(data)
+                    for (let obj in data["errors"]) {
+                        console.log(obj)
+                    }
+                });
+
                 mess.appendChild(message);
                 unhide(mess_root);
             }
@@ -293,7 +314,7 @@
         }
 
         let picker = document.getElementById("file-import")
-        picker.addEventListener("click", file_picker_clicked, false)
+        picker.addEventListener("change", file_picker_clicked, false)
 
 
         function dragover_handler(ev) {
