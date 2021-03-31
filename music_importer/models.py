@@ -182,3 +182,6 @@ class MusicTrackWithNumber(models.Model):
         on_delete=models.CASCADE,
         related_name="tracks",
     )
+
+    class Meta:
+        ordering = ["number"]

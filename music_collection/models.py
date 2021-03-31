@@ -36,6 +36,10 @@ class MusicCollection(models.Model):
     objects = models.Manager()
     track_number_manager = MusicCollectionManager()
 
+    @property
+    def sorted_track_set(self):
+        return self.tracks.order_by("number")
+
 
 def get_next_track_number(arr):
     """

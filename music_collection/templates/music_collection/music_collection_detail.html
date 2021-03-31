@@ -24,7 +24,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for music in  object.tracks.all %}
+            {% for music in  object.sorted_track_set %}
                 <tr>
                     <td>{{ music.number }}</td>
                     <td>{{ music.track_ptr.title }}</td>

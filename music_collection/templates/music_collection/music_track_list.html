@@ -99,7 +99,7 @@
                                     <input type="hidden" value="{{ music.pk }}" name="music_pk"/>
                                     {% csrf_token %}
                                     <select name="col_pk" onchange="this.form.submit()">
-                                        <option>Add to collection</option>
+                                        <option disabled>Add to collection</option>
                                         {% for collection in collections %}
                                             <option value="{{ collection.pk }}">{{ collection.title }}</option>
                                         {% endfor %}
