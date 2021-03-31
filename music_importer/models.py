@@ -75,41 +75,6 @@ class Artist(models.Model):
         return self.name
 
 
-class AlbumManager(models.Manager):
-    def get_by_natural_key(self, name, user):
-        return (self.get_or_create(name=name, user_id=user))[0]
-
-    def insert(self, name, user, artist=None):
-        """
-        Insert an album, checking for existence using the name and the user before inserting.
-        If the album as an artist attached to it, and an album already exists with this name but without an artist
-        attached to it, the stored album will be updated.
-
-        :param name: Album name
-        :param artist: Album artist (default None)
-        :param user: The user to be associated with the album
-        :return: The created album
-        """
-        if artist is not None:
-            # Try to find an album without the artist
-            try:
-                album_stored = self.get(name=name, user=user)
-                if album_stored.artist is None or album_stored.artist != artist:
-                    album_stored.artist = artist
-                    album_stored.save(update_fields=["artist"])
-                album = album_stored
-            # If it does not exist, then this is the first time that this album is inserted
-            except Album.DoesNotExist:
-                album = self.create(name=name, artist=artist, user=user)
-        else:
-            try:
-                album = self.get(name=name, user=user)
-            except Album.DoesNotExist:
-                album = self.create(name=name, user=user)
-
-        return album
-
-
 class Album(models.Model):
     """
     Album model :
@@ -123,8 +88,6 @@ class Album(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False
     )
-
-    objects = AlbumManager()
 
     def __str__(self):
         return (
