@@ -143,3 +143,17 @@ def delete_collection(request):
         return render(request, "display_message.html", context=context)
     else:
         return HttpResponseNotAllowed(permitted_methods=["POST"])
+
+
+@login_required
+def remove_track(request):
+    if request.method == "POST":
+        col_pk = request.POST["col_pk"]
+        music_pk = request.POST["music_pk"]
+        collection = MusicCollection.objects.get(user=request.user, pk=col_pk)
+        music = MusicTrack.objects.get(user=request.user, pk=music_pk)
+        collection_link = collection.tracks.get(track_ptr=music)
+        collection_link.delete()
+        return HttpResponseRedirect(request.path)
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["POST"])

@@ -220,3 +220,6 @@ class TestMusicCollection(TestCase):
         )
 
         self.assertContains(response, "Error")
+
+    def test_delete_music_collection(self):
+        self.assertEqual(True, False)  # TODO
