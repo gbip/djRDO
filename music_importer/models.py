@@ -12,7 +12,6 @@ from django.utils.timezone import now
 
 from djRDO import settings
 from music import key
-from music_collection.models import MusicCollection
 
 
 class KeyField(models.CharField):
@@ -146,7 +145,6 @@ class MusicTrack(models.Model):
     date_released = models.DateField(null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     genre = models.CharField(max_length=200, null=True, blank=True)
-    collections = models.ManyToManyField(MusicCollection)
 
     objects = MusicManager()
 
@@ -172,3 +170,15 @@ class MusicTrack(models.Model):
             return "000000"
         else:
             return key.openKeyColors[self.key]
+
+
+class MusicTrackWithNumber(models.Model):
+    number = models.PositiveSmallIntegerField()
+    track_ptr = models.OneToOneField(
+        MusicTrack, on_delete=models.CASCADE, related_name="collection"
+    )
+    collection = models.ForeignKey(
+        "music_collection.MusicCollection",
+        on_delete=models.CASCADE,
+        related_name="tracks",
+    )

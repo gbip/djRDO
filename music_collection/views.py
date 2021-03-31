@@ -25,15 +25,21 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
     paginate_by = 100
     ordering = ["date_created"]
 
-    def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user).order_by(
-            *self.ordering
+    def get_queryset(self, *args, **kwargs):
+        return (
+            super()
+            .get_queryset(*args, **kwargs)
+            .filter(user=self.request.user)
+            .order_by(*self.ordering)
         )
 
 
 class MusicCollectionDetailView(DetailView, LoginRequiredMixin):
     model = MusicCollection
     template_name = "music_collection/music_collection_detail.html"
+
+    def get_queryset(self, *args, **kwargs):
+        return super().get_queryset(*args, **kwargs).filter(user=self.request.user)
 
 
 @login_required
