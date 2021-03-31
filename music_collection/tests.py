@@ -12,6 +12,10 @@ from music_importer.models import MusicTrack, Artist, Album
 
 
 class TestMultipleUserMusic(TestCase):
+    """
+    Test that multiple user can't see each other data
+    """
+
     @classmethod
     def setUpTestData(cls):
         cls.user1 = get_user_model().objects.create(
@@ -26,6 +30,10 @@ class TestMultipleUserMusic(TestCase):
         cls.user2.save()
 
     def test_no_data_sharing(self):
+        """
+        Creates two user, with a single track each. Then tries to fetch the tracklist and make sure each user can only
+        see their track
+        """
         music = MusicTrack(title="User1 music", user=self.user1)
         music.save()
 
@@ -51,6 +59,10 @@ class TestMultipleUserMusic(TestCase):
 
 
 class TestOrdering(TestCase):
+    """
+    Test the ordering of tracks on the music collection view
+    """
+
     @classmethod
     def setUpTestData(cls):
         cls.user = get_user_model().objects.create(
@@ -60,6 +72,14 @@ class TestOrdering(TestCase):
         cls.user.save()
 
     def ordering_test_helper(self, track_first, track_second, field_name):
+        """
+        Helper that allows to quickly check the ordering of tracks. The music collection list is fetched twice, one time
+        ordered in an ascending order, one time in a descending order. The order in which the track are returned is then
+        verified.
+        :param track_first: The first track
+        :param track_second: The second track
+        :param field_name: The field to sort the track with
+        """
         response = self.client.get(
             reverse("music_collection:music_list")
             + "?order_by="

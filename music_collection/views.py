@@ -6,11 +6,17 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.generic import ListView
 
-from music import key
 from music_importer.models import MusicTrack
 
 
 class MusicCollectionListView(ListView, LoginRequiredMixin):
+    """
+    Provide a list view of all music tracks for a user.
+    Allows two parameter in the request :
+    * order_by : specify a field to order the track
+    * dir : specify the ordering order (ascending, descending)
+    """
+
     model = MusicTrack
     template_name = "music_collection/music_collection.html"
     paginate_by = 100
@@ -27,6 +33,9 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
 
 @login_required
 def delete_collection(request):
+    """
+    Delete a user track's collection.
+    """
     if request.method == "POST":
         tracks = MusicTrack.objects.filter(user=request.user)
         tracks.delete()

@@ -8,6 +8,10 @@ from music_importer.models import MusicTrack
 
 
 class TestAuthViewsBehaviour(TestCase):
+    """
+    Test views behaviour related to authentication
+    """
+
     @classmethod
     def setUp(cls):
         cls.user = get_user_model().objects.create(
@@ -17,12 +21,17 @@ class TestAuthViewsBehaviour(TestCase):
         cls.user.save()
 
     def test_navbar(self):
+        """
+        Verify that the navbar does not dislay login based view to an anonymous user.
+        :return:
+        """
         response = self.client.get(reverse("accounts:login"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Sign up")
         self.assertContains(response, "Log in")
         self.assertNotContains(response, "Import Music")
         self.assertNotContains(response, "Insights")
+        self.assertNotContains(response, "Music Library")
 
         self.assertTrue(
             self.client.login(username=self.user.username, password="test_password")
@@ -33,19 +42,36 @@ class TestAuthViewsBehaviour(TestCase):
         self.assertNotContains(response, "Login")
         self.assertContains(response, "Import Music")
         self.assertContains(response, "Insights")
+        self.assertContains(response, "Music Library")
 
     def test_profile(self):
+        """
+        Make sure that the profile page is login-only and display the required buttons.
+        """
+        self.assertRedirects(
+            self.client.get(reverse("accounts:profile")),
+            reverse("accounts:login") + "?next=" + reverse("accounts:profile"),
+        )
         self.assertTrue(
             self.client.login(username=self.user.username, password="test_password")
         )
         response = self.client.get(reverse("accounts:profile"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.email)
-        for btn_text in ["Logout", "Change Password", "Delete Account"]:
+        for btn_text in [
+            "Logout",
+            "Change Password",
+            "Delete Account",
+            "Delete Music Collection",
+        ]:
             self.assertContains(response, btn_text)
 
 
 class TestAccountMethod(TestCase):
+    """
+    Test behaviour related to account POST method
+    """
+
     @classmethod
     def setUp(cls):
         cls.user = get_user_model().objects.create(
@@ -55,9 +81,15 @@ class TestAccountMethod(TestCase):
         cls.user.save()
 
     def test_user_track_deletion(self):
+        """
+        Verify that track deletion works correctly
+        """
         resp = self.client.get(reverse("music_collection:delete_collection"))
         self.assertRedirects(
-            resp, reverse("accounts:login") + "?next=%2Fmusic%2Fdelete_collection"
+            resp,
+            reverse("accounts:login")
+            + "?next="
+            + reverse("music_collection:delete_collection"),
         )
 
         self.assertTrue(
@@ -77,10 +109,13 @@ class TestAccountMethod(TestCase):
         self.assertEqual(resp.status_code, 405)
 
     def test_user_account_deletion(self):
+        """
+        Verify that account deletion behaves as expected
+        """
         resp = self.client.get(reverse("accounts:delete_account"))
         self.assertRedirects(
             resp,
-            reverse("accounts:login") + "?next=%2Faccounts%2Fdelete_account%2F",
+            reverse("accounts:login") + "?next=" + reverse("accounts:delete_account"),
         )
 
         self.assertTrue(

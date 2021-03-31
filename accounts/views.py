@@ -8,8 +8,11 @@ from music_importer.models import MusicTrack
 from . import forms
 
 
-@login_required()
+@login_required
 def stats(request):
+    """
+    Display detailed statistics about a user music collection
+    """
     if request.method == "GET":
         user_tracks = MusicTrack.objects.filter(user=request.user)
         bpm_distribution = user_tracks.all().values("bpm").annotate(Count("bpm"))
@@ -24,6 +27,9 @@ def stats(request):
 
 @login_required
 def my_profile(request):
+    """
+    Display profile detail about a user
+    """
     if request.method == "GET":
         context = dict()
         user_tracks = MusicTrack.objects.filter(user=request.user)

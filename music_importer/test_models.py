@@ -26,7 +26,6 @@ class MusicImporterSerializerTestCase(TestCase):
     def test_track_serialization(self):
         """
         Tries to serialize then deserialized a track, and checks that it has not changed
-        :return:
         """
         artist = Artist(name="Potato musician", user=self.user)
         artist.save()
