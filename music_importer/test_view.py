@@ -78,6 +78,7 @@ class MusicImporterViewTestCase(TestCase):
         # Retrieve objects and check for equality
         d = MusicTrack.objects.filter(title=ser.data["title"])
         self.assertEqual(d[0], d[1])
+        self.assertEqual(MusicTrack.objects.count(), 2)
 
     def test_loading_all_tracks(self):
         url = reverse("music_importer:upload")

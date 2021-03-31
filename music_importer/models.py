@@ -163,6 +163,6 @@ class MusicTrack(models.Model):
 
     def get_key_color(self):
         if self.key is None:
-            return "00000000"
+            return "000000"
         else:
             return key.openKeyColors[self.key]

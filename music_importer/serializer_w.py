@@ -1,7 +1,6 @@
 """
 This module defines a writable json interface that allows to serialize a track that embeds an artist and an album field.
 """
-from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.fields import CharField, IntegerField
 
@@ -67,6 +66,7 @@ class MusicTrackSerializerW(serializers.ModelSerializer):
 
         album = None
         if validated_data.get("album"):
+            # Dict passed to update_or_create holding the new values for the album
             defaults = {}
             album_data = validated_data.pop("album")
             album_artist_data = album_data.get("artist")
@@ -74,12 +74,14 @@ class MusicTrackSerializerW(serializers.ModelSerializer):
                 album_artist, _ = Artist.objects.get_or_create(
                     **album_artist_data, user=user
                 )
+                # We don't want to remove an existing artist !!!
                 defaults["artist"] = album_artist
+                # This is needed so that the ORM can find the album
                 album_data["artist"] = album_artist
+
             defaults["name"] = album_data.get("name")
             album, p = Album.objects.update_or_create(
                 user=user, **album_data, defaults=defaults
             )
-            print(f"{p=}")
 
         return MusicTrack.objects.create(album=album, artist=artist, **validated_data)
