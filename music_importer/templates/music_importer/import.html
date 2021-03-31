@@ -48,11 +48,16 @@
                             </button>
                         </div>
                     </div>
-                    <div class="has-text-centered">
-                        <button id="upload-btn" class="button is-primary is-center is-hidden"
-                                onclick="send_music_to_server()" disabled>
-                            Upload Tracks
-                        </button>
+                    <div class="has-text-centered block">
+                        <div class="is-hidden block" id="progress-bar">
+                            <progress class="progress is-small is-primary" max="100">15%</progress>
+                        </div>
+                        <div class="block">
+                            <button id="upload-btn" class="button is-primary is-center"
+                                    onclick="send_music_to_server()" disabled>
+                                Upload Tracks
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="column is-hidden" id="message-column">
@@ -113,7 +118,7 @@
             // Default options are marked with *
             const csrftoken = getCookie('csrftoken');
             //console.log(JSON.stringify(data))
-            const response = await fetch(url, {
+            return await fetch(url, {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
                 headers: {
                     'Content-Type': 'application/json',
@@ -122,39 +127,54 @@
                 },
                 redirect: 'follow', // manual, *follow, error
                 body: JSON.stringify(data) // body data type must match "Content-Type" header
-            });
-            return response; // parses JSON response into native JavaScript objects
+            }); // parses JSON response into native JavaScript objects
         }
 
 
         function get_field(tags, field) {
-            if (tags.hasOwnProperty(field)) {
-                return tags[field]
-            } else return null;
+            tree = field.split(".")
+            cursor = tags
+            for (field in tree) {
+                if (field in cursor)
+                    cursor = cursor[field]
+            }
+            return cursor;
         }
 
         // Retrieve the tags that we are looking for
         // TODO : Handle missing fields
         function jsonize_tags(tags) {
-            const property_list = ["title", "genre", "year", "TBPM.data", "TKEY.data", "TPE2.data"];
-            let object = {};
+            let object = {}
 
-            property_list.forEach(function (property) {
-                const val = get_field(tags, property);
-                if (val != null) {
-                    object[property] = val;
-                }
-            })
-            const artist_name = get_field(tags, "artist");
-            if (artist_name != null) {
-                object["artist"] = {name: artist_name};
+            if ('title' in tags) {
+                object['title'] = tags.title;
+            } else {
+                throw {info: "A title tag is required for djRDO to analyze your file."};
             }
-            const album_name = get_field(tags, "album");
-            const album_artist = get_field(tags, "album_artist");
-            if (album_name != null) {
-                object["album"] = {name : album_name};
-                if (album_artist != null) {
-                    object["album"] = {artist: { name : album_artist}};
+
+            if ('genre' in tags) {
+                object['genre'] = tags.genre;
+            }
+
+            if ('year' in tags) {
+                object['year'] = tags.year;
+            }
+            if ('TBPM' in tags) {
+                object["bpm"] = tags.TBPM.data
+            }
+
+            if ("TKEY" in tags) {
+                object["key"] = tags.TKEY.data
+            }
+
+            if ('artist' in tags) {
+                object["artist"] = {name: tags.artist};
+            }
+
+            if ('album' in tags) {
+                object["album"] = {name: tags.album};
+                if ("TPE2" in tags) {
+                    object["album"]["arrtist"] = {name: tags.TPE2.data};
                 }
             }
             return object;
@@ -166,34 +186,49 @@
             return jsonize_tags(tags.tags);
         }
 
+        function has_tags(f) {
+            if ("name" in f) {
+                return f.name.endsWith(".mp3") || f.name.endsWith(".flac");
+            }
+            if ("filename" in f) {
+                return f.filename.endsWith(".mp3") || f.filename.endsWith(".flac");
+            }
+            return true;
+        }
+
         /**
          * Parses the metadata from a list of files.
          * Displays the number of track imported within the dropzone.
          * Print a warning if some files are not music
          */
         async function music_import(files) {
+            document.getElementById("progress-bar").classList.toggle("is-hidden");
             let result = [];
             let counter = 0;
             for (const file of Array.from(files)) {
-                try {
-                    let v = await parse(file);
-                    if (v != null) {
-                        counter += 1;
-                        result.push(v);
-                    } else {
-                        print_warning(file.filepath);
-                    }
-                } catch (e) {
-                    if (null != file.filepath) {
-                        print_warning(file.filepath);
-                    } else {
-                        console.log(e);
+                if (has_tags(file)) {
+                    try {
+                        let v = await parse(file);
+                        if (v != null) {
+                            counter += 1;
+                            result.push(v);
+                        } else {
+                            print_warning(file.filepath, "Unhandled parsing error");
+                        }
+                    } catch (e) {
+                        if ('filepath' in file) {
+                            print_warning(file.filepath, e.info);
+                        } else {
+                            print_warning(file.webkitRelativePath, e.info)
+                        }
                     }
                 }
             }
             music_tracks = result
             print_track_imported(counter);
-            enable_upload_button_if(counter)
+            enable_upload_button_if(counter);
+            document.getElementById("progress-bar").classList.toggle("is-hidden");
+
         }
 
         /** Callback for the file picker */
@@ -216,7 +251,6 @@
             let btn = document.getElementById("upload-btn");
             if (tracks_imported > 0) {
                 btn.disabled = false;
-                unhide(btn)
             }
         }
 
@@ -235,24 +269,36 @@
             p.textContent = "Found " + number + " tracks."
         }
 
+        function hide_track_imported() {
+            let p = document.getElementById("track_imported")
+            if (p != null) {
+                p.textContent = "";
+            }
+        }
+
         /**
          * Print a warning about a file that could not be imported in a bulma message div
          * @param warning_str : string the filename to be be displayed
+         * @param message : the error message
          */
-        function print_warning(warning_str) {
+        function print_warning(warning_str, message) {
             let col = document.getElementById("message-column")
             unhide(col)
             let list = document.getElementById("warn-notif");
             let item = document.createElement("li")
             if (should_be_bold(warning_str)) {
                 let bold = document.createElement("b");
+                let normal = document.createElement("span");
                 item.appendChild(bold)
+                item.appendChild(normal)
                 bold.textContent = warning_str;
+                normal.textContent = " : " + message;
             } else {
-                item.textContent = warning_str;
+                item.textContent = warning_str + " : " + message;
             }
             list.appendChild(item)
         }
+
 
         function hide(elem) {
             if (!elem.classList.contains("is-hidden")) {
@@ -269,19 +315,16 @@
 
         function handle_server_resp(resp) {
             if (resp.status === 200) {
-                mess_root = document.getElementById("server_resp_info");
-                mess = document.getElementById("server_resp_info_body");
-                message = document.createElement("p");
+                let mess_root = document.getElementById("server_resp_info");
+                let mess = document.getElementById("server_resp_info_body");
+                let message = document.createElement("p");
                 message.textContent = music_tracks.length + " tracks have been imported !";
                 mess.appendChild(message);
-                unhide(mess_root);
-                document.getElementById("upload-btn").disabled = true;
-                //hide(document.getElementById("upload-btn"))
+                mess_root.classList.toggle("is-hidden");
             } else {
-                console.log(resp)
-                mess_root = document.getElementById("server_resp_error");
-                mess = document.getElementById("server_resp_error_body");
-                message = document.createElement("p");
+                let mess_root = document.getElementById("server_resp_error");
+                let mess = document.getElementById("server_resp_error_body");
+                let message = document.createElement("p");
                 // TODO : Parse json
                 resp.json().then(data => {
                     console.log(data)
@@ -291,12 +334,15 @@
                 });
 
                 mess.appendChild(message);
-                unhide(mess_root);
+                mess_root.classList.toggle("is-hidden");
             }
+            document.getElementById("upload-btn").disabled = true;
+            hide_track_imported();
+
         }
 
         /**
-         * Emulate a clik on elemId
+         * Emulate a click on elemId
          * @param elemId
          */
         function performClick(elemId) {

@@ -35,7 +35,12 @@
             data: {
                 labels: [
                     {% for bpm in bpm_distribution %}
-                        {{ bpm.bpm }},
+                        {% if bpm.bpm == None %}
+                            "No BPM",
+                        {% else %}
+                            {{ bpm.bpm }},
+                        {% endif %}
+
                     {% endfor %}
                 ],
                 datasets: [{
@@ -69,14 +74,18 @@
             data: {
                 labels: [
                     {% for key in key_distribution %}
-                        "{{ key.key.value }}",
+                        {% if key.key.value == None %}
+                            "No Key",
+                        {% else %}
+                            "{{ key.key.value }}",
+                        {% endif %}
                     {% endfor %}
                 ],
                 datasets: [{
                     backgroundColor: [
-                    {% for key in key_distribution %}
-                        "#{{ key.key.get_key_color }}",
-                    {% endfor %}
+                        {% for key in key_distribution %}
+                            "#{{ key.key.get_key_color }}",
+                        {% endfor %}
                     ],
                     label: '# of Tracks',
                     data: [{% for key in key_distribution %}

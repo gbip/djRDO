@@ -38,14 +38,12 @@ def upload(request):
         for t in data:
             if t is not None:
                 t["user"] = request.user.pk
-        print(f"{data=}")
         serializer = MusicTrackSerializerW(data=data, many=True)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(data=dict(), status=200)
         else:
             errors = {"errors": serializer.errors}
-            print(f"{serializer.errors=}")
             return JsonResponse(errors, status=400)
     else:
         raise Http404("Page not found")
