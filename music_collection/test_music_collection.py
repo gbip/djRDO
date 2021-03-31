@@ -190,3 +190,33 @@ class TestMusicCollection(TestCase):
         self.assertEqual(track.track_ptr, music)
         self.assertEqual(track.collection, collection)
         self.assertEqual(collection.tracks.get(track_ptr=music).track_ptr, music)
+
+    def test_post_music_collection(self):
+        music = MusicTrack(title="toto", user=self.user1)
+        music.save()
+        collection = MusicCollection(title="my_col", user=self.user1)
+        collection.save()
+
+        # Login with user1
+        logged_in = self.client.login(
+            username=self.user1.username, password="test_password"
+        )
+        self.assertTrue(logged_in)
+
+        response = self.client.post(
+            reverse("music_collection:add_music_to_collection"),
+            {"col_pk": collection.pk, "music_pk": music.pk},
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("music_collection:collection_detail", kwargs={"pk": collection.pk}),
+        )
+        self.assertEqual(music.collection.collection.pk, collection.pk)
+
+        response = self.client.post(
+            reverse("music_collection:add_music_to_collection"),
+            {"col_pk": collection.pk, "music_pk": music.pk},
+        )
+
+        self.assertContains(response, "Error")

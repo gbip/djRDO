@@ -1,5 +1,7 @@
+import django
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.utils import IntegrityError
 from django.http import (
     HttpResponseNotAllowed,
     HttpResponseBadRequest,
@@ -50,11 +52,29 @@ def add_music_to_collection(request):
             music_pk = request.POST["music_pk"]
             collection = MusicCollection.objects.get(user=request.user, pk=col_pk)
             music = MusicTrack.objects.get(user=request.user, pk=music_pk)
-            music.collections.add(collection)
-            music.save()
-            return HttpResponseRedirect(
-                reverse("music_collection:collection_detail", kwargs={"pk": col_pk})
-            )
+            try:
+                MusicCollection.track_number_manager.add_track_to_collection(
+                    music, collection
+                )
+                return HttpResponseRedirect(
+                    reverse("music_collection:collection_detail", kwargs={"pk": col_pk})
+                )
+            except django.db.utils.IntegrityError:
+                context = dict()
+                context["error"] = (
+                    'Track <b>"'
+                    + music.title
+                    + '"</b>'
+                    + " is already present in collection "
+                    + '"<b>'
+                    + collection.title
+                    + '"</b>'
+                )
+                return render(
+                    template_name="error.html",
+                    request=request,
+                    context=context,
+                )
         else:
             return HttpResponseBadRequest()
     else:
