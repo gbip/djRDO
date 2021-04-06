@@ -1,0 +1,20 @@
+@charset "utf-8";
+
+// Theme colors :
+$djrdo_blue : #58A4F5;
+$djrdo_red : #F57A71;
+
+$primary: $djrdo_blue;
+$link: #40CF7B;
+$danger: $djrdo_red;
+
+//$warning: $yellow
+//$danger: $red
+//$dark: $grey-darker
+//$text: $grey-dark
+
+
+$input-arrow : $djrdo_blue;
+$navbar-dropdown-arrow : $primary;
+$dropdown-content-arrow : $djrdo_blue;
+@import "../node_modules/bulma/bulma.sass";

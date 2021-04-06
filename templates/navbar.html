@@ -25,12 +25,12 @@
                     Insights
                 </a>
             {% endif %}
-            <div class="navbar-item has-dropdown is-hoverable">
+            <div class="navbar-item has-dropdown is-hoverable ">
                 <a class="navbar-link">
                     More
                 </a>
 
-                <div class="navbar-dropdown">
+                <div class="navbar-dropdown ">
                     <a class="navbar-item">
                         About
                     </a>
@@ -55,7 +55,7 @@
                     <div class="buttons">
                         <a class="button is-primary" href="{% url 'music_importer:index' %}">
                             <span class="icon">
-                                <i class="fas fa-upload"></i>
+                                <i class="fas fa-upload "></i>
                             </span>
                             <strong>Import Music</strong>
                         </a>
@@ -65,11 +65,11 @@
             <div class="navbar-item">
                 {% if user.is_authenticated %}
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
+                        <a class="navbar-link ">
                             {{ user.username }}
                         </a>
 
-                        <div class="navbar-dropdown">
+                        <div class="navbar-dropdown ">
                             <a class="navbar-item" href="{% url 'accounts:profile' %}">
                                 Profile
                             </a>
