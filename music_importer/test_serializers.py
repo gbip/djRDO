@@ -115,8 +115,8 @@ class MusicImporterSerializerFailsTestCase(TestCase):
 
     def test_invalid_key(self):
         error = [
-            {"key": [ErrorDetail(string="Invalid utils key : 13A", code="invalid")]},
-            {"key": [ErrorDetail(string="Invalid utils key : 37", code="invalid")]},
+            {"key": [ErrorDetail(string="Invalid music key : 13A", code="invalid")]},
+            {"key": [ErrorDetail(string="Invalid music key : 37", code="invalid")]},
         ]
         self.verify_error("music_importer/test_data/invalid_key.json", error)
 

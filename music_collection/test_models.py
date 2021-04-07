@@ -1,27 +1,12 @@
-from django.contrib.auth import get_user_model
-from django.test import TestCase
-
 from music_collection.models import MusicCollection, get_next_track_number
 from music_importer.models import MusicTrack, MusicTrackWithNumber
+from utils.test import DjRDOTestHelper
 
 
-class TestMusicCollection(TestCase):
+class TestMusicCollection(DjRDOTestHelper):
     """
     Test that multiple user can't see each other data
     """
-
-    @classmethod
-    def setUpTestData(cls):
-        cls.user1 = get_user_model().objects.create(
-            username="user1", password="test_password", email="toto@toto.com"
-        )
-        cls.user1.set_password("test_password")
-        cls.user1.save()
-        cls.user2 = get_user_model().objects.create(
-            username="user2", password="test_password", email="toto2@toto.com"
-        )
-        cls.user2.set_password("test_password")
-        cls.user2.save()
 
     def test_track_number(self):
         """
@@ -99,7 +84,7 @@ class TestMusicCollection(TestCase):
 
     def test_music_collection_basic(self):
         """
-        Test the basic behaviour of a utils collection
+        Test the basic behaviour of a music collection
         """
         music = MusicTrack(title="toto", user=self.user1)
         music.save()

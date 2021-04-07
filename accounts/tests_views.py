@@ -12,8 +12,7 @@ class TestAuthViewsBehaviour(DjRDOTestHelper):
 
     def test_navbar(self):
         """
-        Verify that the navbar does not dislay login based view to an anonymous user.
-        :return:
+        Verify that the navbar does not display login based view to an anonymous user.
         """
         response = self.client.get(reverse("accounts:login"))
         self.assertEqual(response.status_code, 200)

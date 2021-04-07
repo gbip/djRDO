@@ -2,23 +2,20 @@
 
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
-from django.test import TestCase
-
 # Create your tests here.
 from django.urls import reverse
 from django.utils.datetime_safe import datetime
 
-from utils import key
 from music_collection.models import MusicCollection
 from music_importer.models import MusicTrack, Artist, Album
+from utils import key
 from utils.test import DjRDOTestHelper
 
 
 class TestMusicCollectionViews(DjRDOTestHelper):
     def test_add_music_to_collection(self):
         """
-        Test utils collection view
+        Test music collection view
         :return:
         """
         music = MusicTrack(title="toto", user=self.user)
@@ -80,26 +77,26 @@ class TestMusicCollectionViews(DjRDOTestHelper):
             Creates two user, with a single track each. Then tries to fetch the tracklist and make sure each user can only
             see their track
             """
-            collection = MusicCollection(title="User1 utils", user=self.user1)
+            collection = MusicCollection(title="User1 music", user=self.user1)
             collection.save()
 
             # Login with user1
             self.login("user1")
             response = self.client.get(reverse("music_collection:collection_list"))
-            # Verify that we can see our utils
+            # Verify that we can see our music
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, collection.title)
 
             # Login with client 2
             self.login("user2")
             response = self.client.get(reverse("music_collection:collection_list"))
-            # Verify that we can see our utils
+            # Verify that we can see our music
             self.assertEqual(response.status_code, 200)
             self.assertNotContains(response, collection.title)
 
     def test_same_name(self):
         """
-        Test the detail view of a utils collection : creates two collection with two distinct set of utils and access them.
+        Test the detail view of a music collection : creates two collection with two distinct set of music and access them.
         """
         collection1 = MusicCollection(title="col1", user=self.user1)
         music1 = MusicTrack(title="music1", user=self.user1)
@@ -148,12 +145,12 @@ class TestMusicCollectionViews(DjRDOTestHelper):
 
 class TestOrdering(DjRDOTestHelper):
     """
-    Test the ordering of tracks on the utils collection view
+    Test the ordering of tracks on the music collection view
     """
 
     def ordering_test_helper(self, track_first, track_second, field_name):
         """
-        Helper that allows to quickly check the ordering of tracks. The utils collection list is fetched twice, one time
+        Helper that allows to quickly check the ordering of tracks. The music collection list is fetched twice, one time
         ordered in an ascending order, one time in a descending order. The order in which the track are returned is then
         verified.
         :param track_first: The first track
@@ -232,7 +229,7 @@ class TestMultipleUserMusic(DjRDOTestHelper):
         see their track
         """
         music = MusicTrack(
-            title="User1 utils", date_released=datetime.today(), user=self.user1
+            title="User1 music", date_released=datetime.today(), user=self.user1
         )
         music.save()
 

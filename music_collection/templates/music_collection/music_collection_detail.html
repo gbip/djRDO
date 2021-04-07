@@ -7,46 +7,48 @@
         There are no music tracks in this collection, yet.
     {% else %}
         <div class="block has-text-centered">
-        <h1 class="title">{{ object.title }}</h1>
+            <h1 class="title">{{ object.title }}</h1>
         </div>
         <div class="block">
-        <table class="table is-striped is-hoverable is-fullwidth">
-            <thead>
-            <tr>
-                <th>Track Number</th>
-                <th>Title</th>
-                <th>Artist</th>
-                <th>Album</th>
-                <th>BPM</th>
-                <th>Key</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for music in  object.sorted_track_set %}
+            <table class="table is-striped is-hoverable is-fullwidth">
+                <thead>
                 <tr>
-                    <td>{{ music.number }}</td>
-                    <td>{{ music.track_ptr.title }}</td>
-                    <td>{{ music.track_ptr.artist.name }}</td>
-                    <td>{{ music.track_ptr.album.name }}</td>
-                    <td>{{ music.track_ptr.bpm }}</td>
-                    <td style="color: #{{ music.track_ptr.get_key_color }}">{{ music.track_ptr.key.value }}</td>
-                    <td>{{ music.track_ptr.released_date }}</td>
-                    <td>
-                        <form method="post" action="{% url "music_collection:collection_remove_track" %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="col_pk" value="{{ object.pk }}"/>
-                            <input type="hidden" name="music_pk" value="{{ music.track_ptr.pk }}"/>
-
-                            <button class="button is-outlined is-danger" onclick="this.form.submit()">Remove</button></td>
-                        </form>
+                    <th>Track Number</th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Album</th>
+                    <th>BPM</th>
+                    <th>Key</th>
+                    <th>Date</th>
+                    <th>Action</th>
                 </tr>
+                </thead>
+                <tbody>
+                {% for music in  object.sorted_track_set %}
+                    <tr>
+                        <td>{{ music.number }}</td>
+                        <td>{{ music.track_ptr.title }}</td>
+                        <td>{{ music.track_ptr.artist.name }}</td>
+                        <td>{{ music.track_ptr.album.name }}</td>
+                        <td>{{ music.track_ptr.bpm }}</td>
+                        <td style="color: #{{ music.track_ptr.get_key_color }}">{{ music.track_ptr.key.value }}</td>
+                        <td>{{ music.track_ptr.released_date }}</td>
+                        <td>
+                            <form method="post" action="{% url "music_collection:collection_remove_track" %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="col_pk" value="{{ object.pk }}"/>
+                                <input type="hidden" name="music_pk" value="{{ music.track_ptr.pk }}"/>
 
-            {% endfor %}
-            </tbody>
+                                <button class="button is-outlined is-danger" onclick="this.form.submit()">Remove
+                                </button>
+                        </td>
+                        </form>
+                    </tr>
 
-        </table>
+                {% endfor %}
+                </tbody>
+
+            </table>
         </div>
     {% endif %}
 {% endblock %}

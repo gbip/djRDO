@@ -7,7 +7,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 
 from utils import key
-from music_importer.models import MusicTrack, Artist, Album, MusicManager
+from music_importer.models import MusicTrack, Artist, Album
 from music_importer.serializer_w import MusicTrackSerializerW
 from music_importer.tests import import_tracks_from_test_json
 
@@ -124,14 +124,13 @@ class MusicImporterModelTestCase(TestCase):
             else:
                 album = Album.objects.get(name=album["name"], user=self.user)
 
-        print(MusicTrack.objects.normalize_date(test_case.get("year")))
         track = MusicTrack.objects.get(
             title=test_case["title"],
             key=test_case.get("key"),
             album=album,
             artist=artist,
             bpm=test_case.get("bpm"),
-            # date_released=MusicTrack.objects.normalize_date(test_case.get("year")),
+            date_released=datetime.strptime(test_case.get("year"), "%Y"),
         )
         self.assertIsNotNone(track)
 
@@ -190,9 +189,3 @@ class MusicImporterModelTestCase(TestCase):
             key.OpenKey.M1,
             ("Invalid track key : %r" % track.key),
         )
-
-    def test_date_normalization(self):
-        """
-        Check the date normalizer behaviour
-        """
-        self.assertEqual(MusicManager.normalize_date("2014"), "2014-01-01")

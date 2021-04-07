@@ -1,5 +1,5 @@
 """
-This modules defines how to represent utils keys.
+This modules defines how to represent music keys.
 """
 import enum
 
@@ -7,7 +7,7 @@ import enum
 @enum.unique
 class MusicKey(enum.Enum):
     """
-    Standard utils key representation for all elements of the 5th wheel
+    Standard music key representation for all elements of the 5th wheel
     """
 
     C_MAJOR = "C Major"  # 1d
@@ -39,7 +39,7 @@ class MusicKey(enum.Enum):
 @enum.unique
 class CamelotKey(enum.Enum):
     """
-    Camelot utils key representation
+    Camelot music key representation
     """
 
     B1 = "1B"
@@ -71,7 +71,7 @@ class CamelotKey(enum.Enum):
 @enum.unique
 class OpenKey(str, enum.Enum):
     """
-    Openkey utils key representation.
+    Openkey music key representation.
     Subclassing str allows for easy json serialization/deserialization.
     """
 

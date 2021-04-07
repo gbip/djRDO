@@ -1,8 +1,8 @@
 """
-Data model to represent arbitrary utils tracks.
-A utils track is made of some metadata (title, bpm, key) along with some links to other utils objects such as an album
+Data model to represent arbitrary music tracks.
+A music track is made of some metadata (title, bpm, key) along with some links to other music objects such as an album
 or an artist.
-Every utils model is linked to a user.
+Every music model is linked to a user.
 """
 
 from django.contrib.auth.models import User
@@ -15,7 +15,11 @@ from utils import key
 
 
 class KeyField(models.CharField):
-    description = "A utils key"
+    """
+    Implement a field that only holds value that represents valid music key.
+    """
+
+    description = "A music key"
 
     def __init__(self, *args, **kwargs):
         kwargs["max_length"] = 3
@@ -34,6 +38,9 @@ class KeyField(models.CharField):
 
     @classmethod
     def validate_key(cls, value):
+        """
+        Validates the key by trying to find it in the 3 supported music notation
+        """
         if value is None:
             return None
         elif value in set(k.value for k in key.OpenKey):
@@ -43,7 +50,7 @@ class KeyField(models.CharField):
         elif value in set(k.value for k in key.MusicKey):
             return key.musicKeyToOpenKey[key.MusicKey(value)]
         else:
-            raise exceptions.ValidationError("Invalid utils key : {}".format(value))
+            raise exceptions.ValidationError("Invalid music key : {}".format(value))
 
     def to_python(self, value):
         if isinstance(value, key.OpenKey):
@@ -97,25 +104,6 @@ class Album(models.Model):
         )
 
 
-class MusicManager(models.Manager):
-
-    # TODO : Move validation to form
-    @staticmethod
-    def normalize_date(date_str):
-        """
-        Takes care of normalizing date values to that django can validate those dates. Currently takes care of
-        appending a month and a day if the date only holds the year.
-
-        :param date_str: A date to be normalized
-        :return: The normalized date
-        """
-        result = date_str
-        if result is not None:
-            if len(date_str) == 4:
-                result += "-01-01"
-        return result
-
-
 class MusicTrack(models.Model):
     """
     Music model :
@@ -146,8 +134,6 @@ class MusicTrack(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     genre = models.CharField(max_length=200, null=True, blank=True)
 
-    objects = MusicManager()
-
     def __str__(self):
         return "{0}".format(self.title)
 
@@ -173,6 +159,11 @@ class MusicTrack(models.Model):
 
 
 class MusicTrackWithNumber(models.Model):
+    """
+    Link a music track to a collection, adding a number to the track.
+    This allow tracks to be ordered in a collection.
+    """
+
     number = models.PositiveSmallIntegerField()
     track_ptr = models.OneToOneField(
         MusicTrack, on_delete=models.CASCADE, related_name="collection"

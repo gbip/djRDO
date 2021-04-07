@@ -63,7 +63,7 @@
             <tbody>
             {% for collection in object_list %}
                 <a>
-                    <tr >
+                    <tr>
                         <td>
                             <a href="{% url 'music_collection:collection_detail' pk=collection.pk %}">{{ collection.title }}</a>
                         </td>
