@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 
-class djRDOTestHelper(TestCase):
+class DjRDOTestHelper(TestCase):
 
     users = dict()
 

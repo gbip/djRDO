@@ -12,10 +12,10 @@ from django.utils.datetime_safe import datetime
 from utils import key
 from music_collection.models import MusicCollection
 from music_importer.models import MusicTrack, Artist, Album
-from utils.test import djRDOTestHelper
+from utils.test import DjRDOTestHelper
 
 
-class TestMusicCollectionViews(djRDOTestHelper):
+class TestMusicCollectionViews(DjRDOTestHelper):
     def test_add_music_to_collection(self):
         """
         Test utils collection view
@@ -146,7 +146,7 @@ class TestMusicCollectionViews(djRDOTestHelper):
         response_is_about(self, response, collection2, collection1, music2, music1)
 
 
-class TestOrdering(djRDOTestHelper):
+class TestOrdering(DjRDOTestHelper):
     """
     Test the ordering of tracks on the utils collection view
     """
@@ -221,7 +221,7 @@ class TestOrdering(djRDOTestHelper):
         self.ordering_test_helper(track_first, track_second, "date_released")
 
 
-class TestMultipleUserMusic(djRDOTestHelper):
+class TestMultipleUserMusic(DjRDOTestHelper):
     """
     Test that multiple user can't see each other data
     """

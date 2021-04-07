@@ -5,10 +5,10 @@ from django.test import TestCase
 from django.urls import reverse
 
 from music_importer.models import MusicTrack
-from utils.test import djRDOTestHelper
+from utils.test import DjRDOTestHelper
 
 
-class TestAuthViewsBehaviour(djRDOTestHelper):
+class TestAuthViewsBehaviour(DjRDOTestHelper):
     """
     Test views behaviour related to authentication
     """
@@ -56,7 +56,7 @@ class TestAuthViewsBehaviour(djRDOTestHelper):
             self.assertContains(response, btn_text)
 
 
-class TestAccountMethod(djRDOTestHelper):
+class TestAccountMethod(DjRDOTestHelper):
     """
     Test behaviour related to account POST method
     """

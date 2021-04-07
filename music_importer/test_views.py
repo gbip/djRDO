@@ -6,10 +6,10 @@ from django.urls import reverse
 
 from music_importer.models import MusicTrack
 from music_importer.serializer_w import MusicTrackSerializerW
-from utils.test import djRDOTestHelper
+from utils.test import DjRDOTestHelper
 
 
-class MusicImporterViewTestCase(djRDOTestHelper):
+class MusicImporterViewTestCase(DjRDOTestHelper):
     """
     Test that the upload view correctly works
     """
