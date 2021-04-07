@@ -3,7 +3,6 @@ from django.test import TestCase
 
 
 class DjRDOTestHelper(TestCase):
-
     users = dict()
 
     @classmethod

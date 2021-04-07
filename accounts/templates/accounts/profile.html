@@ -14,7 +14,8 @@
                 <div class="block">
                     <button class="button">Logout</button>
                     <a class="button " href="{% url 'accounts:password_change' %}">Change Password</a>
-                    <form method="post" action="{% url 'music_collection:delete_collection' %}" style="display: contents">
+                    <form method="post" action="{% url 'music_collection:delete_collection' %}"
+                          style="display: contents">
                         {% csrf_token %}
                         <input type="submit" value="Delete Music Collection" class="button is-danger"/>
                     </form>

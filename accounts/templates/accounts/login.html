@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}Sign in to djRDO{% endblock %}
 {% block content %}
-        <div>
+    <div>
         You don't have an account yet ?
         <u><a class="is-link" href="{% url 'accounts:register' %}">Sign up !</a></u>
-        </div>
+    </div>
     <div class="is-primary">
-    {% include 'form.html' with submit_button_value="Log in"%}
+        {% include 'form.html' with submit_button_value="Log in" %}
     </div>
 
     {# Assumes you setup the password_reset view in your URLconf #}
