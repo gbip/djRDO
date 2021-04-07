@@ -1,5 +1,5 @@
 """
-Allows user to group music into a collection, giving a logical name to a set of tracks.
+Allows user to group utils into a collection, giving a logical name to a set of tracks.
 """
 
 from django.db import models
@@ -12,10 +12,10 @@ from music_importer.models import MusicTrackWithNumber
 class MusicCollectionManager(models.Manager):
     def add_track_to_collection(self, music_track, collection):
         """
-        Add a music track to a collection, picking the first track number available
-        :param music_track: MusicTrack to be added to the collection
-        :param collection: The collection to which the music track should be added
-        :return A MusicTrackWithNumber
+        Add a utils track to a collection, picking the first track number available
+        :param music_track: MusicTrack to be added to the collection. It is not modified
+        :param collection: The collection to which the utils track should be added. It is not modified.
+        :return A MusicTrackWithNumber that is already saved in the database
         """
         available_number = collection.tracks.order_by("number")
         track_numbers = map(lambda x: x.number, available_number.all())

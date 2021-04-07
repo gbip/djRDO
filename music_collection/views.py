@@ -19,7 +19,7 @@ from music_importer.models import MusicTrack
 
 class MusicCollectionListView(ListView, LoginRequiredMixin):
     """
-    Provide a list view of all music collection for a user
+    Provide a list view of all utils collection for a user
     """
 
     model = MusicCollection
@@ -99,7 +99,7 @@ def create_collection(request):
 
 class MusicTrackListView(ListView, LoginRequiredMixin):
     """
-    Provide a list view of all music tracks for a user.
+    Provide a list view of all utils tracks for a user.
     Allows two parameter in the request :
     * order_by : specify a field to order the track
     * dir : specify the ordering order (ascending, descending)
@@ -126,7 +126,7 @@ class MusicTrackListView(ListView, LoginRequiredMixin):
 
 
 @login_required
-def delete_collection(request):
+def delete_all_user_tracks(request):
     """
     Delete a user track's collection.
     """
@@ -154,6 +154,8 @@ def remove_track(request):
         music = MusicTrack.objects.get(user=request.user, pk=music_pk)
         collection_link = collection.tracks.get(track_ptr=music)
         collection_link.delete()
-        return HttpResponseRedirect(request.path)
+        return HttpResponseRedirect(
+            reverse("music_collection:collection_detail", kwargs={"pk": collection.pk})
+        )
     else:
         return HttpResponseNotAllowed(permitted_methods=["POST"])

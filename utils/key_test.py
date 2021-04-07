@@ -4,7 +4,7 @@ Test module for musical keys enumeration
 
 import unittest
 
-import music.key as key
+import utils.key as key
 
 
 class TestKeyMethods(unittest.TestCase):

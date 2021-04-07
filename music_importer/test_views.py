@@ -6,9 +6,10 @@ from django.urls import reverse
 
 from music_importer.models import MusicTrack
 from music_importer.serializer_w import MusicTrackSerializerW
+from utils.test import djRDOTestHelper
 
 
-class MusicImporterViewTestCase(TestCase):
+class MusicImporterViewTestCase(djRDOTestHelper):
     """
     Test that the upload view correctly works
     """
@@ -17,20 +18,12 @@ class MusicImporterViewTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.user = get_user_model().objects.create(
-            username="test_user", password="test_password", email="nomail@nomail.com"
-        )
-        cls.user.set_password("test_password")
-        cls.user.save()
-
+        super(MusicImporterViewTestCase, cls).setUpTestData()
         with open("music_importer/test_data/tracks.json", "rb") as file:
             cls.tracks = json.load(file)
 
     def setUp(self):
-        logged_in = self.client.login(
-            username=self.user.username, password="test_password"
-        )
-        self.assertTrue(logged_in)
+        self.login("user")
 
     def test_upload_permissions(self):
         client = Client()

@@ -5,20 +5,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 from music_importer.models import MusicTrack
+from utils.test import djRDOTestHelper
 
 
-class TestAuthViewsBehaviour(TestCase):
+class TestAuthViewsBehaviour(djRDOTestHelper):
     """
     Test views behaviour related to authentication
     """
-
-    @classmethod
-    def setUp(cls):
-        cls.user = get_user_model().objects.create(
-            username="test_user", password="test_password", email="nomail@nomail.com"
-        )
-        cls.user.set_password("test_password")
-        cls.user.save()
 
     def test_navbar(self):
         """
@@ -33,9 +26,7 @@ class TestAuthViewsBehaviour(TestCase):
         self.assertNotContains(response, "Insights")
         self.assertNotContains(response, "Music Library")
 
-        self.assertTrue(
-            self.client.login(username=self.user.username, password="test_password")
-        )
+        self.login("user")
         response = self.client.get(reverse("accounts:stats"))
         self.assertContains(response, self.user.username)
         self.assertNotContains(response, "Signup")
@@ -52,9 +43,7 @@ class TestAuthViewsBehaviour(TestCase):
             self.client.get(reverse("accounts:profile")),
             reverse("accounts:login") + "?next=" + reverse("accounts:profile"),
         )
-        self.assertTrue(
-            self.client.login(username=self.user.username, password="test_password")
-        )
+        self.login("user")
         response = self.client.get(reverse("accounts:profile"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.email)
@@ -67,18 +56,10 @@ class TestAuthViewsBehaviour(TestCase):
             self.assertContains(response, btn_text)
 
 
-class TestAccountMethod(TestCase):
+class TestAccountMethod(djRDOTestHelper):
     """
     Test behaviour related to account POST method
     """
-
-    @classmethod
-    def setUp(cls):
-        cls.user = get_user_model().objects.create(
-            username="test_user", password="test_password", email="nomail@nomail.com"
-        )
-        cls.user.set_password("test_password")
-        cls.user.save()
 
     def test_user_track_deletion(self):
         """
@@ -92,9 +73,7 @@ class TestAccountMethod(TestCase):
             + reverse("music_collection:delete_collection"),
         )
 
-        self.assertTrue(
-            self.client.login(username=self.user.username, password="test_password")
-        )
+        self.login("user")
         track = MusicTrack(title="to be deleted", user=self.user)
         track.save()
         resp = self.client.post(reverse("music_collection:delete_collection"))

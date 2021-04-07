@@ -1,8 +1,8 @@
 """
-Data model to represent arbitrary music tracks.
-A music track is made of some metadata (title, bpm, key) along with some links to other music objects such as an album
+Data model to represent arbitrary utils tracks.
+A utils track is made of some metadata (title, bpm, key) along with some links to other utils objects such as an album
 or an artist.
-Every music model is linked to a user.
+Every utils model is linked to a user.
 """
 
 from django.contrib.auth.models import User
@@ -11,11 +11,11 @@ from django.db import models
 from django.utils.timezone import now
 
 from djRDO import settings
-from music import key
+from utils import key
 
 
 class KeyField(models.CharField):
-    description = "A music key"
+    description = "A utils key"
 
     def __init__(self, *args, **kwargs):
         kwargs["max_length"] = 3
@@ -43,7 +43,7 @@ class KeyField(models.CharField):
         elif value in set(k.value for k in key.MusicKey):
             return key.musicKeyToOpenKey[key.MusicKey(value)]
         else:
-            raise exceptions.ValidationError("Invalid music key : {}".format(value))
+            raise exceptions.ValidationError("Invalid utils key : {}".format(value))
 
     def to_python(self, value):
         if isinstance(value, key.OpenKey):

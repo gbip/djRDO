@@ -2,7 +2,7 @@ from django.urls import path, re_path
 
 from music_collection.views import (
     MusicTrackListView,
-    delete_collection,
+    delete_all_user_tracks,
     MusicCollectionListView,
     create_collection,
     MusicCollectionDetailView,
@@ -20,7 +20,7 @@ urlpatterns = [
     ),
     path("collection", MusicCollectionListView.as_view(), name="collection_list"),
     path("collection/create", create_collection, name="create_collection"),
-    path("delete_collection", delete_collection, name="delete_collection"),
+    path("delete_collection", delete_all_user_tracks, name="delete_collection"),
     path(
         "collection/<int:pk>/",
         MusicCollectionDetailView.as_view(),

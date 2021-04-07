@@ -11,7 +11,7 @@ from music_importer.serializer_w import MusicTrackSerializerW
 
 def import_tracks_from_test_json(path, l, user):
     """
-    Import music tracks from the provided path, and calls l on each track.
+    Import utils tracks from the provided path, and calls l on each track.
 
     :param path: A path to a json file representing the tracks to be loaded
     :param l: A lambda function to be called on each track

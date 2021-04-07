@@ -24,7 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("import/", include("music_importer.urls")),
-    path("music/", include("music_collection.urls")),
+    path("utils/", include("music_collection.urls")),
     path(
         "",
         TemplateView.as_view(template_name="landing.html"),

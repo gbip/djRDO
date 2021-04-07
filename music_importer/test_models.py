@@ -6,7 +6,7 @@ from django.utils.datetime_safe import date
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 
-from music import key
+from utils import key
 from music_importer.models import MusicTrack, Artist, Album, MusicManager
 from music_importer.serializer_w import MusicTrackSerializerW
 from music_importer.tests import import_tracks_from_test_json

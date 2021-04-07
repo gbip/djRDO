@@ -11,7 +11,7 @@ from . import forms
 @login_required
 def stats(request):
     """
-    Display detailed statistics about a user music collection
+    Display detailed statistics about a user utils collection
     """
     if request.method == "GET":
         user_tracks = MusicTrack.objects.filter(user=request.user)
