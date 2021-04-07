@@ -2,7 +2,7 @@
 This module defines a writable json interface that allows to serialize a track that embeds an artist and an album field.
 """
 from rest_framework import serializers
-from rest_framework.fields import CharField, IntegerField
+from rest_framework.fields import CharField, IntegerField, DateField
 
 from music_importer.models import MusicTrack, Album, Artist, KeyField
 
@@ -39,6 +39,7 @@ class MusicTrackSerializerW(serializers.ModelSerializer):
     key = CharField(
         validators=[KeyField.validate_key], max_length=3, min_length=2, required=False
     )
+    year = DateField(source="date_released", required=False, input_formats=["%Y", "Y"])
 
     class Meta:
         model = MusicTrack
@@ -49,7 +50,7 @@ class MusicTrackSerializerW(serializers.ModelSerializer):
             "artist",
             "album",
             "genre",
-            "date_released",
+            "year",
             "user",
         ]
 

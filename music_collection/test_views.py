@@ -231,19 +231,23 @@ class TestMultipleUserMusic(DjRDOTestHelper):
         Creates two user, with a single track each. Then tries to fetch the tracklist and make sure each user can only
         see their track
         """
-        music = MusicTrack(title="User1 utils", user=self.user1)
+        music = MusicTrack(
+            title="User1 utils", date_released=datetime.today(), user=self.user1
+        )
         music.save()
 
         # Login with user1
         self.login("user1")
         response = self.client.get(reverse("music_collection:music_list"))
-        # Verify that we can see our utils
+        # Verify that we can see our music
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, music.title)
+        self.assertContains(response, music.date_released.year)
 
         # Login with client 2
         self.login("user2")
         response = self.client.get(reverse("music_collection:music_list"))
-        # Verify that we can see our utils
+        # Verify that we can see our music
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, music.title)
+        self.assertNotContains(response, music.date_released)

@@ -24,6 +24,7 @@ def import_tracks_from_test_json(path, l, user):
             if l is not None:
                 l(track)
 
+            print(track)
             serializer = MusicTrackSerializerW(data=track)
             serializer.initial_data["user"] = user.pk
             serializer.is_valid(raise_exception=True)
