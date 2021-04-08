@@ -59,7 +59,6 @@ class MusicImporterViewTestCase(DjRDOTestHelper):
         data["user"] = self.user.pk
         ser = MusicTrackSerializerW(data=data)
         valid = ser.is_valid()
-        print(ser.errors)
         self.assertTrue(valid)
 
         response = self.client.post(
