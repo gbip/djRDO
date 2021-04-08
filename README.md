@@ -37,7 +37,8 @@ pipenv shell # Move into the virtual environnement
 pipenv install # Install dependencies
 ```
 
-Stay in the pipenv shell at the end of the process.
+All django commands must be typed in the pipenv shell !
+So stay in the pipenv shell at the end of the process.
 
 You will need to create a `.env` file that defines your database configuration.
 Some examples are provided (`.env.*`). To use sqlite3 as a database (recommended for development) use this command :
@@ -53,8 +54,6 @@ Then, you can create the database :
 # Still in pipenv shell
 python manage.py migrate
 ```
-
-You can then run all your django commands within this shell.
 
 To launch a development web server : 
 
