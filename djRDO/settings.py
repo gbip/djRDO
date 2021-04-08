@@ -11,23 +11,23 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.urls import reverse
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
+CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
+SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=True, cast=bool)
+
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = config("DEBUG", cast=bool, default=False)
 
 # Application definition
 
@@ -78,12 +78,36 @@ WSGI_APPLICATION = "djRDO.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
+DATABASES = {}
+
+if config("DATABASE_TYPE") == "sqlite3":
+    DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": config("DATABASE_NAME"),
     }
-}
+elif config("DATABASE_TYPE") == "mysql":
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": config("DATABASE_NAME", default="djRDO"),
+        "PASSWORD": config("DATABASE_PASSWORD"),
+        "PORT": config("DATABASE_PORT", default=""),
+        "USER": config("DATABASE_USER"),
+        "HOST": config("DATABASE_HOST", default=""),
+    }
+elif config("DATABASE_TYPE") == "postgresql":
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DATABASE_NAME", default="djRDO"),
+        "PASSWORD": config("DATABASE_PASSWORD"),
+        "PORT": config("DATABASE_PORT", default=""),
+        "USER": config("DATABASE_USER"),
+        "HOST": config("DATABASE_HOST"),
+    }
+
+
+if not DEBUG:
+    # Keep database connection alive for a minute
+    CONN_MAX_AGE = 60
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -109,6 +133,24 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
 ]
+
+# Email
+
+
+EMAIL_BACKEND = config(
+    "EMAIL_BACKEND", default="django.core.mail.backends.filebased.EmailBackend"
+)
+if EMAIL_BACKEND == "django.core.mail.backends.filebased.EmailBackend":
+    EMAIL_FILE_PATH = str(BASE_DIR.joinpath("sent_emails"))
+else:
+    EMAIL_HOST = config("EMAIL_HOST")
+    EMAIL_PORT = config("EMAIL_PORT", cast=int)
+    EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
+    DEFAULT_FROM_EMAIL = "djRDO Team <" + EMAIL_HOST_USER + ">"
+    EMAIL_SUBJECT_PREFIX = "[djRDO] "
+    SERVER_EMAIL = "djRDO@yourhost.com"
 
 LOGIN_REDIRECT_URL = "/accounts"
 AUTH_USER_MODEL = "accounts.DjRdoUser"

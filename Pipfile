@@ -12,6 +12,7 @@ django-widget-tweaks = "*"
 pylint-django = "*"
 djangorestframework = "*"
 python-decouple = "*"
+mysqlclient = "*"
 
 [dev-packages]
 
