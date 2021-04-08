@@ -45,6 +45,12 @@ Then, create the database and apply the mandatory migration :
 python manage.py migrate
 ```
 
+Finally, you will need to generate a secret key for djRDO :
+
+```shell
+echo "SECRET_KEY = " `python -c "import secrets; print(secrets.token_urlsafe())"` > .env
+```
+
 You can then run all your django commands within this shell.
 
 To launch a developement web server : 

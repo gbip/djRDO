@@ -11,6 +11,7 @@ argon2-cffi = "*"
 django-widget-tweaks = "*"
 pylint-django = "*"
 djangorestframework = "*"
+python-decouple = "*"
 
 [dev-packages]
 
