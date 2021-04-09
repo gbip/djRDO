@@ -17,7 +17,7 @@ from music_collection.models import MusicCollection
 from music_importer.models import MusicTrack
 
 
-class MusicCollectionListView(ListView, LoginRequiredMixin):
+class MusicCollectionListView(LoginRequiredMixin, ListView):
     """
     Provide a list view of all utils collection for a user
     """
@@ -36,7 +36,7 @@ class MusicCollectionListView(ListView, LoginRequiredMixin):
         )
 
 
-class MusicCollectionDetailView(DetailView, LoginRequiredMixin):
+class MusicCollectionDetailView(LoginRequiredMixin, DetailView):
     model = MusicCollection
     template_name = "music_collection/music_collection_detail.html"
 
@@ -97,7 +97,7 @@ def create_collection(request):
         return HttpResponseNotAllowed(permitted_methods=["POST"])
 
 
-class MusicTrackListView(ListView, LoginRequiredMixin):
+class MusicTrackListView(LoginRequiredMixin, ListView):
     """
     Provide a list view of all utils tracks for a user.
     Allows two parameter in the request :

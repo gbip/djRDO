@@ -93,6 +93,17 @@ This docker image is based on the following files :
 * `docker-compose.yml`
 * `Dockerfile`
 
+## Configuration
+
+Currently, the application is configured using a `.env` file. The provided `.env.sqlite3` makes a good candidate for a 
+development configuration.
+
+### Options
+
+* `DEMO_ENABLED` : enables the demo message and loads a pre-filled database. It does not take care of flushing the database
+every hour, this needs to be automated using a system tool (eg `crontab`).
+* `REGISTRATION_ENABLED` : enabled by default, set to false to disable registration
+
 ## Deployment
 
 ### With docker

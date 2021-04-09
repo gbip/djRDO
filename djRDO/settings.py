@@ -70,6 +70,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "djRDO.context_processors.registration_enabled",
+                "djRDO.context_processors.demo_enabled",
             ],
         },
     },
@@ -177,3 +179,9 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
 STATICFILES_DIRS = ["assets"]
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# djRDO specific configuration
+
+REGISTRATION_ENABLED = config("REGISTRATION_ENABLED", cast=bool, default=True)
+
+DEMO_ENABLED = config("DEMO_ENABLED", cast=bool, default=False)

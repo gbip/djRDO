@@ -20,7 +20,11 @@
                     </span>
                     </div>
                     <span class="is-size-5">
+                        {% if registration_enabled %}
                      Simply <a href="{% url "accounts:register" %}">create an account</a> and get started !
+                        {% else %}
+                            <a href="{% url "accounts:login" %}">Login</a> to get started !
+                        {% endif %}
                     </span>
                 </div>
                 <div class="column">

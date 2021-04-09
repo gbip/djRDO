@@ -1,6 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path, reverse_lazy
 
+from djRDO import settings
 from . import views
 
 # noinspection Pylint
@@ -47,7 +48,6 @@ urlpatterns = [
         ),
         name="password_reset_done",
     ),
-    path("register/", views.signup, name="register"),
     path(
         "reset/<uidb64>/<token>/",
         auth_views.PasswordResetConfirmView.as_view(
@@ -64,3 +64,6 @@ urlpatterns = [
         name="password_reset_complete",
     ),
 ]
+
+if settings.REGISTRATION_ENABLED:
+    urlpatterns.append(path("register/", views.signup, name="register"))

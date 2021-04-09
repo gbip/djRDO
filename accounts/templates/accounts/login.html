@@ -2,8 +2,10 @@
 {% block title %}Sign in to djRDO{% endblock %}
 {% block content %}
     <div>
+    {% if registration_enabled %}
         You don't have an account yet ?
         <u><a class="is-link" href="{% url 'accounts:register' %}">Sign up !</a></u>
+    {% endif %}
     </div>
     <div class="is-primary">
         {% include 'form.html' with submit_button_value="Log in" %}
