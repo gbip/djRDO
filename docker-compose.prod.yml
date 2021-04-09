@@ -1,14 +1,12 @@
 version: "3.9"
    
 services:
-
   db:
     image: postgres:12.0-alpine
     env_file :
       - .env.docker.prod.postgre
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data
-
   web:
     env_file :
       - .env.docker.prod.djrdo
@@ -22,7 +20,6 @@ services:
       - db
     volumes:
       - static_volume:/home/djRDO/web/static
-
   nginx:
     build: ./nginx
     ports:
