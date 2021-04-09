@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$DATABASE_TYPE" = "postgres" ]
+if [ "$DATABASE_TYPE" = "postgresql" ]
 then
     echo "Waiting for postgres..."
 
@@ -11,6 +11,11 @@ then
     echo "PostgreSQL started"
 fi
 
+echo "Migrating djRDO..."
 python manage.py migrate
+echo "Done !"
+echo "Collecting static files ..."
+python manage.py collectstatic  --noinput
+echo "Done !"
 
 exec "$@"

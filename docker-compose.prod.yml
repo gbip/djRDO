@@ -1,0 +1,37 @@
+version: "3.9"
+   
+services:
+
+  db:
+    image: postgres:12.0-alpine
+    env_file :
+      - .env.docker.prod.postgre
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+
+  web:
+    env_file :
+      - .env.docker.prod.djrdo
+    build: 
+      context: .
+      dockerfile : Dockerfile.prod
+    command: hypercorn --bind 0.0.0.0:8000 djRDO.asgi:application 
+    expose :
+      - 8000
+    depends_on:
+      - db
+    volumes:
+      - static_volume:/home/djRDO/web/static
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+    volumes:
+      - static_volume:/home/djRDO/web/static
+
+volumes:
+  postgres_data_prod:
+  static_volume:

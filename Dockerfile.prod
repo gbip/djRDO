@@ -1,0 +1,66 @@
+###########
+# BUILDER #
+###########
+
+FROM python:3.9.2-alpine as builder
+
+WORKDIR /usr/src/djRDO
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# Needed by python mysql
+RUN apk add --no-cache mariadb-connector-c-dev ;\
+    apk add --no-cache --virtual .build-deps \
+        build-base \
+        mariadb-dev ;
+
+# Needed by postgresql
+RUN apk add --no-cache postgresql-libs  &&\
+ apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
+
+# Needed for argon2 password hashing
+RUN apk add gcc musl-dev libffi-dev
+
+RUN pip install --upgrade pip
+COPY . .
+
+# Instal packages
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/djRDO/wheels -r requirements.txt
+
+#########
+# FINAL #
+#########
+
+from python:3.9.2-alpine
+
+RUN mkdir -p /home/djRDO
+
+RUN addgroup -S djRDO && adduser -S djRDO -G djRDO
+
+ENV HOME=/home/djRDO
+ENV DJRDO_HOME=/home/djRDO/web
+
+RUN mkdir -p $DJRDO_HOME/static
+
+workdir $DJRDO_HOME
+
+RUN apk update && apk add libpq
+
+COPY --from=builder /usr/src/djRDO/wheels /wheels
+COPY --from=builder /usr/src/djRDO/requirements.txt .
+RUN pip install --no-cache /wheels/*
+
+
+# copy entrypoint-prod.sh
+COPY ./docker_entrypoint.sh $DJRDO_HOME
+
+# copy project
+COPY . $DJRDO_HOME
+
+# chown all the files to the djrdo user
+RUN chown -R djRDO:djRDO $DJRDO_HOME
+
+USER djRDO
+
+ENTRYPOINT ["/home/djRDO/web/docker_entrypoint.sh"]
