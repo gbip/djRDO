@@ -29,6 +29,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 DEBUG = config("DEBUG", cast=bool, default=False)
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Application definition
 
 INSTALLED_APPS = [
