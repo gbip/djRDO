@@ -273,3 +273,5 @@ music_importer/test_data/django_formatted_tracks.json
 music_importer/test_data/toto.json
 .env
 .env.docker.prod*
+
+static/
