@@ -6,17 +6,15 @@ services:
     env_file :
       - ./.env.docker.dev
     volumes:
-      - postgres_data:/var/lib/postgresql/
+      - postgres_data_dev:/var/lib/postgresql/
   web:
     env_file :
       - ./.env.docker.dev
     build: .
     command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./djRDO:/djRDO
     ports:
       - "8000:8000"
     depends_on:
       - db
 volumes:
-  postgres_data:
+  postgres_data_dev:
