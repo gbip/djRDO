@@ -1,7 +1,8 @@
 # djRDO
 
-<div style="text-align:center"><img alt="djRDO banner" src="assets/banner.png" /></div>
+<div href="https://demo.djrdo.org" style="text-align:center"><img alt="djRDO banner" src="assets/banner.png" /></div>
 
+## [Demo](https://demo.djrdo.org)
 
 djRDO is a free software that allows dj to manage their music collection.
 
