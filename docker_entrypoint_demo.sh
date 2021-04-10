@@ -11,8 +11,10 @@ then
     echo "PostgreSQL started"
 fi
 
-echo "Migrating djRDO..."
-python manage.py flush
+echo "Flushing database..."
+python manage.py flush --no-input
+echo "Done !"
+echo "Migrating"
 python manage.py migrate
 echo "Done !"
 echo "Loading demo data ..."

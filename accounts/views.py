@@ -19,7 +19,6 @@ def stats(request):
         key_distribution = user_tracks.all().values("key").annotate(Count("key"))
         context = dict()
         context["bpm_distribution"] = bpm_distribution
-        print(key_distribution)
         context["key_distribution"] = key_distribution
         return render(request, "accounts/stats.html", context)
     else:
