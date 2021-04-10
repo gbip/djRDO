@@ -12,6 +12,7 @@ then
 fi
 
 echo "Migrating djRDO..."
+python manage.py flush
 python manage.py migrate
 echo "Done !"
 echo "Loading demo data ..."
