@@ -144,10 +144,11 @@
 
             // Dropdowns
 
-            var $dropdowns = getAll('.dropdown:not(.is-hoverable)');
+            const $dropdowns = [];//getAll('.dropdown:not(.navbar-burger):not(.navbar-menu):not(.is-hoverable)');
 
             if ($dropdowns.length > 0) {
                 $dropdowns.forEach(function ($el) {
+                    console.log($el)
                     $el.addEventListener('click', function (event) {
                         event.stopPropagation();
                         $el.classList.toggle('is-active');
