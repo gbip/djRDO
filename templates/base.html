@@ -12,43 +12,74 @@
 </head>
 <body>
 {% include "navbar.html" %}
-<section class="section">
+
+{% if messages %}
+    {% for message in messages %}
+    <section class="section">
+
     <div class="container">
+    <div class="block">
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <article class="message is-danger">
 
-        {% block content %}
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+    <article class="message is-warning">
 
-        {% endblock %}
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <article class="message is-info">
 
-    </div>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <article class="message is-success">
+
+        {% endif %}
+        <div class="message-body">
+            {{ message|safe }} {# Ok to mark the message as safe, since it can't be exploited in a CSRF attack thanks to django CSRF-protection #}
+        </div>
+    </article>
+    {% endfor %}
+{% endif %}
+</div>
+
+</div>
+<div class="container">
+
+    {% block content %}
+
+    {% endblock %}
+
+</div>
 </section>
 </body>
 </html>
 {% block script %}
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
 
-  // Get all "navbar-burger" elements
-  const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+            // Get all "navbar-burger" elements
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-  // Check if there are any navbar burgers
-  if ($navbarBurgers.length > 0) {
+            // Check if there are any navbar burgers
+            if ($navbarBurgers.length > 0) {
 
-    // Add a click event on each of them
-    $navbarBurgers.forEach( el => {
-      el.addEventListener('click', () => {
+                // Add a click event on each of them
+                $navbarBurgers.forEach(el => {
+                    el.addEventListener('click', () => {
 
-        // Get the target from the "data-target" attribute
-        const target = el.dataset.target;
-        const $target = document.getElementById(target);
+                        // Get the target from the "data-target" attribute
+                        const target = el.dataset.target;
+                        const $target = document.getElementById(target);
 
-        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-        el.classList.toggle('is-active');
-        $target.classList.toggle('is-active');
+                        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                        el.classList.toggle('is-active');
+                        $target.classList.toggle('is-active');
 
-      });
-    });
-  }
+                    });
+                });
+            }
 
-});
+        });
     </script>
 {% endblock %}
