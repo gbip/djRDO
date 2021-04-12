@@ -93,23 +93,32 @@
                     <td style="color: #{{ music.get_key_color }}"><b>{{ music.key.value }}</b></td>
                     <td>{{ music.date_released.year }}</td>
                     <td>
-                        <div class="control has-icons-left">
-                            <div class="select">
-                                <form method="post" action="{% url 'music_collection:add_music_to_collection' %}">
-                                    <input type="hidden" value="{{ music.pk }}" name="music_pk"/>
-                                    {% csrf_token %}
-                                    <select name="col_pk" onchange="this.form.submit()">
-                                        <option disabled>Add to collection</option>
+                        <form method="post" action="{% url 'music_collection:add_music_to_collection' %}">
+                            <input type="hidden" value="{{ music.pk }}" name="music_pk"/>
+                            <div class="columns">
+                                {% csrf_token %}
+                                <div class="column">
+                                <div class="select">
+                                    <select name="col_pk">
+                                        <option selected disabled>Select a collection</option>
                                         {% for collection in collections %}
                                             <option value="{{ collection.pk }}">{{ collection.title }}</option>
+                                            <div class="icon is-small is-left has-icons-left">
+                                                <i class="fas fa-folder"></i>
+                                            </div>
                                         {% endfor %}
                                     </select>
-                                </form>
+                                </div>
+                                </div>
+                                <div class="column">
+                                    <button class="button is-primary" onclick="this.form.submit()">
+                                                <span class="icon is-small">
+                                                  <i class="fas fa-plus"></i>
+                                                </span>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="icon is-small is-left">
-                                <i class="fas fa-folder"></i>
-                            </div>
-                        </div>
+                        </form>
 
                     </td>
                 </tr>
