@@ -1,0 +1,4 @@
+location /static/ {
+  alias /home/djRDO/web/static/;
+  add_header Access-Control-Allow-Origin *;
+}

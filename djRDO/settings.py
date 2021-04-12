@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 from decouple import config, Csv
 
@@ -28,6 +28,8 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 DEBUG = config("DEBUG", cast=bool, default=False)
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
@@ -80,12 +82,14 @@ WSGI_APPLICATION = "djRDO.wsgi.application"
 
 DATABASES = {}
 
-if config("DATABASE_TYPE") == "sqlite3":
+database = config("DATABASE_TYPE", default="sqlite3")
+
+if database == "sqlite3":
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": config("DATABASE_NAME"),
     }
-elif config("DATABASE_TYPE") == "mysql":
+elif database == "mysql":
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": config("DATABASE_NAME", default="djRDO"),
@@ -94,7 +98,7 @@ elif config("DATABASE_TYPE") == "mysql":
         "USER": config("DATABASE_USER"),
         "HOST": config("DATABASE_HOST", default=""),
     }
-elif config("DATABASE_TYPE") == "postgresql":
+elif database == "postgresql":
     DATABASES["default"] = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": config("DATABASE_NAME", default="djRDO"),
@@ -172,3 +176,4 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATICFILES_DIRS = ["assets"]
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")

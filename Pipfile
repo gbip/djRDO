@@ -13,6 +13,8 @@ pylint-django = "*"
 djangorestframework = "*"
 python-decouple = "*"
 mysqlclient = "*"
+psycopg2 = "*"
+hypercorn = "*"
 
 [dev-packages]
 
