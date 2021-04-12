@@ -274,4 +274,7 @@ music_importer/test_data/toto.json
 .env
 .env.docker.prod.djrdo
 .env.docker.prod.postgre
-.env.docker.prod.nginx
+=======
+.env.docker.prod*
+
+static/

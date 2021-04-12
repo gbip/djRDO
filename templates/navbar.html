@@ -78,12 +78,14 @@
                     </div>
                 {% else %}
                     <div class="buttons">
+                    {% if registration_enabled %}
                         <a class="button is-primary" href="{% url 'accounts:register' %}">
                              <span class="icon">
                                 <i class="fas fa-user"></i>
                             </span>
                             <span>Sign up</span>
                         </a>
+                    {% endif %}
                         <a href="{% url 'accounts:login' %}" class="button is-primary is-outlined">
                             <span class="icon">
                                 <i class="fas fa-sign-in-alt"></i>

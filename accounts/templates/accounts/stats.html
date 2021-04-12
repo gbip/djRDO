@@ -75,7 +75,7 @@
             data: {
                 labels: [
                     {% for key in key_distribution %}
-                        {% if key.key.value == None %}
+                        {% if key.key == None %}
                             "No Key",
                         {% else %}
                             "{{ key.key.value }}",
@@ -85,14 +85,16 @@
                 datasets: [{
                     backgroundColor: [
                         {% for key in key_distribution %}
-                            "#{{ key.key.get_key_color }}",
+                              {% if key.key == None %}
+                                   "#000000",
+                                {% else %}
+                                    "#{{ key.key.get_key_color }}",
+                                {% endif %}
                         {% endfor %}
                     ],
                     label: '# of Tracks',
                     data: [{% for key in key_distribution %}
                         {{ key.key__count}},
-
-
                     {% endfor %}
                     ],
                     borderWidth: 1
