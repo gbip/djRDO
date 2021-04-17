@@ -23,10 +23,12 @@ RUN apk add --no-cache postgresql-libs  &&\
 RUN apk add gcc musl-dev libffi-dev
 
 RUN pip install --upgrade pip
-COPY . .
+COPY requirements.txt .
 
 # Instal packages
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/djRDO/wheels -r requirements.txt
+
+COPY . .
 
 #########
 # FINAL #
