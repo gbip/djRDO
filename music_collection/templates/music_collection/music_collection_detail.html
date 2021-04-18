@@ -47,8 +47,18 @@
 
                 {% endfor %}
                 </tbody>
-
             </table>
+        </div>
+        <div class="block has-text-centered">
+        <img alt="Music collection cover" src="{% url "music_collection:collection_cover" pk=musiccollection.pk %}"/>
+        </div>
+        <div class="block has-text-centered">
+            <button class="button is-primary">
+                <span class="icon">
+                    <i class="far fa-image"></i>
+                </span>
+                <span>Generate cover</span>
+            </button>
         </div>
     {% endif %}
 {% endblock %}

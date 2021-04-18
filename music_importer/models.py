@@ -12,6 +12,7 @@ from django.utils.timezone import now
 
 from djRDO import settings
 from utils import key
+from utils.cover import music_set_to_svg
 
 
 class KeyField(models.CharField):
@@ -112,10 +113,15 @@ class Album(models.Model):
 
     def __str__(self):
         return (
-            self.name
-            + " - "
-            + str(self.artist.name if self.artist is not None else None)
+                self.name
+                + " - "
+                + str(self.artist.name if self.artist is not None else None)
         )
+
+    def to_svg(self):
+        result = music_set_to_svg(self.musictrack_set, self.user.name + "_" + self.name)
+        result.append(result.text(self.name + " by " + self.artist.name, x=8, y=0, fill='blue'))
+        return result
 
 
 class MusicTrack(models.Model):
@@ -153,13 +159,13 @@ class MusicTrack(models.Model):
 
     def __eq__(self, other):
         return (
-            self.bpm == other.bpm
-            and self.key == other.key
-            and self.title == other.title
-            and self.genre == other.genre
-            and self.date_released == other.date_released
-            and self.artist == other.artist
-            and self.album == other.album
+                self.bpm == other.bpm
+                and self.key == other.key
+                and self.title == other.title
+                and self.genre == other.genre
+                and self.date_released == other.date_released
+                and self.artist == other.artist
+                and self.album == other.album
         )
 
     def __hash__(self):

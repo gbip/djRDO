@@ -1,3 +1,5 @@
+import io
+
 import django
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,7 +8,7 @@ from django.db.utils import IntegrityError
 from django.http import (
     HttpResponseNotAllowed,
     HttpResponseBadRequest,
-    HttpResponseRedirect,
+    HttpResponseRedirect, FileResponse, HttpResponse,
 )
 from django.shortcuts import render
 
@@ -15,7 +17,7 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView
 
 from music_collection.models import MusicCollection
-from music_importer.models import MusicTrack
+from music_importer.models import MusicTrack, Album
 
 
 class MusicCollectionListView(LoginRequiredMixin, ListView):
@@ -31,9 +33,9 @@ class MusicCollectionListView(LoginRequiredMixin, ListView):
     def get_queryset(self, *args, **kwargs):
         return (
             super()
-            .get_queryset(*args, **kwargs)
-            .filter(user=self.request.user)
-            .order_by(*self.ordering)
+                .get_queryset(*args, **kwargs)
+                .filter(user=self.request.user)
+                .order_by(*self.ordering)
         )
 
 
@@ -57,12 +59,15 @@ def add_music_to_collection(request):
                 MusicCollection.track_number_manager.add_track_to_collection(
                     music, collection
                 )
-                messages.info(request, '"<b>{}</b>" has been added to collection "<b>{}</b>"'.format(music.title, collection.title))
+                messages.info(request, '"<b>{}</b>" has been added to collection "<b>{}</b>"'.format(music.title,
+                                                                                                     collection.title))
                 return HttpResponseRedirect(
                     request.META["HTTP_REFERER"]
                 )
             except django.db.utils.IntegrityError:
-                messages.error(request, 'Can\'t add track to collection :<br>"<b>{}</b>" is already in collection "<b>{}</b>"'.format(music.title, collection.title))
+                messages.error(request,
+                               'Can\'t add track to collection :<br>"<b>{}</b>" is already in collection "<b>{}</b>"'.format(
+                                   music.title, collection.title))
                 return HttpResponseRedirect(
                     request.META["HTTP_REFERER"]
                 )
@@ -126,10 +131,10 @@ def delete_all_user_tracks(request):
         tracks.delete()
         context = dict()
         context["message"] = (
-            "<strong>"
-            + request.user.username
-            + "</strong>"
-            + " all your tracks have been deleted successfully."
+                "<strong>"
+                + request.user.username
+                + "</strong>"
+                + " all your tracks have been deleted successfully."
         )
         return render(request, "display_message.html", context=context)
     else:
@@ -150,3 +155,26 @@ def remove_track(request):
         )
     else:
         return HttpResponseNotAllowed(permitted_methods=["POST"])
+
+
+@login_required
+def get_album_cover(request, pk):
+    if request.method == "GET":
+        album = Album.objects.get(user=request.user, pk=pk)
+        buffer = io.BytesIO()
+        svg = album.to_svg()
+
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, )
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["GET"])
+
+
+@login_required
+def get_collection_cover(request, pk):
+    if request.method == "GET":
+        collection = MusicCollection.objects.get(user=request.user, pk=pk)
+        svg = collection.to_svg()
+        return HttpResponse(svg.tostring(), content_type="image/svg+xml")
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["GET"])

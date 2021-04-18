@@ -37,16 +37,16 @@ cd djRDO
 pipenv shell # Move into the virtual environment
 ```
 
-However, before installing the dependencies, you need to install a few packages that are needed by the mysql, postgresql and argon2 python libraries:
+However, before installing the dependencies, you need to install a few packages that are needed by the mysql, postgresql, drawSvg and argon2 python libraries:
 
 On **Ubuntu**-based distro you can install those packages with :
 ```shell
-sudo apt install gcc musl-dev postgresql-dev musl-dev libffi-dev mariadb-connector-c-dev mariadb-dev
+sudo apt install gcc musl-dev postgresql-dev musl-dev libffi-dev mariadb-connector-c-dev mariadb-dev libcairo2
 ```    
 
 On **Arch**-based distro you can install them with :
 ```shell
-postgresql python-mysqlclient python-argon2_cffi
+postgresql python-mysqlclient python-argon2_cffi cairo
 ```
 
 ```shell

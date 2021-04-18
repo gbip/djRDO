@@ -15,6 +15,7 @@ python-decouple = "*"
 mysqlclient = "*"
 psycopg2 = "*"
 hypercorn = "*"
+svgwrite = "*"
 
 [dev-packages]
 

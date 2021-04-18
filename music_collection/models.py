@@ -6,7 +6,8 @@ from django.db import models
 
 # Create your models here.
 from djRDO import settings
-from music_importer.models import MusicTrackWithNumber
+from music_importer.models import MusicTrackWithNumber, MusicTrack
+from utils.cover import music_set_to_svg
 
 
 class MusicCollectionManager(models.Manager):
@@ -40,6 +41,11 @@ class MusicCollection(models.Model):
     def sorted_track_set(self):
         return self.tracks.order_by("number")
 
+    def to_svg(self):
+        set = MusicTrack.objects.filter(collection__collection__exact=self).order_by('collection__number')
+        result = music_set_to_svg(set, self.user.username + "_" + self.title)
+        result.add(result.text(self.title + " by " + self.user.username, (0, 0), fill='blue'))
+        return result
 
 def get_next_track_number(arr):
     """
