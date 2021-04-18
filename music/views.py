@@ -9,6 +9,7 @@ from django.views import generic
 from rest_framework.parsers import JSONParser
 
 from .models import MusicTrack
+
 # Create your views here.
 from .serializer_w import MusicTrackSerializerW
 

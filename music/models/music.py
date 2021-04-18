@@ -41,13 +41,13 @@ class MusicTrack(models.Model):
 
     def __eq__(self, other):
         return (
-                self.bpm == other.bpm
-                and self.key == other.key
-                and self.title == other.title
-                and self.genre == other.genre
-                and self.date_released == other.date_released
-                and self.artist == other.artist
-                and self.album == other.album
+            self.bpm == other.bpm
+            and self.key == other.key
+            and self.title == other.title
+            and self.genre == other.genre
+            and self.date_released == other.date_released
+            and self.artist == other.artist
+            and self.album == other.album
         )
 
     def __hash__(self):

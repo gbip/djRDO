@@ -29,9 +29,7 @@ class MusicImporterViewTestCase(DjRDOTestHelper):
 
         # /index, not logged in
         response = client.get(reverse("music:index"))
-        redirect_url = (
-            reverse("accounts:login") + "?next=" + reverse("music:index")
-        )
+        redirect_url = reverse("accounts:login") + "?next=" + reverse("music:index")
         self.assertRedirects(response, redirect_url)
 
         # /index, logged in
@@ -40,9 +38,7 @@ class MusicImporterViewTestCase(DjRDOTestHelper):
 
         # /upload not logged in
         response = client.get(reverse("music:upload"))
-        redirect_url = (
-            reverse("accounts:login") + "?next=" + reverse("music:upload")
-        )
+        redirect_url = reverse("accounts:login") + "?next=" + reverse("music:upload")
         self.assertRedirects(response, redirect_url)
 
     def test_loading_one_track(self):

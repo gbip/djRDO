@@ -91,9 +91,7 @@ class MusicImporterSerializerFailsTestCase(TestCase):
                 "name": [ErrorDetail(string="This field is required.", code="required")]
             }
         }
-        self.verify_error(
-            "music/test_data/invalid_album_without_name.json", [error]
-        )
+        self.verify_error("music/test_data/invalid_album_without_name.json", [error])
 
     def test_invalid_bpm(self):
         error = [

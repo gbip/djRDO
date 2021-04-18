@@ -42,10 +42,15 @@ class MusicCollection(models.Model):
         return self.tracks.order_by("number")
 
     def to_svg(self):
-        set = MusicTrack.objects.filter(collection__collection__exact=self).order_by('collection__number')
+        set = MusicTrack.objects.filter(collection__collection__exact=self).order_by(
+            "collection__number"
+        )
         result = music_set_to_svg(set, self.user.username + "_" + self.title)
-        result.add(result.text(self.title + " by " + self.user.username, (0, 0), fill='blue'))
+        result.add(
+            result.text(self.title + " by " + self.user.username, (0, 0), fill="blue")
+        )
         return result
+
 
 def get_next_track_number(arr):
     """

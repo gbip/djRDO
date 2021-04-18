@@ -8,9 +8,12 @@ from django.db.utils import IntegrityError
 from django.http import (
     HttpResponseNotAllowed,
     HttpResponseBadRequest,
-    HttpResponseRedirect, FileResponse, HttpResponse,
+    HttpResponseRedirect,
+    FileResponse,
+    HttpResponse,
 )
 from django.shortcuts import render
+
 # Create your views here.
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
@@ -33,9 +36,9 @@ class MusicCollectionListView(LoginRequiredMixin, ListView):
     def get_queryset(self, *args, **kwargs):
         return (
             super()
-                .get_queryset(*args, **kwargs)
-                .filter(user=self.request.user)
-                .order_by(*self.ordering)
+            .get_queryset(*args, **kwargs)
+            .filter(user=self.request.user)
+            .order_by(*self.ordering)
         )
 
 
@@ -59,14 +62,33 @@ def add_music_to_collection(request):
                 MusicCollection.track_number_manager.add_track_to_collection(
                     music, collection
                 )
-                messages.info(request, '"<b>{}</b>" has been added to collection "<b>{}</b>"'.format(music.title,
-                                                                                                     collection.title))
-                return redirect_to_referer_or(request,HttpResponseRedirect(reverse("music_collection:collection_detail", kwargs={'pk': col_pk})))
+                messages.info(
+                    request,
+                    '"<b>{}</b>" has been added to collection "<b>{}</b>"'.format(
+                        music.title, collection.title
+                    ),
+                )
+                return redirect_to_referer_or(
+                    request,
+                    HttpResponseRedirect(
+                        reverse(
+                            "music_collection:collection_detail", kwargs={"pk": col_pk}
+                        )
+                    ),
+                )
             except django.db.utils.IntegrityError:
-                messages.error(request,
-                               'Can\'t add track to collection :<br>"<b>{}</b>" is already in collection "<b>{}</b>"'.format(
-                                   music.title, collection.title))
-            return redirect_to_referer_or(request,HttpResponseRedirect(reverse("music_collection:collection_detail", kwargs={'pk': col_pk})))
+                messages.error(
+                    request,
+                    'Can\'t add track to collection :<br>"<b>{}</b>" is already in collection "<b>{}</b>"'.format(
+                        music.title, collection.title
+                    ),
+                )
+            return redirect_to_referer_or(
+                request,
+                HttpResponseRedirect(
+                    reverse("music_collection:collection_detail", kwargs={"pk": col_pk})
+                ),
+            )
         else:
             return HttpResponseBadRequest()
     else:
@@ -127,10 +149,10 @@ def delete_all_user_tracks(request):
         tracks.delete()
         context = dict()
         context["message"] = (
-                "<strong>"
-                + request.user.username
-                + "</strong>"
-                + " all your tracks have been deleted successfully."
+            "<strong>"
+            + request.user.username
+            + "</strong>"
+            + " all your tracks have been deleted successfully."
         )
         return render(request, "display_message.html", context=context)
     else:
@@ -161,7 +183,10 @@ def get_album_cover(request, pk):
         svg = album.to_svg()
 
         buffer.seek(0)
-        return FileResponse(buffer, as_attachment=True, )
+        return FileResponse(
+            buffer,
+            as_attachment=True,
+        )
     else:
         return HttpResponseNotAllowed(permitted_methods=["GET"])
 

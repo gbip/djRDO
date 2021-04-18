@@ -21,12 +21,14 @@ class Album(models.Model):
 
     def __str__(self):
         return (
-                self.name
-                + " - "
-                + str(self.artist.name if self.artist is not None else None)
+            self.name
+            + " - "
+            + str(self.artist.name if self.artist is not None else None)
         )
 
     def to_svg(self):
         result = music_set_to_svg(self.musictrack_set, self.user.name + "_" + self.name)
-        result.append(result.text(self.name + " by " + self.artist.name, x=8, y=0, fill='blue'))
+        result.append(
+            result.text(self.name + " by " + self.artist.name, x=8, y=0, fill="blue")
+        )
         return result
