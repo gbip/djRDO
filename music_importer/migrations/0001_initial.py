@@ -5,6 +5,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
 import music_importer.models
+import music_importer.models.key
 
 
 class Migration(migrations.Migration):
@@ -71,7 +72,7 @@ class Migration(migrations.Migration):
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
                 ("bpm", models.PositiveSmallIntegerField(blank=True, null=True)),
-                ("key", music_importer.models.KeyField(blank=True, null=True)),
+                ("key", music_importer.models.key.KeyField(blank=True, null=True)),
                 ("date_released", models.DateField(blank=True, null=True)),
                 ("genre", models.CharField(blank=True, max_length=200, null=True)),
                 (

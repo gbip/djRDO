@@ -8,6 +8,60 @@
     }
 },
 {
+    "model": "music_importer.musictrackwithnumber",
+    "pk": 1,
+    "fields": {
+        "number": 1,
+        "track_ptr": 2,
+        "collection": 2
+    }
+},
+{
+    "model": "music_importer.musictrackwithnumber",
+    "pk": 2,
+    "fields": {
+        "number": 2,
+        "track_ptr": 1,
+        "collection": 2
+    }
+},
+{
+    "model": "music_importer.musictrackwithnumber",
+    "pk": 3,
+    "fields": {
+        "number": 3,
+        "track_ptr": 6,
+        "collection": 2
+    }
+},
+{
+    "model": "music_importer.musictrackwithnumber",
+    "pk": 4,
+    "fields": {
+        "number": 4,
+        "track_ptr": 9,
+        "collection": 2
+    }
+},
+{
+    "model": "music_importer.musictrackwithnumber",
+    "pk": 5,
+    "fields": {
+        "number": 5,
+        "track_ptr": 39,
+        "collection": 2
+    }
+},
+{
+    "model": "music_importer.musictrackwithnumber",
+    "pk": 6,
+    "fields": {
+        "number": 6,
+        "track_ptr": 37,
+        "collection": 2
+    }
+},
+{
     "model": "accounts.djrdouser",
     "pk": 1,
     "fields": {
@@ -23,6 +77,28 @@
         "email": "demo@noemail.com",
         "groups": [],
         "user_permissions": []
+    }
+},
+{
+    "model": "music_collection.musiccollection",
+    "pk": 1,
+    "fields": {
+        "title": "",
+        "date_created": "2021-04-17T16:24:54.329Z",
+        "user": [
+            "demo"
+        ]
+    }
+},
+{
+    "model": "music_collection.musiccollection",
+    "pk": 2,
+    "fields": {
+        "title": "Cool sounds",
+        "date_created": "2021-04-17T16:25:01.407Z",
+        "user": [
+            "demo"
+        ]
     }
 },
 {

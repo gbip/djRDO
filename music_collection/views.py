@@ -18,6 +18,7 @@ from django.views.generic import ListView, DetailView
 
 from music_collection.models import MusicCollection
 from music_importer.models import MusicTrack, Album
+from utils.http import redirect_to_referer_or
 
 
 class MusicCollectionListView(LoginRequiredMixin, ListView):
@@ -61,16 +62,12 @@ def add_music_to_collection(request):
                 )
                 messages.info(request, '"<b>{}</b>" has been added to collection "<b>{}</b>"'.format(music.title,
                                                                                                      collection.title))
-                return HttpResponseRedirect(
-                    request.META["HTTP_REFERER"]
-                )
+                return redirect_to_referer_or(request,HttpResponseRedirect(reverse("music_collection:collection_detail", kwargs={'pk': col_pk})))
             except django.db.utils.IntegrityError:
                 messages.error(request,
                                'Can\'t add track to collection :<br>"<b>{}</b>" is already in collection "<b>{}</b>"'.format(
                                    music.title, collection.title))
-                return HttpResponseRedirect(
-                    request.META["HTTP_REFERER"]
-                )
+            return redirect_to_referer_or(request,HttpResponseRedirect(reverse("music_collection:collection_detail", kwargs={'pk': col_pk})))
         else:
             return HttpResponseBadRequest()
     else:
