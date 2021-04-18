@@ -269,8 +269,8 @@ pip-selfcheck.json
 
 /.idea/
 
-music_importer/test_data/django_formatted_tracks.json
-music_importer/test_data/toto.json
+music/test_data/django_formatted_tracks.json
+music/test_data/toto.json
 .env
 .env.docker.prod.djrdo
 .env.docker.prod.postgre

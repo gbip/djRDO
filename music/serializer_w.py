@@ -4,7 +4,7 @@ This module defines a writable json interface that allows to serialize a track t
 from rest_framework import serializers
 from rest_framework.fields import CharField, IntegerField, DateField
 
-from music_importer.models import MusicTrack, Album, Artist, KeyField
+from music.models import MusicTrack, Album, Artist, KeyField
 
 
 class ArtistSerializerW(serializers.ModelSerializer):

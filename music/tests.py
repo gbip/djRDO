@@ -3,7 +3,7 @@ This module holds common test code
 """
 import json
 
-from music_importer.serializer_w import MusicTrackSerializerW
+from music.serializer_w import MusicTrackSerializerW
 
 
 # Create your tests here.

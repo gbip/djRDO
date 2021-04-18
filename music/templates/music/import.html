@@ -353,7 +353,7 @@
         }
 
         async function send_music_to_server() {
-            response = await send_music_tags("{% url 'music_importer:upload' %}", music_tracks);
+            response = await send_music_tags("{% url 'music:upload' %}", music_tracks);
             handle_server_resp(response)
         }
 

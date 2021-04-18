@@ -1,5 +1,5 @@
+from music.models import MusicTrack, MusicTrackWithNumber
 from music_collection.models import MusicCollection, get_next_track_number
-from music_importer.models import MusicTrack, MusicTrackWithNumber
 from utils.test import DjRDOTestHelper
 
 

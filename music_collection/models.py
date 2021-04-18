@@ -6,7 +6,7 @@ from django.db import models
 
 # Create your models here.
 from djRDO import settings
-from music_importer.models import MusicTrackWithNumber, MusicTrack
+from music.models import MusicTrackWithNumber, MusicTrack
 from utils.cover import music_set_to_svg
 
 

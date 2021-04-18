@@ -6,10 +6,10 @@ from django.utils.datetime_safe import date, datetime
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 
+from music.models import MusicTrack, Artist, Album
+from music.serializer_w import MusicTrackSerializerW
+from music.tests import import_tracks_from_test_json
 from utils import key
-from music_importer.models import MusicTrack, Artist, Album
-from music_importer.serializer_w import MusicTrackSerializerW
-from music_importer.tests import import_tracks_from_test_json
 
 
 class MusicImporterSerializerTestCase(TestCase):
@@ -76,7 +76,7 @@ class MusicImporterModelTestCase(TestCase):
             username="test_user", password="test_password"
         )
         import_tracks_from_test_json(
-            "music_importer/test_data/tracks.json",
+            "music/test_data/tracks.json",
             lambda x: cls.tracks.append(x),
             cls.user,
         )

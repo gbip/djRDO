@@ -1,7 +1,7 @@
 from django.db import models
 
 from djRDO import settings
-from music_importer.models.artist import Artist
+from music.models.artist import Artist
 from utils.cover import music_set_to_svg
 
 

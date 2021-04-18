@@ -4,7 +4,7 @@ from django.http import HttpResponseNotAllowed
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from music_importer.models import MusicTrack
+from music.models import MusicTrack
 from . import forms
 
 

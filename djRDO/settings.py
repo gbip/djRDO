@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
-from decouple import config, Csv
 
+from decouple import config, Csv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.urls import reverse
 
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "widget_tweaks",
-    "music_importer",
+    "music",
     "accounts",
     "music_collection",
 ]

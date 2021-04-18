@@ -1,25 +1,20 @@
-import json
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import (
     Http404,
-    HttpResponseRedirect,
     JsonResponse,
 )
 from django.shortcuts import render
-from django.urls import reverse
 from django.views import generic
 from rest_framework.parsers import JSONParser
 
 from .models import MusicTrack
-
 # Create your views here.
 from .serializer_w import MusicTrackSerializerW
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
-    template_name = "music_importer/import.html"
+    template_name = "music/import.html"
     context_object_name = "must_list"
 
     def get_queryset(self):

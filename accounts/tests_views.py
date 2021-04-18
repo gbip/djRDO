@@ -1,7 +1,7 @@
 # Create your tests here.
 from django.urls import reverse
 
-from music_importer.models import MusicTrack
+from music.models import MusicTrack
 from utils.test import DjRDOTestHelper
 
 

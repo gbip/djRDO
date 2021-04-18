@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.timezone import now
 
 from djRDO import settings
-from music_importer.models import Artist, Album, KeyField
+from music.models import Artist, Album, KeyField
 from utils import key
 
 

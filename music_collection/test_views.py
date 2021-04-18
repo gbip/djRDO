@@ -6,8 +6,8 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils.datetime_safe import datetime
 
+from music.models import MusicTrack, Artist, Album
 from music_collection.models import MusicCollection
-from music_importer.models import MusicTrack, Artist, Album
 from utils import key
 from utils.test import DjRDOTestHelper
 

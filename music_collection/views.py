@@ -1,9 +1,9 @@
 import io
 
 import django
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 from django.db.utils import IntegrityError
 from django.http import (
     HttpResponseNotAllowed,
@@ -11,13 +11,12 @@ from django.http import (
     HttpResponseRedirect, FileResponse, HttpResponse,
 )
 from django.shortcuts import render
-
 # Create your views here.
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 
+from music.models import MusicTrack, Album
 from music_collection.models import MusicCollection
-from music_importer.models import MusicTrack, Album
 from utils.http import redirect_to_referer_or
 
 

@@ -23,7 +23,7 @@ from djRDO import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
-    path("import/", include("music_importer.urls")),
+    path("import/", include("music.urls")),
     path("music/", include("music_collection.urls")),
     path(
         "",

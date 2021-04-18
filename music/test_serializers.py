@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.exceptions import ErrorDetail
 
-from music_importer.models import Album, MusicTrack
-from music_importer.serializer_w import MusicTrackSerializerW
+from music.models import Album, MusicTrack
+from music.serializer_w import MusicTrackSerializerW
 
 
 class MusicImporterSerializerSpecialBehaviourTestCase(TestCase):
@@ -19,7 +19,7 @@ class MusicImporterSerializerSpecialBehaviourTestCase(TestCase):
         """
         Tries to load a simple track with just a title
         """
-        with open("music_importer/test_data/simple_track.json", "rb") as file:
+        with open("music/test_data/simple_track.json", "rb") as file:
             tracks = json.load(file)
             self.assertEqual(len(tracks), 1)
             serializer = MusicTrackSerializerW(data=tracks[0])
@@ -36,8 +36,8 @@ class MusicImporterSerializerSpecialBehaviourTestCase(TestCase):
         :return:
         """
         files = [
-            "music_importer/test_data/album_artist.json",
-            "music_importer/test_data/album_artist_reversed.json",
+            "music/test_data/album_artist.json",
+            "music/test_data/album_artist_reversed.json",
         ]
         for file in files:
             self.generic_test_album_creation(file)
@@ -62,10 +62,10 @@ class MusicImporterSerializerFailsTestCase(TestCase):
     """
 
     json_files = [
-        "music_importer/test_data/invalid_album_without_name.json",
-        "music_importer/test_data/invalid_bpm.json",
-        "music_importer/test_data/invalid_key.json",
-        "music_importer/test_data/invalid_no_title.json",
+        "music/test_data/invalid_album_without_name.json",
+        "music/test_data/invalid_bpm.json",
+        "music/test_data/invalid_key.json",
+        "music/test_data/invalid_no_title.json",
     ]
 
     @classmethod
@@ -92,7 +92,7 @@ class MusicImporterSerializerFailsTestCase(TestCase):
             }
         }
         self.verify_error(
-            "music_importer/test_data/invalid_album_without_name.json", [error]
+            "music/test_data/invalid_album_without_name.json", [error]
         )
 
     def test_invalid_bpm(self):
@@ -111,17 +111,17 @@ class MusicImporterSerializerFailsTestCase(TestCase):
                 ]
             },
         ]
-        self.verify_error("music_importer/test_data/invalid_bpm.json", error)
+        self.verify_error("music/test_data/invalid_bpm.json", error)
 
     def test_invalid_key(self):
         error = [
             {"key": [ErrorDetail(string="Invalid music key : 13A", code="invalid")]},
             {"key": [ErrorDetail(string="Invalid music key : 37", code="invalid")]},
         ]
-        self.verify_error("music_importer/test_data/invalid_key.json", error)
+        self.verify_error("music/test_data/invalid_key.json", error)
 
     def test_invalid_no_title(self):
         error = {
             "title": [ErrorDetail(string="This field is required.", code="required")]
         }
-        self.verify_error("music_importer/test_data/invalid_no_title.json", [error])
+        self.verify_error("music/test_data/invalid_no_title.json", [error])
