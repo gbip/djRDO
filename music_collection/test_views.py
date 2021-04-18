@@ -36,14 +36,6 @@ class TestMusicCollectionViews(DjRDOTestHelper):
         )
         self.assertEqual(music.collection.collection.pk, collection.pk)
 
-        response = self.client.post(
-            reverse("music_collection:add_music_to_collection"),
-            {"col_pk": collection.pk, "music_pk": music.pk},
-        )
-
-    # FIXME
-    #        self.assertRedirects(response, reverse("music_collection:collection_detail", kwargs={"pk": collection.pk}))
-
     def test_delete_track_from_collection(self):
         music = MusicTrack(title="toto", user=self.user)
         music.save()

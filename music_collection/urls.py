@@ -35,5 +35,7 @@ urlpatterns = [
         name="add_music_to_collection",
     ),
     path("album/<int:pk>/cover", get_album_cover, name="album_cover"),
-    path("collection/<int:pk>/cover", get_collection_cover, name="collection_cover"),
+    path(
+        "collection/<int:pk>/cover.svg", get_collection_cover, name="collection_cover"
+    ),
 ]
