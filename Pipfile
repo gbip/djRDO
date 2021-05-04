@@ -16,6 +16,8 @@ mysqlclient = "*"
 psycopg2 = "*"
 hypercorn = "*"
 svgwrite = "*"
+reportlab = "*"
+svglib = "*"
 
 [dev-packages]
 

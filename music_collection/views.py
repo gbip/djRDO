@@ -13,6 +13,9 @@ from django.http import (
     HttpResponse,
 )
 from django.shortcuts import render
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPDF
+from reportlab.pdfgen import canvas
 
 # Create your views here.
 from django.urls import reverse
@@ -197,5 +200,23 @@ def get_collection_cover(request, pk):
         collection = MusicCollection.objects.get(user=request.user, pk=pk)
         svg = collection.to_svg()
         return HttpResponse(svg.tostring(), content_type="image/svg+xml")
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["GET"])
+
+
+@login_required()
+def get_collection_cover_pdf(request, pk):
+    if request.method == "GET":
+        buffer = io.BytesIO()
+
+        collection = MusicCollection.objects.get(user=request.user, pk=pk)
+        svg = collection.to_svg()
+
+        renderPDF.drawToFile(svg, buffer)
+        buffer.seek(0)
+
+        return FileResponse(
+            buffer, as_attachment=True, filename=collection.title + ".pdf"
+        )
     else:
         return HttpResponseNotAllowed(permitted_methods=["GET"])

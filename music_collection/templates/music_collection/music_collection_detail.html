@@ -7,7 +7,7 @@
         There are no music tracks in this collection, yet.
     {% else %}
         <div class="block has-text-centered">
-            <h1 class="title">{{ object.title }}</h1>
+            <h1 class="title"><i>{{ object.title }}</i> collection</h1>
         </div>
         <div class="block">
             <table class="table is-striped is-hoverable is-fullwidth">
@@ -49,16 +49,36 @@
                 </tbody>
             </table>
         </div>
-        <div class="block has-text-centered">
-        <img alt="Music collection cover" src="{% url "music_collection:collection_cover" pk=musiccollection.pk %}"/>
-        </div>
-        <div class="block has-text-centered">
-            <button class="button is-primary">
-                <span class="icon">
-                    <i class="far fa-image"></i>
-                </span>
-                <span>Generate cover</span>
-            </button>
+        <div class="block box has-text-centered">
+            <p class="subtitle is-3">
+                Cover image preview
+            </p>
+            <div class="block" style="outline: 2px dashed lightgray">
+            <img alt="Music collection cover"
+                 src="{% url "music_collection:collection_cover_svg" pk=musiccollection.pk %}"/>
+            </div>
+            <div class="block is-">
+                <div class="columns is-mobile">
+                    <div class="column">
+                        <a class="button is-primary"
+                           href="{% url "music_collection:collection_cover_pdf" pk=musiccollection.pk %}" >
+                        <span class="icon">
+                        <i class="far fa-image"></i>
+                        </span>
+                            <span>Download PDF</span>
+                        </a>
+                    </div>
+                    <div class="column">
+                        <a class="button is-info"
+                                href="{% url "music_collection:collection_cover_svg" pk=musiccollection.pk %}" >
+                        <span class="icon">
+                        <i class="far fa-image"></i>
+                        </span>
+                            <span>Download SVG</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     {% endif %}
 {% endblock %}

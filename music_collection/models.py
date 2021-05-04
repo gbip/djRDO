@@ -45,10 +45,7 @@ class MusicCollection(models.Model):
         set = MusicTrack.objects.filter(collection__collection__exact=self).order_by(
             "collection__number"
         )
-        result = music_set_to_svg(set, self.user.username + "_" + self.title)
-        result.add(
-            result.text(self.title + " by " + self.user.username, (0, 0), fill="blue")
-        )
+        result = music_set_to_svg(set, self.title)
         return result
 
 

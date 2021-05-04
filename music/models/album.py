@@ -27,8 +27,6 @@ class Album(models.Model):
         )
 
     def to_svg(self):
-        result = music_set_to_svg(self.musictrack_set, self.user.name + "_" + self.name)
-        result.append(
-            result.text(self.name + " by " + self.artist.name, x=8, y=0, fill="blue")
-        )
+        result = music_set_to_svg(self.musictrack_set, self.name)
+
         return result
