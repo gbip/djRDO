@@ -2,7 +2,7 @@ from django.db import models
 
 from djRDO import settings
 from music.models.artist import Artist
-from utils.cover import music_set_to_svg
+from utils.cover import MusicSetSvgRenderer
 
 
 class Album(models.Model):
@@ -27,6 +27,7 @@ class Album(models.Model):
         )
 
     def to_svg(self):
-        result = music_set_to_svg(self.musictrack_set, self.name)
+        renderer = MusicSetSvgRenderer(self.musictrack_set, font_size=16)
+        result = renderer.render(self.name)
 
         return result
