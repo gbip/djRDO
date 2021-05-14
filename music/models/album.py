@@ -5,6 +5,11 @@ from music.models.artist import Artist
 from utils.cover import MusicSetSvgRenderer
 
 
+class UserAlbumManager(models.Manager):
+    def get(self, user):
+        return self.get_queryset().filter(user=user)
+
+
 class Album(models.Model):
     """
     Album model :
@@ -18,6 +23,9 @@ class Album(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False
     )
+
+    objects = models.Manager()
+    user_albums = UserAlbumManager()
 
     def __str__(self):
         return (

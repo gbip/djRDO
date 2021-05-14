@@ -7,4 +7,5 @@ app_name = "music"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path("upload", views.upload, name="upload"),
+    path("albums", views.AlbumListView.as_view(), name="albums"),
 ]

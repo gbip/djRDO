@@ -15,15 +15,27 @@
     <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
             {% if user.is_authenticated %}
-                <a class="navbar-item" href="{% url 'music_collection:music_list' %}">
+                <div class="navbar-item has-dropdown is-hoverable ">
+                <a class="navbar-link">
                     Music Library
                 </a>
-                <a class="navbar-item" href="{% url 'music_collection:collection_list' %}">
-                    Collections
-                </a>
-                <a class="navbar-item" href="{% url 'accounts:stats' %}">
-                    Insights
-                </a>
+
+                <div class="navbar-dropdown ">
+                    <a class="navbar-item" href="{% url "music:albums" %}">
+                        Albums
+                    </a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item" href={% url "music_collection:music_list" %}>
+                        All
+                    </a>
+                </div>
+            </div>
+            <a class="navbar-item" href="{% url 'music_collection:collection_list' %}">
+                Collections
+            </a>
+            <a class="navbar-item" href="{% url 'accounts:stats' %}">
+                Insights
+            </a>
             {% endif %}
             <div class="navbar-item has-dropdown is-hoverable ">
                 <a class="navbar-link">

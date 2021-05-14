@@ -1,11 +1,29 @@
 import json
 
-from django.test import Client
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from music.models import MusicTrack
 from music.serializer_w import MusicTrackSerializerW
+from music.test_helpers import create_album, create_track, create_user
 from utils.test import DjRDOTestHelper
+
+
+class AlbumListViewTestCase(TestCase):
+    def test_album_list_view(self):
+        user1 = create_user("user1")
+        self.client.force_login(user1)
+        album, artist = create_album(
+            "Album 1",
+            user=user1,
+            artist_name="Artist 1",
+        )
+
+        create_track("Title 1", user=user1, album=album)
+
+        response = self.client.get(reverse("music:albums"))
+        self.assertContains(response, "Album 1")
+        self.assertContains(response, "Artist 1")
 
 
 class MusicImporterViewTestCase(DjRDOTestHelper):

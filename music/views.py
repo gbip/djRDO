@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.views import generic
 from rest_framework.parsers import JSONParser
 
-from .models import MusicTrack
+from .models import MusicTrack, Album
 
 # Create your views here.
 from .serializer_w import MusicTrackSerializerW
@@ -43,3 +43,13 @@ def upload(request):
             return JsonResponse(errors, status=400)
     else:
         raise Http404("Page not found")
+
+
+class AlbumListView(LoginRequiredMixin, generic.ListView):
+    model = Album
+    template_name = "music/albums.html"
+
+    def get_queryset(self):
+        query_set = Album.user_albums.get(user=self.request.user).order_by("name")
+        album_list = [query_set[i : i + 4] for i in range(0, len(query_set), 4)]
+        return album_list

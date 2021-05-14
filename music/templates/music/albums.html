@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %} Upload music to djRDO {% endblock %}
+{% load static %}
+{% block header %}
+    <script src="{% static 'music_importer/jsmediatags.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/djRDO.css' %}">
+    <script src="{% static 'js/data_transfer.js' %}"></script>
+
+{% endblock %}
+{% block content %}
+    {% for album_sublist in object_list %}
+        <div class="columns is-desktop">
+            {% for album in album_sublist %}
+                <div class="column is-3">
+                    <div class="box">
+                        <p class="title is-5">
+                            {{ album.name }}
+                        </p>
+                        <p class="is-italic">
+                            {% if album.artist %}
+                                by {{ album.artist.name }}
+                            {% endif %}
+                        </p>
+                        <p class="has-text-grey">
+                            {{ album.musictrack_set.count }} tracks
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

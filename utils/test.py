@@ -3,6 +3,10 @@ from django.test import TestCase
 
 
 class DjRDOTestHelper(TestCase):
+    """
+    Helper class that creates three user on test initialization : user, user1 and user2.
+    """
+
     users = dict()
 
     @classmethod
