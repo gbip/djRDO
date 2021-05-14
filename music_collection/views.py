@@ -150,6 +150,10 @@ def delete_all_user_tracks(request):
     if request.method == "POST":
         tracks = MusicTrack.objects.filter(user=request.user).all()
         tracks.delete()
+        albums = Album.objects.filter(user=request.user).all()
+        albums.delete()
+        artists = Artist.objects.filter(user=request.user).all()
+        artists.delete()
         context = dict()
         context["message"] = (
             "<strong>"
