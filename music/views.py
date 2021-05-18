@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.views import generic
 from rest_framework.parsers import JSONParser
 
+from music_collection.models import MusicCollection
 from .models import MusicTrack, Album
 
 # Create your views here.
@@ -19,7 +20,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     context_object_name = "must_list"
 
     def get_queryset(self):
-        return MusicTrack.objects.get_queryset()[:5]
+        return MusicCollection.objects.filter(user=self.request.user)
 
 
 @login_required
@@ -31,12 +32,32 @@ def tracks_uploaded(request):
 def upload(request):
     if request.method == "POST" and request.content_type == "application/json":
         data = JSONParser().parse(request)
-        for t in data:
+        if isinstance(data, dict):
+            music_data = data["tracks"]
+            collection = data["collection"]
+            if collection == "None":
+                collection = None
+        else:
+            music_data = data
+            collection = None
+
+        if collection is not None:
+            collection, _ = MusicCollection.objects.get_or_create(
+                user_id=request.user.pk, title=collection
+            )
+
+        for t in music_data:
             if t is not None:
                 t["user"] = request.user.pk
-        serializer = MusicTrackSerializerW(data=data, many=True)
+        serializer = MusicTrackSerializerW(data=music_data, many=True)
         if serializer.is_valid():
-            serializer.save()
+            tracks = serializer.save()
+            if collection is not None:
+                for track in tracks:
+                    MusicCollection.track_number_manager.add_track_to_collection(
+                        track, collection
+                    )
+
             return JsonResponse(data=dict(), status=200)
         else:
             errors = {"errors": serializer.errors}

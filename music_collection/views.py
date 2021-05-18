@@ -21,7 +21,7 @@ from reportlab.pdfgen import canvas
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
 
-from music.models import MusicTrack, Album
+from music.models import MusicTrack, Album, Artist
 from music_collection.models import MusicCollection
 from utils.http import redirect_to_referer_or
 
@@ -154,6 +154,8 @@ def delete_all_user_tracks(request):
         albums.delete()
         artists = Artist.objects.filter(user=request.user).all()
         artists.delete()
+        collections = MusicCollection.objects.filter(user=request.user).all()
+        collections.delete()
         context = dict()
         context["message"] = (
             "<strong>"

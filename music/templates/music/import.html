@@ -2,7 +2,7 @@
 {% block title %} Upload music to djRDO {% endblock %}
 {% load static %}
 {% block header %}
-    <script src="{% static 'music_importer/jsmediatags.min.js' %}"></script>
+    <script src="{% static 'js/jsmediatags.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/djRDO.css' %}">
     <script src="{% static 'js/data_transfer.js' %}"></script>
 
@@ -57,6 +57,32 @@
                                     onclick="send_music_to_server()" disabled>
                                 Upload Tracks
                             </button>
+                        </div>
+                        <div class="block">
+                            <div class="field">
+                              <label class="label">Add those tracks to a collection</label>
+                              <div class="control">
+                                <div class="select">
+                                  <select id="user_collection_select">
+                                    <option selected>None</option>
+                                      {%  for collection in object_list %}
+                                          <option>{{ collection.title }}</option>
+                                      {% endfor %}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="control">
+                                <label class="checkbox">
+                                  <input type="checkbox" id="user_create_collection">
+                                  Create a custom collection
+                                </label>
+                                <div class="control">
+                                     <label class="label">Choose a collection name</label>
+                                    <input disabled class="input" type="text" id="user_collection_name" placeholder="Collection name">
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -173,7 +199,7 @@
             if ('album' in tags) {
                 object["album"] = {name: tags.album};
                 if ("TPE2" in tags) {
-                    object["album"]["arrtist"] = {name: tags.TPE2.data};
+                    object["album"]["artist"] = {name: tags.TPE2.data};
                 }
             }
             return object;
@@ -352,8 +378,27 @@
             }
         }
 
+        function get_collection_for_import() {
+            const collection_dropdown = document.getElementById('user_collection_select');
+            const collection_name = document.getElementById('user_collection_name');
+            if (this.window.custom_collection) {
+                return collection_name.value;
+            } else {
+                if (collection_dropdown.value === "None") {
+                    return null;
+                } else {
+                    return collection_dropdown.value;
+                }
+            }
+        }
+
         async function send_music_to_server() {
-            response = await send_music_tags("{% url 'music:upload' %}", music_tracks);
+            json = {
+                "tracks" : music_tracks,
+                "collection" : get_collection_for_import()
+            }
+            console.log(json)
+            response = await send_music_tags("{% url 'music:upload' %}", json);
             handle_server_resp(response)
         }
 
@@ -375,5 +420,19 @@
                     music_import(files)
                 })
         }
+
+        const selectElement = document.getElementById('user_create_collection');
+        const custom_collection = true;
+
+        selectElement.addEventListener('change', (event) => {
+            const collection_dropdown = document.getElementById('user_collection_select');
+            const collection_name = document.getElementById('user_collection_name');
+
+            this.custom_collection = !this.custom_collection;
+            collection_dropdown.disabled = this.custom_collection;
+            collection_name.disabled = !this.custom_collection;
+
+        });
+
     </script>
 {% endblock %}

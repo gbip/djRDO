@@ -50,6 +50,17 @@ class MusicTrack(models.Model):
             and self.album == other.album
         )
 
+    def fields_equal(self, other):
+        return (
+            self.bpm == other.bpm
+            and self.key == other.key
+            and self.title == other.title
+            and self.genre == other.genre
+            and self.date_released == other.date_released
+            and self.artist.name == other.artist.name
+            and self.album.name == other.album.name
+        )
+
     def __hash__(self):
         return hash(self.id)
 

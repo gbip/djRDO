@@ -27,7 +27,7 @@ class MusicCollectionManager(models.Manager):
 
 
 class MusicCollection(models.Model):
-    title = models.CharField(max_length=500)
+    title = models.CharField(max_length=500, null=False, blank=False)
     date_created = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
