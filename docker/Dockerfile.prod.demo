@@ -47,7 +47,7 @@ RUN mkdir -p $DJRDO_HOME/static
 
 workdir $DJRDO_HOME
 
-RUN apk update && apk add libpq
+RUN apk update && apk add libpq libxslt
 
 COPY --from=builder /usr/src/djRDO/wheels /wheels
 COPY --from=builder /usr/src/djRDO/requirements.txt .
