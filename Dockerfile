@@ -2,7 +2,7 @@
 # BUILDER #
 ###########
 
-FROM python:3.9.2-alpine as builder
+FROM python:3.9.4-alpine as builder
 
 WORKDIR /usr/src/djRDO
 
@@ -13,14 +13,14 @@ ENV PYTHONDONTWRITEBYTECODE 1
 RUN apk add --no-cache mariadb-connector-c-dev ;\
     apk add --no-cache --virtual .build-deps \
         build-base \
-        mariadb-dev ;
+        mariadb-dev;
 
 # Needed by postgresql
 RUN apk add --no-cache postgresql-libs  &&\
  apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
 
 # Needed for argon2 password hashing
-RUN apk add gcc musl-dev libffi-dev
+RUN apk add gcc musl-dev libffi-dev libxml2-dev libxslt-dev
 
 RUN pip install --upgrade pip
 

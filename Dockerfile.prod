@@ -2,7 +2,7 @@
 # BUILDER #
 ###########
 
-FROM python:3.9.2-alpine as builder
+FROM python:3.9.4-alpine as builder
 
 WORKDIR /usr/src/djRDO
 
@@ -20,7 +20,7 @@ RUN apk add --no-cache postgresql-libs  &&\
  apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
 
 # Needed for argon2 password hashing
-RUN apk add gcc musl-dev libffi-dev
+RUN apk add gcc musl-dev libffi-dev libxml2-dev libxslt-dev
 
 RUN pip install --upgrade pip
 COPY . .
@@ -32,7 +32,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/djRDO/wheels -r requ
 # FINAL #
 #########
 
-from python:3.9.2-alpine
+from python:3.9.4-alpine
 
 RUN mkdir -p /home/djRDO
 
