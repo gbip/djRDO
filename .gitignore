@@ -271,10 +271,10 @@ pip-selfcheck.json
 
 music/test_data/django_formatted_tracks.json
 music/test_data/toto.json
-.env
-.env.docker.prod.djrdo
-.env.docker.prod.postgre
-=======
-.env.docker.prod*
+.env*
 
 static/
+./Dockerfile*
+Dockerfile
+./docker-compose.*
+docker-compose.yml

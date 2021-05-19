@@ -86,13 +86,16 @@ python manage.py test
 ### Using docker
 
 
-A `docker-compose` configuration file is provided for this project.
-Run `docker-compose -f docker-compose.yml up` to use it.
+A `docker-compose` configuration file is provided for this project. Docker configuration lives in `./docker`.
+You should copy/symling them to this project root folder, and modify them accordingly.
 
-This docker image is based on the following files :
-* `.env.docker.dev`
-* `docker-compose.yml`
-* `Dockerfile`
+Here is a suggested way to do it :
+
+```
+ln -s docker/docker-compose.yml # Developement docker-compose
+ln -s docker/Dockerfile .		# Needed by the docker-compose file
+cp docker/.env.docker.dev .		# djRDO configuration file
+```
 
 ## Configuration
 
@@ -118,12 +121,17 @@ Docker environment files are named using the following syntax : `.env.docker.(st
 Where `djrdo` is the python configuration, `postgre` the database configuration and `nginx` some of the nginx config.
 The other part of the nginx configuration lives in `./nginx`
 
-Before running any docker command, you should modify the files `.env.docker.prod.*.example` to suit your setup.
+Before running any docker command, you should modify the files `.env.docker.prod.*.example` to suit your setup. I suggeste that you 
+copy those files to the root of this repository to avoid any conflict when upgrading :
+
+```shell
+cp docker/.env.docker.prod .
+# edit .env.docker.prod.( djrdo | nginx | postgre)
+ln -s docker/Dockerfile.prod # This file is maintained by us, you should not have to change it
+ln -s docker/docker-compose.prod.yml # Same
+```
 
 Then, starting djRDO can be done using either of the following commands :
-```shell
-sudo docker-compose -f docker-compose.staging.yml up # Staging version
-```
 
 ```shell
 sudo docker-compose -f docker-compose.prod.yml up # Production version
@@ -131,4 +139,4 @@ sudo docker-compose -f docker-compose.prod.yml up # Production version
 
 ### Without docker
 
-Not supported yet.
+Not documented yet.

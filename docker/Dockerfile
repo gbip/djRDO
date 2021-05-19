@@ -19,8 +19,8 @@ RUN apk add --no-cache mariadb-connector-c-dev ;\
 RUN apk add --no-cache postgresql-libs  &&\
  apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
 
-# Needed for argon2 password hashing
-RUN apk add gcc musl-dev libffi-dev libxml2-dev libxslt-dev
+# Needed for argon2 password hashing and Pillow
+RUN apk add gcc musl-dev libffi-dev libxml2-dev libxslt-dev jpeg-dev zlib-dev 
 
 RUN pip install --upgrade pip
 
