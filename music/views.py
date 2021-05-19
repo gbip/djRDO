@@ -3,6 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import (
     Http404,
     JsonResponse,
+    HttpResponse,
+    HttpResponseNotAllowed,
 )
 from django.shortcuts import render
 from django.views import generic
@@ -74,3 +76,18 @@ class AlbumListView(LoginRequiredMixin, generic.ListView):
         query_set = Album.user_albums.get(user=self.request.user).order_by("name")
         album_list = [query_set[i : i + 4] for i in range(0, len(query_set), 4)]
         return album_list
+
+
+class AlbumDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Album
+    template_name = "music/album_detail.html"
+
+
+@login_required
+def get_album_generated_cover(request, pk):
+    if request.method == "GET":
+        album = Album.objects.get(user=request.user, pk=pk)
+        svg = album.to_svg()
+        return HttpResponse(svg.tostring(), content_type="image/svg+xml")
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["GET"])

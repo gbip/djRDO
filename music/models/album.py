@@ -35,7 +35,6 @@ class Album(models.Model):
         )
 
     def to_svg(self):
-        renderer = MusicSetSvgRenderer(self.musictrack_set, font_size=16)
-        result = renderer.render(self.name)
-
-        return result
+        track_set = Album.objects.get(id=self.id).musictrack_set.all()
+        renderer = MusicSetSvgRenderer(track_set)
+        return renderer.render(self.name)

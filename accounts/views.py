@@ -15,8 +15,12 @@ def stats(request):
     """
     if request.method == "GET":
         user_tracks = MusicTrack.objects.filter(user=request.user)
-        bpm_distribution = user_tracks.all().values("bpm").annotate(Count("bpm")).order_by("bpm")
-        key_distribution = user_tracks.all().values("key").annotate(Count("key")).order_by("key")
+        bpm_distribution = (
+            user_tracks.all().values("bpm").annotate(Count("bpm")).order_by("bpm")
+        )
+        key_distribution = (
+            user_tracks.all().values("key").annotate(Count("key")).order_by("key")
+        )
         context = dict()
         context["bpm_distribution"] = bpm_distribution
         context["key_distribution"] = key_distribution

@@ -14,7 +14,7 @@
                 <div class="column is-3">
                     <div class="box">
                         <p class="title is-5">
-                            {{ album.name }}
+                            <a href="{% url 'music:album_detail_view' pk=album.pk %}">{{ album.name }}</a>
                         </p>
                         <p class="is-italic">
                             {% if album.artist %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.name }} {% endblock %}
+{% block content %}
+
+        <div class="block has-text-centered">
+            <h1 class="title"><i>{{ object.name }}</i> <br/></h1>
+            <h1 class="subtitle"> by <u>{{ object.artist.name }}</u></h1>
+        </div>
+        <div class="block">
+            <table class="table is-striped is-hoverable is-fullwidth">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>BPM</th>
+                    <th>Key</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for music in album.musictrack_set.all %}
+                    <tr>
+                        <td>{{ music.title }}</td>
+                        <td>{{ music.artist.name }}</td>
+                        <td>{{ music.album.name }}</td>
+                        <td>{{ music.bpm }}</td>
+                        <td style="color: #{{ music.get_key_color }}">{{ music.key.value }}</td>
+                        <td>{{ music.released_date }}</td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    <div class="block box has-text-centered">
+            <p class="subtitle is-3">
+                Cover image preview
+            </p>
+            <div class="block" style="outline: 2px dashed lightgray">
+            <img alt="Music collection cover"
+                 src="{% url "music:album_cover" pk=album.pk %}"/>
+            </div>
+            <div class="block is-">
+                    <div class="column">
+                        <a class="button is-info"
+                                href="{% url "music:album_cover" pk=album.pk %}" >
+                        <span class="icon">
+                        <i class="far fa-image"></i>
+                        </span>
+                            <span>Download SVG</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
