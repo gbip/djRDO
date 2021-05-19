@@ -18,6 +18,7 @@ hypercorn = "*"
 svgwrite = "*"
 reportlab = "*"
 svglib = "*"
+django-mathfilters = "*"
 
 [dev-packages]
 

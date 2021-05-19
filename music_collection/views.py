@@ -210,7 +210,7 @@ def get_collection_cover(request, pk):
         return HttpResponseNotAllowed(permitted_methods=["GET"])
 
 
-@login_required()
+@login_required
 def get_collection_cover_pdf(request, pk):
     if request.method == "GET":
         buffer = io.BytesIO()
@@ -226,3 +226,20 @@ def get_collection_cover_pdf(request, pk):
         )
     else:
         return HttpResponseNotAllowed(permitted_methods=["GET"])
+
+
+@login_required
+def reorder_track(request, col_pk, track_pk, new_number):
+    collection = MusicCollection.objects.get(id=col_pk, user=request.user)
+    track = collection.tracks.get(track_ptr_id=track_pk)
+    # track = MusicTrack.objects.get(id=track_pk, user=request.user)
+
+    if request.method == "POST":
+        MusicCollection.track_number_manager.change_track_number(
+            track.number, new_number, collection
+        )
+        return HttpResponseRedirect(
+            reverse("music_collection:collection_detail", kwargs={"pk": col_pk})
+        )
+    else:
+        return HttpResponseNotAllowed(permitted_methods=["POST"])

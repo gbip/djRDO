@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load mathfilters %}
 
 {% block title %}{{ object.title }} - Collection {% endblock %}
 {% block content %}
@@ -26,7 +27,39 @@
                 <tbody>
                 {% for music in  object.sorted_track_set %}
                     <tr>
-                        <td>{{ music.number }}</td>
+                        <td>
+                            <div class="columns">
+                                <div class="column">
+                                    {{ music.number }}
+                                </div>
+                                {% if not forloop.first %}
+                                <form method="post" action="{% url 'music_collection:reorder_track' col_pk=object.pk track_pk=music.track_ptr.pk new_number=music.number|sub:1 %}">
+                                        {% csrf_token %}
+                                    <div class="column">
+                                            <button class="button is-primary is-small" onclick="this.form.submit()">
+                                                        <span class="icon is-small">
+                                                          <i class="fas fa-chevron-up"></i>
+                                                        </span>
+                                            </button>
+                                    </div>
+                                </form>
+                                {% endif %}
+                        {% if not forloop.last %}
+                                <form method="post" action="{% url 'music_collection:reorder_track' col_pk=object.pk track_pk=music.track_ptr.pk new_number=music.number|add:1 %}">
+                                        {% csrf_token %}
+                                    <div class="column">
+                                            <button class="button is-primary is-small" onclick="this.form.submit()">
+                                                        <span class="icon is-small">
+                                                          <i class="fas fa-chevron-down"></i>
+                                                        </span>
+                                            </button>
+                                    </div>
+                                </form>
+                                {% endif %}
+                            </div>
+
+
+                        </td>
                         <td>{{ music.track_ptr.title }}</td>
                         <td>{{ music.track_ptr.artist.name }}</td>
                         <td>{{ music.track_ptr.album.name }}</td>

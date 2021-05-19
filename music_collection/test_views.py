@@ -210,6 +210,47 @@ class TestOrdering(DjRDOTestHelper):
         self.ordering_test_helper(track_first, track_second, "import_date")
         self.ordering_test_helper(track_first, track_second, "date_released")
 
+    def test_reorder_track_view(self):
+        track_1 = MusicTrack.objects.create(title="Track 1", user=self.user)
+        track_2 = MusicTrack.objects.create(title="Track 2", user=self.user)
+        collection = MusicCollection.objects.create(title="Collection", user=self.user)
+        MusicCollection.track_number_manager.add_track_to_collection(
+            track_1, collection
+        )
+        MusicCollection.track_number_manager.add_track_to_collection(
+            track_2, collection
+        )
+
+        self.login("user")
+
+        self.assertEqual(
+            collection.tracks.get(track_ptr__title=track_1.title).number, 1
+        )
+        self.assertEqual(
+            collection.tracks.get(track_ptr__title=track_2.title).number, 2
+        )
+
+        response = self.client.post(
+            reverse(
+                "music_collection:reorder_track",
+                kwargs={
+                    "col_pk": collection.pk,
+                    "track_pk": track_1.pk,
+                    "new_number": 2,
+                },
+            )
+        )
+        self.assertRedirects(
+            response,
+            reverse("music_collection:collection_detail", kwargs={"pk": collection.pk}),
+        )
+        self.assertEqual(
+            collection.tracks.get(track_ptr__title=track_1.title).number, 2
+        )
+        self.assertEqual(
+            collection.tracks.get(track_ptr__title=track_2.title).number, 1
+        )
+
 
 class TestMultipleUserMusic(DjRDOTestHelper):
     """

@@ -41,4 +41,9 @@ urlpatterns = [
         views.get_collection_cover_pdf,
         name="collection_cover_pdf",
     ),
+    path(
+        "reorder/collection/<int:col_pk>/track/<int:track_pk>/number/<int:new_number>",
+        views.reorder_track,
+        name="reorder_track",
+    ),
 ]

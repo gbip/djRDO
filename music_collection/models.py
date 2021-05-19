@@ -25,6 +25,21 @@ class MusicCollectionManager(models.Manager):
         result.save()
         return result
 
+    def change_track_number(self, old_track_number, new_track_number, collection):
+        track = MusicTrackWithNumber.objects.get(
+            number=old_track_number, collection=collection
+        )
+        other_track = MusicTrackWithNumber.objects.get(
+            number=new_track_number, collection=collection
+        )
+        other_track.number = old_track_number
+        track.number = new_track_number
+        other_track.save()
+        track.save()
+
+    def get_last_number(self):
+        return
+
 
 class MusicCollection(models.Model):
     title = models.CharField(max_length=500, null=False, blank=False)

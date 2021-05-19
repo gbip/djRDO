@@ -97,3 +97,28 @@ class TestMusicCollection(DjRDOTestHelper):
         self.assertEqual(track.track_ptr, music)
         self.assertEqual(track.collection, collection)
         self.assertEqual(collection.tracks.get(track_ptr=music).track_ptr, music)
+
+    def test_reorder_track(self):
+        track_1 = MusicTrack.objects.create(title="Track 1", user=self.user)
+        track_2 = MusicTrack.objects.create(title="Track 2", user=self.user)
+        collection = MusicCollection.objects.create(title="Collection", user=self.user)
+        MusicCollection.track_number_manager.add_track_to_collection(
+            track_1, collection
+        )
+        MusicCollection.track_number_manager.add_track_to_collection(
+            track_2, collection
+        )
+        self.assertEqual(
+            collection.tracks.get(track_ptr__title=track_1.title).number, 1
+        )
+        self.assertEqual(
+            collection.tracks.get(track_ptr__title=track_2.title).number, 2
+        )
+
+        MusicCollection.track_number_manager.change_track_number(1, 2, collection)
+        self.assertEqual(
+            collection.tracks.get(track_ptr__title=track_1.title).number, 2
+        )
+        self.assertEqual(
+            collection.tracks.get(track_ptr__title=track_2.title).number, 1
+        )
